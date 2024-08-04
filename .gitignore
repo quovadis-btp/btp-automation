@@ -7,3 +7,4 @@ btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/.terraform.loc
 btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/btp-trial.tfvars
 btp-context/runtime-context/modules/sap-kyma-runtime/.DS_Store
 btp-context/provider-context/modules/.DS_Store
+btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/.5eb44f70-44fc-48d7-8edc-ca8aa12e7464-quovadis-kyma.kubeconfig
