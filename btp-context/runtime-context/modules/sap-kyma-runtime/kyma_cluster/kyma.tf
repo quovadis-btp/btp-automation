@@ -9,4 +9,5 @@ module "sap_kyma_runtime" {
   name           = var.name
   administrators = var.administrators
   subaccount_id  = btp_subaccount.this.id
+  plan           = var.plan
 }
