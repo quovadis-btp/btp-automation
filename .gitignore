@@ -2,3 +2,7 @@
 btp-context/.DS_Store
 btp-context/runtime-context/.DS_Store
 btp-context/runtime-context/modules/.DS_Store
+btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/.DS_Store
+btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/.terraform.lock.hcl
+btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/btp-trial.tfvars
+btp-context/runtime-context/modules/sap-kyma-runtime/.DS_Store
