@@ -32,13 +32,13 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-examples/.terraform.lock.hcl
+hc_instance/.terraform.lock.hcl
 .terraform.lock.hcl
 .DS_Store
-examples/hc-certificates.json
-examples/hc-destinations.json
-examples/Makefile
-examples/dest-bootstrap.json
-examples/dest-bootstrap2.json
-examples/dest-bootstrap3.json
-examples/toto.json
+hc_instance/hc-certificates.json
+hc_instance/hc-destinations.json
+hc_instance/Makefile
+hc_instance/dest-bootstrap.json
+hc_instance/dest-bootstrap2.json
+hc_instance/dest-bootstrap3.json
+hc_instance/toto.json

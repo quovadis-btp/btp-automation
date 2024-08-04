@@ -14,7 +14,7 @@ To use this module in your Terraform environment, you can clone it from the GitH
 
 ```hcl
 module "sap_hana_cloud" {
-  source = "github.com/ptesny/terraform-sap-hana-cloud"
+  source                    = "sap-hana-cloud"
 
   subaccount_id             = "<subaccount-id>"
   service_name              = "hana"

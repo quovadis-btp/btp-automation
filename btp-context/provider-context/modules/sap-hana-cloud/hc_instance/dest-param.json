@@ -1,0 +1,41 @@
+{
+    "init_data": {
+        "subaccount": {
+            "destinations": [
+                  {
+                    "Description": "cis-httpbin",
+                    "Type": "HTTP",
+                    "clientId": "sb-8f51093b-7e69-4552-91d1-ee7c4e85ee60-sa-954e745f-f31c-49ee-9088-e22a0754ea2a-clone!b298674|cis-local!b4",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "cis-httpbin",
+                    "tokenServiceURL": "https://ad8110f5trial.authentication.us10.hana.ondemand.com/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "https://httpbin.org",
+                    "tokenServiceURLType": "Dedicated",
+                    "clientSecret": "62ee1fc7-8b4b-406f-a5b5-95fa0b000887$WdQftMhALr7olqb4S_Z0LfLuLyk6WmWZnDhKgDx1hdQ="
+                  },
+                  {
+                    "Description": "SAP Cloud Management Service APIs",
+                    "Type": "HTTP",
+                    "clientId": "sb-8f51093b-7e69-4552-91d1-ee7c4e85ee60-sa-954e745f-f31c-49ee-9088-e22a0754ea2a-clone!b298674|cis-local!b4",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "provisioning-service",
+                    "tokenServiceURL": "https://ad8110f5trial.authentication.us10.hana.ondemand.com/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "https://provisioning-service.cfapps.us10.hana.ondemand.com",
+                    "tokenServiceURLType": "Dedicated",
+                    "clientSecret": "62ee1fc7-8b4b-406f-a5b5-95fa0b000887$WdQftMhALr7olqb4S_Z0LfLuLyk6WmWZnDhKgDx1hdQ="
+                  }         
+            ],
+           "certificates": [
+           ],
+
+            "existing_certificates_policy": "update",
+            "existing_destinations_policy": "update"           
+       }
+   }
+}

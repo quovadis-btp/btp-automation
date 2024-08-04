@@ -5,7 +5,7 @@ resource "btp_subaccount" "this" {
 }
 
 module "sap_hana_cloud" {
-  source                     = "../../../modules/sap-hana-cloud" ### "github.com/ptesny/terraform-sap-hana-cloud"
+  source                     = "../../sap-hana-cloud" ### "github.com/ptesny/terraform-sap-hana-cloud"
   service_name               = var.service_name
   plan_name                  = var.plan_name
   hana_cloud_tools_app_name  = var.hana_cloud_tools_app_name
