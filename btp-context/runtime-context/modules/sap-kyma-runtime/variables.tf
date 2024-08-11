@@ -49,3 +49,24 @@ variable "region" {
   type        = string
   default     = "us10"
 }
+
+
+variable "kyma_config_template" {
+  type = object({
+    name            = string
+    region          = string
+#    machine_type    = string
+#    auto_scaler_min = number
+#    auto_scaler_max = number
+    administrators = set(string)
+  })
+  description = "Your Kyma environment configuration parameters. Name and region are mandatory. Please refer to the following documentation for more details: https://help.sap.com/docs/btp/sap-business-technology-platform/provisioning-and-update-parameters-in-kyma-environment."
+  default     = null
+
+  #validation {
+  #  condition = (
+  #    var.kyma_config_template == null ? true : length(var.kyma_config_template.name) > 0 && length(var.kyma_config_template.region) > 0
+  #  )
+  #  error_message = "Value for kyma_config_template must either be null or an object with values for at least name and region"
+  #}
+}

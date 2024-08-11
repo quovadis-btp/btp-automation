@@ -1,5 +1,5 @@
 output "dashboard_url" {
-  value = btp_subaccount_environment_instance.kymaruntime.dashboard_url
+  value = btp_subaccount_environment_instance.kymacluster.dashboard_url
 }
 
 output "kubeconfig" {

@@ -24,7 +24,33 @@ resource "btp_subaccount_entitlement" "kymaruntime" {
 
 data "btp_whoami" "me" {}
 
-resource "btp_subaccount_environment_instance" "kymaruntime" {
+
+data "btp_subaccount_environments" "all" {
+  subaccount_id = var.subaccount_id
+  depends_on    = [btp_subaccount_entitlement.kymaruntime]
+}
+
+
+# Take the first kyma region from the first kyma environment if no kyma instance parameters are provided
+resource "null_resource" "cache_kyma_region" {
+  triggers = {
+    region = var.kyma_config_template != null ? var.kyma_config_template.region : jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == lower(local.subaccount_iaas_provider)][0].schema_create).parameters.properties.region.enum[0]
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
+} 
+
+locals {
+  kyma_instance_parameters = var.kyma_config_template != null ? var.kyma_config_template : {
+    name   = var.name
+    region = null_resource.cache_kyma_region.triggers.region
+    administrators = toset(concat(tolist(var.administrators), [data.btp_whoami.me.email]))
+  }
+}  
+
+resource "btp_subaccount_environment_instance" "kymacluster" {
   subaccount_id = var.subaccount_id
 
   name             = var.name
@@ -55,7 +81,7 @@ resource "btp_subaccount_environment_instance" "kymaruntime" {
 }
 
 data "http" "kubeconfig" {
-  url = jsondecode(btp_subaccount_environment_instance.kymaruntime.labels)["KubeconfigURL"]
+  url = jsondecode(btp_subaccount_environment_instance.kymacluster.labels)["KubeconfigURL"]
 }
 
 resource "local_sensitive_file" "kubeconfig" {
