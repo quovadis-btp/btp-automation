@@ -356,7 +356,7 @@ locals {
   hc-x509 = jsondecode(btp_subaccount_service_binding.hc_binding_x509.credentials)["uaa"]
 }
 
-
+/*
 resource "terraform_data" "openssl_cert" {
   triggers_replace = {
     always_run = "${timestamp()}"
@@ -377,6 +377,7 @@ resource "terraform_data" "openssl_cert" {
    EOF
  }
 }
+*/
 
 # https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
 #
