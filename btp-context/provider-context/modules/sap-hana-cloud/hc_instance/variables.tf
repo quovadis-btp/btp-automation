@@ -25,9 +25,20 @@ variable "subdomain" {
   type        = string
 }
 
+variable "subaccount_id" {
+  type        = string
+  description = "The subaccount ID."
+  default     = ""
+}
+
 variable "admins" {
   description = "The list of email addresses of the SAP BTP Subaccount Administrators"
   type        = list(string)
+}
+
+variable "emergency_admins" {
+  type        = list(string)
+  description = "Defines the colleagues who are added to each subaccount as emergency administrators."
 }
 
 variable "region" {

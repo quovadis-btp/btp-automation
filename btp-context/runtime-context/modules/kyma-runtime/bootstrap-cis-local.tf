@@ -158,3 +158,28 @@ resource "btp_subaccount_role_collection_assignment" "launchpad_admin" {
   user_name            = each.value
   depends_on           = [btp_subaccount_subscription.build_workzone]
 }
+
+data "btp_subaccount_subscription" "build_workzone" {
+  subaccount_id = data.btp_subaccount.context.id
+  app_name      = local.service_name__build_workzone
+  plan_name     = var.service_plan__build_workzone
+}
+
+output "sap_build_workzone_subscription_url" {
+  value       = data.btp_subaccount_subscription.build_workzone.subscription_url
+  description = "SAP Build Workzone subscription URL."
+}
+
+locals {
+  sap_approuter_dynamic_dest = "${replace(data.btp_subaccount_subscription.build_workzone.subscription_url, ".dt", "")}/dynamic_dest"
+}
+
+output "httpbin_headers_url" {
+  value       = "${local.sap_approuter_dynamic_dest}/cis-httpbin/headers"
+  description = "HTTPBIN headers."
+}
+
+output "provisioning_service_environments_url" {
+  value       = "${local.sap_approuter_dynamic_dest}/provisioning-service/provisioning/v1/environments"
+  description = "SAP Cloud Management Service APIs (provisioning_service_url)."
+}

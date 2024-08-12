@@ -8,3 +8,5 @@ btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/btp-trial.tfva
 btp-context/runtime-context/modules/sap-kyma-runtime/.DS_Store
 btp-context/provider-context/modules/.DS_Store
 btp-context/runtime-context/modules/sap-kyma-runtime/kyma_cluster/.5eb44f70-44fc-48d7-8edc-ca8aa12e7464-quovadis-kyma.kubeconfig
+btp-context/provider-context/.DS_Store
+btp-context/provider-context/modules/sap-hana-cloud/hc_instance/subaccount_id.txt

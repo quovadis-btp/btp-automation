@@ -80,7 +80,42 @@ resource "local_sensitive_file" "bot" {
   filename = "bot.json"
 }
 
+# https://developer.hashicorp.com/terraform/language/resources/terraform-data#argument-reference
+#
+resource "terraform_data" "replacement" {
+# if openssl x509 -checkend 86400 -noout -in file.pem
+  input = "${timestamp()}"
+}
+
+# https://stackoverflow.com/questions/21297853/how-to-determine-ssl-cert-expiration-date-from-a-pem-encoded-certificate
+#
+resource "terraform_data" "check-cert" {
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+     set -e -o pipefail ;\
+      if openssl x509 -checkend 86400 -noout -in ${local.bot-cert.certificate}
+      then
+        echo "Certificate is good for another day!"
+      else
+        echo "Certificate has expired or will do so within 24 hours!"
+        echo "(or is invalid/not found)"
+      fi
+     )
+   EOF
+ }
+}
+
+
+# https://developer.hashicorp.com/terraform/language/resources/terraform-data#the-terraform_data-managed-resource-type
+#
 resource "btp_subaccount_service_binding" "ias-bot-binding-cert" {
+
   depends_on          = [btp_subaccount_service_instance.quovadis-ias-bot]
 
   subaccount_id       = data.btp_subaccount.context.id
@@ -93,6 +128,12 @@ resource "btp_subaccount_service_binding" "ias-bot-binding-cert" {
     validity-type   = "DAYS"
     app-identifier  = "kymaruntime"
   })
+  
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.replacement
+    ]
+  }
 }
 
 locals {
@@ -101,8 +142,10 @@ locals {
 
 resource "local_sensitive_file" "bot-cert" {
   content = jsonencode({
-    clientid = local.bot-cert.clientid
-    url      = local.bot-cert.url
+    clientid    = local.bot-cert.clientid
+    certificate = local.bot-cert.certificate
+    key         = local.bot-cert.key    
+    url         = local.bot-cert.url
   })
   filename = "bot-cert.json"
 }

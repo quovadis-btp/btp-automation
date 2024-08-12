@@ -184,12 +184,22 @@ data "btp_subaccount_service_plan" "dest_lite" {
   depends_on    = [btp_subaccount_entitlement.destination]
 }
 
-# Create/update destination bootstrap service instance
+
 resource "btp_subaccount_service_instance" "dest_bootstrap" {
   subaccount_id  = var.subaccount_id
   serviceplan_id = data.btp_subaccount_service_plan.dest_lite.id
   name           = "dest_bootstrap"
-  parameters = jsonencode({
+}
+
+resource "btp_subaccount_service_instance" "dest_provider" {
+  depends_on = [
+    btp_subaccount_service_instance.my_sap_hana_cloud_instance[0]
+  ]
+
+  subaccount_id  = var.subaccount_id
+  serviceplan_id = data.btp_subaccount_service_plan.dest_lite.id
+  name           = "dest_provider"
+  parameters     = jsonencode({
 
     "init_data": {
         "subaccount": {
@@ -197,33 +207,93 @@ resource "btp_subaccount_service_instance" "dest_bootstrap" {
                   {
                     "Description": "dest-httpbin",
                     "Type": "HTTP",
-                    "clientId": "sb-cloneb4e431bc1dcd4f83b5e3843edfee980d!b298674|destination-xsappname!b62",
+                    "clientId": "${local.dest-secret.clientid}",
                     "HTML5.DynamicDestination": "true",
                     "HTML5.Timeout": "60000",
                     "Authentication": "OAuth2ClientCredentials",
                     "Name": "dest-httpbin",
-                    "tokenServiceURL": "https://ad8110f5trial.authentication.us10.hana.ondemand.com/oauth/token",
+                    "tokenServiceURL": "${local.dest-secret.url}/oauth/token",
                     "ProxyType": "Internet",
                     "URL": "https://httpbin.org",
                     "tokenServiceURLType": "Dedicated",
-                    "clientSecret": "8def3d2d-84a2-4c78-b70f-18e4f4859c00$I7c1DbFl7X6dNkJPLGfVl6O9myHcjA8PQtrjid0D8cU="
+                    "clientSecret": "${local.dest-secret.clientsecret}"
                   },
                   {
                     "Description": "SAP Destination Service APIs",
                     "Type": "HTTP",
-                    "clientId": "sb-cloneb4e431bc1dcd4f83b5e3843edfee980d!b298674|destination-xsappname!b62",
+                    "clientId": "${local.dest-secret.clientid}",
                     "HTML5.DynamicDestination": "true",
                     "HTML5.Timeout": "60000",
                     "Authentication": "OAuth2ClientCredentials",
                     "Name": "destination-service",
-                    "tokenServiceURL": "https://ad8110f5trial.authentication.us10.hana.ondemand.com/oauth/token",
+                    "tokenServiceURL": "${local.dest-secret.url}/oauth/token",
                     "ProxyType": "Internet",
-                    "URL": "https://destination-configuration.cfapps.us10.hana.ondemand.com/destination-configuration/v1",
+                    "URL": "${local.dest-secret.uri}/destination-configuration/v1",
                     "tokenServiceURLType": "Dedicated",
-                    "clientSecret": "8def3d2d-84a2-4c78-b70f-18e4f4859c00$I7c1DbFl7X6dNkJPLGfVl6O9myHcjA8PQtrjid0D8cU="
-                  }
+                    "clientSecret": "${local.dest-secret.clientsecret}"
+                  },
+                  {
+                    "Description": "hc-httpbin",
+                    "Type": "HTTP",
+                    "clientId": "${local.hc-secret.clientid}",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "hc-httpbin",
+                    "tokenServiceURL": "${local.hc-secret.url}/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "https://httpbin.org",
+                    "tokenServiceURLType": "Dedicated",
+                    "clientSecret": "${local.hc-secret.clientsecret}"
+                  },
+                  {
+                    "Description": "SAP HANA Cloud Management APIs",
+                    "Type": "HTTP",
+                    "clientId": "${local.hc-secret.clientid}",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "hc-services",
+                    "tokenServiceURL": "${local.hc-secret.url}/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "${local.hc-api}",
+                    "tokenServiceURLType": "Dedicated",
+                    "clientSecret": "${local.hc-secret.clientsecret}"
+                  },         
+                  {
+                    "Description": "hc-httpbin-x509",
+                    "Type": "HTTP",
+                    "clientId": "${local.hc-x509.clientid}",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "hc-httpbin-x509",
+                    "tokenServiceURL": "${local.hc-x509.url}/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "https://httpbin.org",
+                    "tokenServiceURLType": "Dedicated",
+                    "tokenService.KeyStoreLocation": "hc-x509.p12",
+                    "tokenService.KeyStorePassword": "Password1"
+                  },
+                  {
+                    "Description": "SAP HANA Cloud Management APIs with x509",
+                    "Type": "HTTP",
+                    "clientId": "${local.hc-x509.clientid}",
+                    "HTML5.DynamicDestination": "true",
+                    "HTML5.Timeout": "60000",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "Name": "hc-services-x509",
+                    "tokenServiceURL": "${local.hc-x509.url}/oauth/token",
+                    "ProxyType": "Internet",
+                    "URL": "${local.hc-api}",
+                    "tokenServiceURLType": "Dedicated",
+                    "tokenService.KeyStoreLocation": "hc-x509.p12",
+                    "tokenService.KeyStorePassword": "Password1"
+                  }         
+
             ],
            "certificates": [
+               "${local.hc-x509-p12}"
            ],
 
             "existing_certificates_policy": "update",
@@ -232,6 +302,12 @@ resource "btp_subaccount_service_instance" "dest_bootstrap" {
    }
   
   })
+
+  lifecycle {
+    replace_triggered_by = [
+      btp_subaccount_service_binding.dest_binding
+    ]
+  }
 
 }
 
@@ -255,4 +331,65 @@ data "btp_subaccount_service_binding" "dest_binding_data" {
   depends_on = [
     btp_subaccount_service_binding.dest_binding
   ]
+}
+
+locals {
+  dest-secret = jsondecode(btp_subaccount_service_binding.dest_binding.credentials)
+}
+
+locals {
+  hc-secret = jsondecode(btp_subaccount_service_binding.hc_binding.credentials)["uaa"]
+}
+
+# https://stackoverflow.com/questions/52350446/terraform-split-variable-value-into-2
+#
+locals {
+  elem1 = "${element(split(".", jsondecode(btp_subaccount_service_binding.hc_binding.credentials)["host"]),2)}"
+  elem2 = "${element(split(".", jsondecode(btp_subaccount_service_binding.hc_binding.credentials)["host"]),3)}"
+  elem3 = "${element(split(".", jsondecode(btp_subaccount_service_binding.hc_binding.credentials)["host"]),4)}"
+  elem4 = "${element(split(".", jsondecode(btp_subaccount_service_binding.hc_binding.credentials)["host"]),5)}"
+
+  hc-api = "https://api.gateway.orchestration.${join(".", [local.elem1,local.elem2,local.elem3,local.elem4])}"
+}
+
+locals {
+  hc-x509 = jsondecode(btp_subaccount_service_binding.hc_binding_x509.credentials)["uaa"]
+}
+
+
+resource "terraform_data" "openssl_cert" {
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+      ( \
+      set -e -o pipefail ;\
+      ISSUER=$(terraform output -json hc_credentials_x509 | jq -r '.uaa | {clientid, key, certificate, url: (.certurl+ "/oauth/token") }' ) ;\
+      KEYSTORE=$(openssl pkcs12 -export \
+      -in <(echo "$(jq  -r '. | .certificate' <<< $ISSUER )") \
+      -inkey <(echo "$(jq  -r '. | .key' <<< $ISSUER )") \
+      -passout pass:Password1 | base64)   ;\
+      echo $KEYSTORE ;\
+      openssl pkcs12 -nokeys -info -in <(echo -n $KEYSTORE | base64 -d) -passin pass:Password1 ;\
+      )
+   EOF
+ }
+}
+
+# https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
+#
+data "external" "openssl_cert" {
+  program = ["bash", "${path.module}/openssl-cert.sh"]
+
+  query = {
+    # arbitrary map from strings to strings, passed
+    # to the external program as the data query.
+  }
+}
+
+
+locals {
+  hc-x509-p12 = data.external.openssl_cert.result
 }

@@ -137,10 +137,15 @@ resource "btp_subaccount_service_binding" "ias-local-binding-cert" {
   parameters = jsonencode({
     credential-type = "X509_GENERATED"
     key-length      = 4096
-    validity        = 365
+    validity        = 1
     validity-type   = "DAYS"
     app-identifier  = "kymaruntime"
   })
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.replacement
+    ]
+  }
 }
 
 locals {
