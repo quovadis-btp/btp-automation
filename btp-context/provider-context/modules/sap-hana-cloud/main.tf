@@ -386,6 +386,10 @@ data "external" "openssl_cert" {
   query = {
     # arbitrary map from strings to strings, passed
     # to the external program as the data query.
+    clientid = "${local.hc-x509.clientid}"
+    key = "${local.hc-x509.key}"    
+    certificate = "${local.hc-x509.certificate}" 
+    url = "${local.hc-x509.certurl}/oauth/token" 
   }
 }
 
