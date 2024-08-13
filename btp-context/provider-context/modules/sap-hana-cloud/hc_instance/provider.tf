@@ -11,4 +11,5 @@ provider "btp" {
   globalaccount = var.globalaccount
   username      = var.username
   password      = var.password
+  idp           = var.idp
 }

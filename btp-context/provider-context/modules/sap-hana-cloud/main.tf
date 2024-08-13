@@ -102,7 +102,7 @@ resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance" {
   timeouts = {
     create = "15m"
     update = "15m"
-    delete = "5m"
+    delete = "15m"
   }
   depends_on = [
     btp_subaccount_subscription.hana_cloud_tools
@@ -120,7 +120,7 @@ resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance_with_mapp
   timeouts = {
     create = "15m"
     update = "15m"
-    delete = "5m"
+    delete = "15m"
   }
   depends_on = [
     btp_subaccount_subscription.hana_cloud_tools

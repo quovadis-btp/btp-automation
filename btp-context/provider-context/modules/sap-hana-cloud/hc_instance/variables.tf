@@ -15,6 +15,18 @@ variable "password" {
   type        = string
 }
 
+variable "idp" {
+  type        = string
+  description = "btp provider idp"
+  default     = ""
+}
+
+variable "origin" {
+  type        = string
+  description = "btp provider idp origin key"
+  default     = ""
+}
+
 variable "subaccount_name" {
   description = "The name of the SAP BTP Subaccount"
   type        = string
