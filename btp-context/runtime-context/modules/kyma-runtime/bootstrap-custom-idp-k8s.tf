@@ -12,23 +12,42 @@ resource "btp_subaccount_entitlement" "identity" {
 }
 
 resource "btp_subaccount_subscription" "identity_instance" {
-  depends_on     = [btp_subaccount_entitlement.identity]
-  count = var.BTP_CUSTOM_IDP == "" ? 1 : 0
+  depends_on    = [btp_subaccount_entitlement.identity]
+  count         = var.BTP_CUSTOM_IDP == "" ? 1 : 0
 
   subaccount_id = data.btp_subaccount.context.id
   app_name      = "sap-identity-services-onboarding"
   plan_name     = "default"
-  parameters = jsonencode({
+  parameters    = jsonencode({
     cloud_service = "PROD"
   })
 }
 
+# create a new fully customized trust configuration for a global account
+resource "btp_globalaccount_trust_configuration" "fully_customized" {
+  identity_provider = var.BTP_CUSTOM_IDP != "" ? var.BTP_CUSTOM_IDP : element(split("/", btp_subaccount_subscription.identity_instance[0].subscription_url), 2)
 
+  #name              = "trial"
+  #description       = "trial"
+  #origin            = "trial-platform"
+
+  depends_on        = [btp_subaccount_subscription.identity_instance]
+}
+
+# assign a role collection to a user on global account level
+resource "btp_globalaccount_role_collection_assignment" "jd" {
+  for_each             = toset("${var.platform_admins}")
+  role_collection_name = "Global Account Administrator"
+  user_name            = each.value
+  origin               = btp_globalaccount_trust_configuration.fully_customized.origin
+
+  depends_on        = [btp_globalaccount_trust_configuration.fully_customized]
+}
 
 resource "btp_subaccount_trust_configuration" "custom_idp" {
   subaccount_id     = data.btp_subaccount.context.id
   identity_provider = var.BTP_CUSTOM_IDP != "" ? var.BTP_CUSTOM_IDP : element(split("/", btp_subaccount_subscription.identity_instance[0].subscription_url), 2)
-  ##name              = "${var.BTP_SUBACCOUNT}-${var.BTP_CUSTOM_IAS_TENANT}"
+  name              = "${local.subaccount_domain}"
 
   depends_on        = [btp_subaccount_subscription.identity_instance]
 
