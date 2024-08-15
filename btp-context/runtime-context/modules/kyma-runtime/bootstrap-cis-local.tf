@@ -163,6 +163,7 @@ data "btp_subaccount_subscription" "build_workzone" {
   subaccount_id = data.btp_subaccount.context.id
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
+  depends_on    = [btp_subaccount_subscription.build_workzone]
 }
 
 output "sap_build_workzone_subscription_url" {
