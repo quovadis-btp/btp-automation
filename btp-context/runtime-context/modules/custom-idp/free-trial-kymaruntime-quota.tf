@@ -4,7 +4,37 @@
 free-trial-kymaruntime-quota: 
   btp assign accounts/entitlement --to-subaccount $$(btp list accounts/subaccount | jq -r '.value[] | select(.displayName == "trial") | .guid ') --for-service kymaruntime --plan trial --amount 0
 
+I need to implement it with an external tf provider by passing the username, pssword and the ga subdomain to do the login with btp cli...
+
+for the BTPCLI passwords that have special characters and need to be wrapped into single quotes:
+https://superuser.com/questions/1506499/surround-field-from-json-with-quotes
+
+
+
+#!/bin/bash
+
+set -e -o pipefail 
+ISSUER=$(jq -r '{url: "\(.url)", username: "\(.username)", password: "\(.password)", globalaccount: "\(.globalaccount)" }' )
+jq -n --arg issuer "$ISSUER" '{"username": $issuer}'
+
+
 */
+
+# https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
+#
+data "external" "free-trial-kymaruntime-quota" {
+  program = ["bash", "${path.module}/free-trial-kymaruntime-quota.sh"]
+
+  query = {
+    # arbitrary map from strings to strings, passed
+    # to the external program as the data query.
+    username = "${var.username}"
+    password = "${var.password}"
+    globalaccount = "${var.globalaccount}"
+    url = "https://cli.btp.cloud.sap" 
+  }
+}
+
 
 /*
 terraform console
@@ -40,16 +70,16 @@ locals {
 }
 
 
-
+/*
 resource "btp_subaccount_entitlement" "free-trial-kymaruntime-quota" {
   for_each      = { for acc in data.btp_subaccounts.all.values : acc.id => acc if acc.name == "trial" && var.BTP_KYMA_PLAN == "trial"}
 
   subaccount_id = each.key # each.value.id
   service_name  = "kymaruntime"
   plan_name     = var.BTP_KYMA_PLAN
-  amount        = 0 # https://github.com/SAP/terraform-provider-btp/issues/880
+  amount        = 0 #null # https://github.com/SAP/terraform-provider-btp/issues/880
 }
-
+*/
 
 /*
 │ Cannot assign the quota for service 'kymaruntime' and service plan 'trial' to subaccount

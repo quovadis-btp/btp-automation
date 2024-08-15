@@ -57,3 +57,11 @@ variable "region" {
   description = "The region of the SAP BTP Subaccount"
   type        = string
 }
+
+variable "BTP_KYMA_PLAN" {
+  type        = string
+  description = "Plan name"
+  default     = "trial"
+}
+
+
