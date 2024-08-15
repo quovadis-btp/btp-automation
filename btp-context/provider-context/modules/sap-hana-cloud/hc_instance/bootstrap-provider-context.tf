@@ -57,7 +57,14 @@ data "btp_globalaccount_trust_configuration" "custom" {
 # look up user details which belongs to a custom identity provider on global account level
 data "btp_globalaccount_user" "quovadis" {
   user_name = var.username
-  origin = var.origin == "" ? "sap.custom" :  var.origin
+  origin    = var.origin == "" ? "sap.custom" :  var.origin
+}
+
+# assign a role collection to a user on global account level
+resource "btp_globalaccount_role_collection_assignment" "jd" {
+  role_collection_name = "Global Account Viewer"
+  user_name            = data.btp_globalaccount_user.quovadis.email
+  origin               = data.btp_globalaccount_user.quovadis.origin
 }
 
 /*
