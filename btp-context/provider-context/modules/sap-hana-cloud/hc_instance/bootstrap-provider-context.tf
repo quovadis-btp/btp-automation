@@ -47,29 +47,31 @@ resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
 
 ## bootstrap custom idp trust for the provider subaccount
 
-
-# custom identity provider
-data "btp_globalaccount_trust_configuration" "custom" {
-  origin = var.origin == "" ? "sap.custom" :  var.origin
+# default identity provider
+data "btp_subaccount_trust_configuration" "default" {
+  subaccount_id = data.btp_subaccount.context.id
+  origin        = "sap.default"
 }
 
-
-# look up user details which belongs to a custom identity provider on global account level
-data "btp_globalaccount_user" "quovadis" {
-  user_name = var.username
-  origin    = var.origin == "" ? "sap.custom" :  var.origin
-}
-
-# assign a role collection to a user on global account level
-resource "btp_globalaccount_role_collection_assignment" "jd" {
-  role_collection_name = "Global Account Viewer"
-  user_name            = data.btp_globalaccount_user.quovadis.email
-  origin               = data.btp_globalaccount_user.quovadis.origin
-}
 
 /*
+# custom identity provider
+data "btp_globalaccount_trust_configuration" "custom" {
+  origin = var.origin
+}
+
+
+resource "btp_subaccount_trust_configuration" "custom_idp" {
+  subaccount_id     = data.btp_subaccount.context.id
+  identity_provider = var.idp != "" ? var.idp : data.btp_globalaccount_trust_configuration.custom.identity_provider
+  
+  name              = "${local.subaccount_name}"
+}
+*/
+
+
 resource "btp_subaccount_entitlement" "identity" {
-  count = var.idp == "" ? 1 : 0
+  count         = var.idp == "" ? 1 : 0
 
   subaccount_id = data.btp_subaccount.context.id
   service_name  = "sap-identity-services-onboarding"
@@ -83,29 +85,16 @@ resource "btp_subaccount_subscription" "identity_instance" {
   subaccount_id = data.btp_subaccount.context.id
   app_name      = "sap-identity-services-onboarding"
   plan_name     = "default"
-  parameters = jsonencode({
+  parameters    = jsonencode({
     cloud_service = "PROD"
   })
 }
-*/
-
-# default identity provider
-data "btp_subaccount_trust_configuration" "default" {
-  subaccount_id = data.btp_subaccount.context.id
-  origin        = "sap.default"
-}
-
-/*
-# custom identity provider
-data "btp_subaccount_trust_configuration" "custom" {
-  subaccount_id = data.btp_subaccount.context.id
-  origin        = "sap.custom"
-}
-*/
 
 resource "btp_subaccount_trust_configuration" "custom_idp" {
   subaccount_id     = data.btp_subaccount.context.id
-  identity_provider = var.idp != "" ? var.idp : data.btp_globalaccount_trust_configuration.custom.identity_provider
-  
-  name              = "${local.subaccount_name}"
+  identity_provider = var.idp != "" ? var.idp : element(split("/", btp_subaccount_subscription.identity_instance[0].subscription_url), 2)
+  name              = "${local.subaccount_domain}"
+
+  depends_on        = [btp_subaccount_subscription.identity_instance]
+
 }
