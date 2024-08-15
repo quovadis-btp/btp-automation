@@ -52,3 +52,49 @@ resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
   role_collection_name = "Subaccount Administrator"
   user_name            = each.value
 }
+
+
+/*
+# custom identity provider
+data "btp_globalaccount_trust_configuration" "custom" {
+  origin = var.origin
+}
+
+
+resource "btp_subaccount_trust_configuration" "custom_idp" {
+  subaccount_id     = data.btp_subaccount.context.id
+  identity_provider = var.idp != "" ? var.idp : data.btp_globalaccount_trust_configuration.custom.identity_provider
+  
+  name              = "${local.subaccount_name}"
+}
+*/
+
+
+resource "btp_subaccount_entitlement" "identity" {
+  count         = var.BTP_CUSTOM_IDP == "" ? 1 : 0
+
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "sap-identity-services-onboarding"
+  plan_name     = "default"
+}
+
+resource "btp_subaccount_subscription" "identity_instance" {
+  depends_on    = [btp_subaccount_entitlement.identity]
+  count         = var.BTP_CUSTOM_IDP == "" ? 1 : 0
+
+  subaccount_id = data.btp_subaccount.context.id
+  app_name      = "sap-identity-services-onboarding"
+  plan_name     = "default"
+  parameters    = jsonencode({
+    cloud_service = "PROD"
+  })
+}
+
+resource "btp_subaccount_trust_configuration" "custom_idp" {
+  subaccount_id     = data.btp_subaccount.context.id
+  identity_provider = var.BTP_CUSTOM_IDP != "" ? var.BTP_CUSTOM_IDP : element(split("/", btp_subaccount_subscription.identity_instance[0].subscription_url), 2)
+  name              = "${local.subaccount_domain}"
+
+  depends_on        = [btp_subaccount_subscription.identity_instance]
+
+}

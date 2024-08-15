@@ -13,17 +13,6 @@ free-trial-kymaruntime-quota:
 
 */
 
-
-# look up all available subaccounts of a global account
-data "btp_subaccounts" "all" {}
-
-data "btp_subaccount_environment_instances" "trial" { subaccount_id = local.trial.id }
-
-locals {
-  trial             = [for acc in data.btp_subaccounts.all.values : acc if acc.name == "trial"][0]
-
-  trial_kymaruntime = { for acc in data.btp_subaccounts.all.values : acc.id => acc if acc.name == "trial" && var.BTP_KYMA_PLAN == "trial"}
-
 /*
 terraform console
 > local.trial_kymaruntime
@@ -46,8 +35,17 @@ terraform console
   }
 }
 */  
-}
 
+/*
+# look up all available subaccounts of a global account
+data "btp_subaccounts" "all" {}
+
+data "btp_subaccount_environment_instances" "trial" { subaccount_id = local.trial.id }
+
+locals {
+  trial             = [for acc in data.btp_subaccounts.all.values : acc if acc.name == "trial"][0]
+}
+*/
 
 /*
 resource "btp_subaccount_entitlement" "free-trial-kymaruntime-quota" {

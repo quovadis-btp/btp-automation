@@ -139,7 +139,7 @@ resource "btp_subaccount_entitlement" "build_workzone" {
   subaccount_id = data.btp_subaccount.context.id
   service_name  = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
-  amount        = var.service_plan__build_workzone == "free" ? 1 : null
+  #amount        = var.service_plan__build_workzone == "free" ? 1 : null
 }
 
 # Create app subscription to SAP Build Workzone, standard edition (depends on entitlement)
