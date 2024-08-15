@@ -47,6 +47,18 @@ resource "local_file" "subaccount_id" {
 # Assignment of emergency admins to the sub account as sub account administrators
 ###############################################################################################
 resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
+  #
+  # https://github.com/SAP/terraform-provider-btp/issues/345
+  /*
+╷
+│ Error: API Error Deleting Resource Role Collection Assignment (Subaccount)
+│ 
+│ Cannot delete last admin user of subaccount.
+╵
+  
+  */
+  depends_on           = [btp_subaccount.create_subaccount]
+
   for_each             = toset("${var.emergency_admins}")
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Subaccount Administrator"
