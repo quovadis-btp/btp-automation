@@ -112,9 +112,9 @@ variable "emergency_admins" {
   description = "Defines the colleagues who are added to each subaccount as emergency administrators."
 }
 
-variable "platform_admins" {
+variable "launchpad_admins" {
   type        = list(string)
-  description = "Designates global account administrators as platform users."
+  description = "Designates launchpad admins."
 }
 
 variable "cluster_admins" {
