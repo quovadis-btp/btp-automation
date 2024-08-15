@@ -6,7 +6,6 @@ terraform {
     }
     jq = {
       source  = "massdriver-cloud/jq"
-      version = "0.2.0"
     }
     http-full = {
       source = "salrashid123/http-full"
