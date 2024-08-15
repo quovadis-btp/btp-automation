@@ -41,7 +41,7 @@ variable "BTP_KYMA_DRY_RUN" {
 variable "BTP_KYMA_PLAN" {
   type        = string
   description = "Plan name"
-  default     = "sap-converged-cloud"
+  default     = "trial"
 }
 
 variable "BTP_KYMA_NAME" {
@@ -110,4 +110,14 @@ variable "service_plan__build_workzone" {
 variable "emergency_admins" {
   type        = list(string)
   description = "Defines the colleagues who are added to each subaccount as emergency administrators."
+}
+
+variable "platform_admins" {
+  type        = list(string)
+  description = "Designates global account administrators as platform users."
+}
+
+variable "cluster_admins" {
+  type        = list(string)
+  description = "Designates kyma cluster administrators."
 }
