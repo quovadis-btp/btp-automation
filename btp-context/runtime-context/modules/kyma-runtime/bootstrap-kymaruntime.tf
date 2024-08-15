@@ -28,15 +28,15 @@ resource "btp_subaccount_environment_instance" "kyma" {
       list = [
         {
           name    = "api-gateway"
-          channel = "fast"
+          channel = "regular"
         },
         {
           name    = "istio"
-          channel = "fast"
+          channel = "regular"
         },
         {
           name    = "btp-operator"
-          channel = "fast"
+          channel = "regular"
         },
         {
             "name": "serverless",
