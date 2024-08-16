@@ -34,6 +34,7 @@ resource "btp_subaccount" "create_subaccount" {
 }
 
 data "btp_subaccount" "context" {
+  depends_on  = [btp_subaccount.create_subaccount]
   id = var.subaccount_id != "" ? var.subaccount_id : btp_subaccount.create_subaccount[0].id
 }
 
@@ -55,16 +56,22 @@ resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
 │ 
 │ Cannot delete last admin user of subaccount.
 ╵
-  
   */
-  depends_on           = [btp_subaccount.create_subaccount]
+  depends_on           = [data.btp_subaccount.context, btp_subaccount_trust_configuration.custom_idp]
 
   for_each             = toset("${var.emergency_admins}")
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Subaccount Administrator"
   user_name            = each.value
+  origin               = btp_subaccount_trust_configuration.custom_idp.origin
 }
 
+# custom identity provider
+data "btp_subaccount_trust_configuration" "custom_idp" {
+  depends_on    = [btp_subaccount_trust_configuration.custom_idp]
+  subaccount_id = data.btp_subaccount.context.id
+  origin        = btp_subaccount_trust_configuration.custom_idp.origin
+}
 
 /*
 # custom identity provider
@@ -79,6 +86,8 @@ resource "btp_subaccount_trust_configuration" "custom_idp" {
   
   name              = "${local.subaccount_name}"
 }
+
+
 */
 
 
