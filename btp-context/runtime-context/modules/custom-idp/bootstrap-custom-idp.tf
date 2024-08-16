@@ -42,7 +42,7 @@ resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Subaccount Administrator"
   user_name            = each.value
-  origin               = btp_subaccount_trust_configuration.custom_idp.origin
+  //origin               = btp_subaccount_trust_configuration.custom_idp.origin
 }
 
 
