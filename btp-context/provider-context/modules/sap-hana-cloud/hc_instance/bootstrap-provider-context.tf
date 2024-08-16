@@ -38,37 +38,18 @@ resource "local_file" "subaccount_id" {
 }
 
 resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
+  depends_on           = [data.btp_subaccount.context, btp_subaccount_trust_configuration.custom_idp]
+
   for_each             = toset("${var.emergency_admins}")
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Subaccount Administrator"
   user_name            = each.value
+  origin               = btp_subaccount_trust_configuration.custom_idp.origin
 }
+
 
 
 ## bootstrap custom idp trust for the provider subaccount
-
-# default identity provider
-data "btp_subaccount_trust_configuration" "default" {
-  subaccount_id = data.btp_subaccount.context.id
-  origin        = "sap.default"
-}
-
-
-/*
-# custom identity provider
-data "btp_globalaccount_trust_configuration" "custom" {
-  origin = var.origin
-}
-
-
-resource "btp_subaccount_trust_configuration" "custom_idp" {
-  subaccount_id     = data.btp_subaccount.context.id
-  identity_provider = var.idp != "" ? var.idp : data.btp_globalaccount_trust_configuration.custom.identity_provider
-  
-  name              = "${local.subaccount_name}"
-}
-*/
-
 
 resource "btp_subaccount_entitlement" "identity" {
   count         = var.idp == "" ? 1 : 0
@@ -89,6 +70,13 @@ resource "btp_subaccount_subscription" "identity_instance" {
     cloud_service = "PROD"
   })
 }
+
+data "btp_subaccount_trust_configuration" "custom_idp" {
+  depends_on    = [btp_subaccount_trust_configuration.custom_idp]
+  subaccount_id = data.btp_subaccount.context.id
+  origin        = btp_subaccount_trust_configuration.custom_idp.origin
+}
+
 
 resource "btp_subaccount_trust_configuration" "custom_idp" {
   subaccount_id     = data.btp_subaccount.context.id
