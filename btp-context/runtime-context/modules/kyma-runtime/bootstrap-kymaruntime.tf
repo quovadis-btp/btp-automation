@@ -45,6 +45,10 @@ resource "btp_subaccount_environment_instance" "kyma" {
         {
             "name": "connectivity-proxy",
             "channel": "regular"
+        },
+        {
+            "name": "cloud-manager",
+            "channel": "regular"
         }
       ]
     }
