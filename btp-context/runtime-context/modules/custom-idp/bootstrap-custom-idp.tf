@@ -36,10 +36,13 @@ resource "local_file" "subaccount_id" {
 }
 
 resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
+  depends_on           = [btp_subaccount_trust_configuration.custom_idp]
+
   for_each             = toset("${var.emergency_admins}")
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Subaccount Administrator"
   user_name            = each.value
+  origin               = btp_subaccount_trust_configuration.custom_idp.origin
 }
 
 
