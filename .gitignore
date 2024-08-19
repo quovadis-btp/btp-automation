@@ -17,4 +17,4 @@ btp-context/runtime-context/modules/custom-idp.sav/provider.tf
 btp-context/runtime-context/modules/custom-idp.sav/variables.tf
 .DS_Store
 /btp-context/runtime-context/modules/sap-kyma-runtime.sav
-/btp-context/runtime-context/modules/custom-idp.sav
+/btp-context/bootstrap-context/modules/custom-idp.sav
