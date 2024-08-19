@@ -16,3 +16,4 @@ btp-context/runtime-context/modules/custom-idp.sav/free-trial-kymaruntime-quota.
 btp-context/runtime-context/modules/custom-idp.sav/provider.tf
 btp-context/runtime-context/modules/custom-idp.sav/variables.tf
 .DS_Store
+/btp-context/runtime-context/modules/sap-kyma-runtime.sav
