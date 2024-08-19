@@ -23,3 +23,8 @@ output "dest_credentials" {
   sensitive = true
   value = jsondecode(module.provider_context.dest_credentials)
 }
+
+output "provider_k8s" {
+  sensitive = true
+  value = module.provider_context.provider_k8s["content"]
+}

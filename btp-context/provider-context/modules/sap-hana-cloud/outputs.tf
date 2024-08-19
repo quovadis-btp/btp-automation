@@ -18,3 +18,7 @@ output "hc_credentials_x509" {
 output "dest_credentials" {
   value = btp_subaccount_service_binding.dest_binding.credentials
 }
+
+output "provider_k8s" {
+  value = local_sensitive_file.provider_sm
+}
