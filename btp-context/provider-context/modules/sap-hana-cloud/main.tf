@@ -30,12 +30,13 @@ resource "btp_subaccount_entitlement" "tools" {
   plan_name     = var.hana_cloud_tools_plan_name
 }
 
+/*
 resource "btp_subaccount_entitlement" "destination" {
   subaccount_id = data.btp_subaccount.context.id
   service_name  = "destination"
   plan_name     = "lite"
 }
-
+*/
 
 resource "btp_subaccount_role_collection_assignment" "hana_admin" {
   subaccount_id        = data.btp_subaccount.context.id

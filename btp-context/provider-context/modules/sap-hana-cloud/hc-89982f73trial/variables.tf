@@ -43,14 +43,39 @@ variable "subaccount_id" {
   default     = ""
 }
 
-variable "admins" {
-  description = "The list of email addresses of the SAP BTP Subaccount Administrators"
-  type        = list(string)
+variable "service_plan__sap_build_apps" {
+  type        = string
+  description = "The plan for SAP Build Apps subscription"
+  default     = "free"
+  validation {
+    condition     = contains(["free", "standard", "partner"], var.service_plan__sap_build_apps)
+    error_message = "Invalid value for service_plan__sap_build_apps. Only 'free', 'standard' and 'partner' are allowed."
+  }
+}
+
+variable "service_plan__build_workzone" {
+  type        = string
+  description = "The plan for build_workzone subscription"
+  default     = "free"
+  validation {
+    condition     = contains(["free", "standard"], var.service_plan__build_workzone)
+    error_message = "Invalid value for service_plan__build_workzone. Only 'free' and 'standard' are allowed."
+  }
 }
 
 variable "emergency_admins" {
   type        = list(string)
   description = "Defines the colleagues who are added to each subaccount as emergency administrators."
+}
+
+variable "launchpad_admins" {
+  type        = list(string)
+  description = "Designates launchpad admins."
+}  
+
+variable "admins" {
+  description = "The list of email addresses of the SAP BTP Subaccount Administrators"
+  type        = list(string)
 }
 
 variable "region" {

@@ -46,6 +46,36 @@ variable "subaccount_id" {
   type        = string
 }
 
+variable "service_plan__sap_build_apps" {
+  type        = string
+  description = "The plan for SAP Build Apps subscription"
+  default     = "free"
+  validation {
+    condition     = contains(["free", "standard", "partner"], var.service_plan__sap_build_apps)
+    error_message = "Invalid value for service_plan__sap_build_apps. Only 'free', 'standard' and 'partner' are allowed."
+  }
+}
+
+variable "service_plan__build_workzone" {
+  type        = string
+  description = "The plan for build_workzone subscription"
+  default     = "free"
+  validation {
+    condition     = contains(["free", "standard"], var.service_plan__build_workzone)
+    error_message = "Invalid value for service_plan__build_workzone. Only 'free' and 'standard' are allowed."
+  }
+}
+
+variable "emergency_admins" {
+  type        = list(string)
+  description = "Defines the colleagues who are added to each subaccount as emergency administrators."
+}
+
+variable "launchpad_admins" {
+  type        = list(string)
+  description = "Designates launchpad admins."
+}
+
 variable "service_name" {
   description = "The name of the SAP HANA Cloud service"
   type        = string
@@ -80,11 +110,6 @@ variable "admins" {
   description = "List of users to assign the SAP HANA Cloud Administrator role"
   type        = list(string)
   default     = null
-}
-
-variable "emergency_admins" {
-  type        = list(string)
-  description = "Defines the colleagues who are added to each subaccount as emergency administrators."
 }
 
 variable "viewers" {

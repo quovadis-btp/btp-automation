@@ -24,8 +24,7 @@ module "provider_context" {
   admins                     = var.admins
   emergency_admins           = var.emergency_admins
   launchpad_admins           = var.launchpad_admins
-
-  service_plan__build_workzone = var.service_plan__build_workzone
+  
   subaccount_id              = var.subaccount_id
   whitelist_ips              = ["0.0.0.0/0"]
 }
