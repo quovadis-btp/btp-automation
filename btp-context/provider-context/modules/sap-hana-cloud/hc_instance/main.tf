@@ -1,6 +1,6 @@
 
 #
-module "sap_hana_cloud" {
+module "provider_context" {
   source                     = "../../sap-hana-cloud"
   service_name               = var.service_name
   plan_name                  = var.plan_name
