@@ -1,3 +1,4 @@
+
 # Define the input variables
 variable "globalaccount" {
   description = "The name of the SAP BTP Global Account"
@@ -36,50 +37,15 @@ variable "subdomain" {
   type        = string
 }
 
-variable "region" {
-  description = "The region of the SAP BTP Subaccount"
-  type        = string
-}
-
 variable "subaccount_id" {
-  description = "The ID of the subaccount"
   type        = string
-}
-
-variable "service_name" {
-  description = "The name of the SAP HANA Cloud service"
-  type        = string
-  default     = "hana-cloud-trial"       
-}
-
-variable "plan_name" {
-  description = "The name of the SAP HANA Cloud plan"
-  type        = string
-  default     = "hana"     
-}
-
-variable "instance_name" {
-  description = "The name of the SAP HANA Cloud instance"
-  type        = string
-  default     = "hc-trial"    
-}
-
-variable "hana_cloud_tools_app_name" {
-  description = "The name of the SAP HANA Cloud Tools application"
-  type        = string
-  default     = "hana-cloud-tools-trial"  
-}
-
-variable "hana_cloud_tools_plan_name" {
-  description = "The name of the SAP HANA Cloud Tools plan"
-  type        = string
-  default     = "tools"    
+  description = "The subaccount ID."
+  default     = ""
 }
 
 variable "admins" {
-  description = "List of users to assign the SAP HANA Cloud Administrator role"
+  description = "The list of email addresses of the SAP BTP Subaccount Administrators"
   type        = list(string)
-  default     = null
 }
 
 variable "emergency_admins" {
@@ -87,53 +53,47 @@ variable "emergency_admins" {
   description = "Defines the colleagues who are added to each subaccount as emergency administrators."
 }
 
-variable "viewers" {
-  description = "List of users to assign the SAP HANA Cloud Viewer role"
-  type        = list(string)
-  default     = null
+variable "region" {
+  description = "The region of the SAP BTP Subaccount"
+  type        = string
 }
 
-variable "security_admins" {
-  description = "List of users to assign the SAP HANA Cloud Security Administrator role"
-  type        = list(string)
-  default     = null
+variable "service_name" {
+  description = "The name of the SAP HANA Cloud service"
+  type        = string
+}
+
+variable "plan_name" {
+  description = "The name of the SAP HANA Cloud plan"
+  type        = string
+}
+
+variable "instance_name" {
+  description = "The name of the SAP HANA Cloud instance"
+  type        = string
+}
+
+variable "hana_cloud_tools_app_name" {
+  description = "The name of the SAP HANA Cloud Tools application"
+  type        = string
+}
+
+variable "hana_cloud_tools_plan_name" {
+  description = "The name of the SAP HANA Cloud Tools plan"
+  type        = string
 }
 
 variable "memory" {
-  description = "The memory size of the SAP HANA Cloud instance"
+  description = "Memory size of the SAP HANA Cloud instance"
   type        = number
-  default     = 16
 }
 
 variable "vcpu" {
-  description = "The number of vCPUs of the SAP HANA Cloud instance"
+  description = "Number of vCPUs of the SAP HANA Cloud instance"
   type        = number
-  default     = 1
 }
 
 variable "storage" {
   description = "Storage size of the SAP HANA Cloud instance"
   type        = number
-  default     = 80
-}
-
-variable "database_mappings" {
-  description = "The database mapping for the SAP HANA Cloud instance"
-  type = list(object({
-    organization_guid = string
-    space_guid        = string
-  }))
-  default = null
-}
-
-variable "labels" {
-  description = "The labels of the SAP HANA Cloud instance"
-  type        = map(string)
-  default     = {}
-}
-
-variable "whitelist_ips" {
-  description = "The list of IP addresses to whitelist"
-  type        = list(string)
-  default     = []
 }

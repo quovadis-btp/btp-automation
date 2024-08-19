@@ -19,26 +19,26 @@ locals {
 }
 
 resource "btp_subaccount_entitlement" "hana_cloud" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   service_name  = var.service_name
   plan_name     = var.plan_name
 }
 
 resource "btp_subaccount_entitlement" "tools" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   service_name  = var.hana_cloud_tools_app_name
   plan_name     = var.hana_cloud_tools_plan_name
 }
 
 resource "btp_subaccount_entitlement" "destination" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   service_name  = "destination"
   plan_name     = "lite"
 }
 
 
 resource "btp_subaccount_role_collection_assignment" "hana_admin" {
-  subaccount_id        = var.subaccount_id
+  subaccount_id        = data.btp_subaccount.context.id
   for_each             = var.admins == null ? {} : { for user in var.admins : user => user }
   role_collection_name = "SAP HANA Cloud Administrator"
   user_name            = each.value
@@ -48,7 +48,7 @@ resource "btp_subaccount_role_collection_assignment" "hana_admin" {
 }
 
 resource "btp_subaccount_role_collection_assignment" "hana_viewer" {
-  subaccount_id        = var.subaccount_id
+  subaccount_id        = data.btp_subaccount.context.id
   for_each             = var.viewers == null ? {} : { for user in var.viewers : user => user }
   role_collection_name = "SAP HANA Cloud Viewer"
   user_name            = each.value
@@ -58,7 +58,7 @@ resource "btp_subaccount_role_collection_assignment" "hana_viewer" {
 }
 
 resource "btp_subaccount_role_collection_assignment" "hana_security_admin" {
-  subaccount_id        = var.subaccount_id
+  subaccount_id        = data.btp_subaccount.context.id
   for_each             = var.security_admins == null ? {} : { for user in var.security_admins : user => user }
   role_collection_name = "SAP HANA Cloud Security Administrator"
   user_name            = each.value
@@ -68,21 +68,21 @@ resource "btp_subaccount_role_collection_assignment" "hana_security_admin" {
 }
 
 resource "btp_subaccount_subscription" "hana_cloud_tools" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   app_name      = var.hana_cloud_tools_app_name
   plan_name     = var.hana_cloud_tools_plan_name
   depends_on    = [btp_subaccount_entitlement.tools]
 }
 
 data "btp_subaccount_subscription" "hana_cloud_tools_data" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   app_name      = var.hana_cloud_tools_app_name
   plan_name     = var.hana_cloud_tools_plan_name
   depends_on    = [btp_subaccount_entitlement.tools]
 }
 
 data "btp_subaccount_service_plan" "my_hana_plan" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   name          = var.plan_name
   offering_name = var.service_name
   depends_on = [
@@ -93,7 +93,7 @@ data "btp_subaccount_service_plan" "my_hana_plan" {
 # Create or Update an SAP HANA Cloud database instance
 resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance" {
   count = var.database_mappings == null ? 1 : 0
-  subaccount_id  = var.subaccount_id
+  subaccount_id  = data.btp_subaccount.context.id
   serviceplan_id = data.btp_subaccount_service_plan.my_hana_plan.id
   name           = var.instance_name
   parameters = jsonencode({
@@ -111,7 +111,7 @@ resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance" {
 
 resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance_with_mappings" {
   count = var.database_mappings == null ? 0 : 1
-  subaccount_id  = var.subaccount_id
+  subaccount_id  = data.btp_subaccount.context.id
   serviceplan_id = data.btp_subaccount_service_plan.my_hana_plan.id
   name           = var.instance_name
   parameters = jsonencode({
@@ -129,7 +129,7 @@ resource "btp_subaccount_service_instance" "my_sap_hana_cloud_instance_with_mapp
 
 # look up a service instance by its name and subaccount ID
 data "btp_subaccount_service_instance" "my_hana_service" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   name          = var.instance_name
   depends_on = [
     btp_subaccount_service_instance.my_sap_hana_cloud_instance[0]
@@ -139,7 +139,7 @@ data "btp_subaccount_service_instance" "my_hana_service" {
 
 # create a service binding in a subaccount
 resource "btp_subaccount_service_binding" "hc_binding_dbadmin" {
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = data.btp_subaccount_service_instance.my_hana_service.id
   name                = "hc-binding-dbadmin"
   parameters = jsonencode({
@@ -154,7 +154,7 @@ resource "btp_subaccount_service_binding" "hc_binding_dbadmin" {
 
 # create a service binding in a subaccount
 resource "btp_subaccount_service_binding" "hc_binding" {
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = data.btp_subaccount_service_instance.my_hana_service.id
   name                = "hc-binding"
   depends_on = [
@@ -164,7 +164,7 @@ resource "btp_subaccount_service_binding" "hc_binding" {
 
 # create a parameterized service binding in a subaccount
 resource "btp_subaccount_service_binding" "hc_binding_x509" {
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = data.btp_subaccount_service_instance.my_hana_service.id
   name                = "hc-binding-x509"
   parameters = jsonencode({
@@ -178,7 +178,7 @@ resource "btp_subaccount_service_binding" "hc_binding_x509" {
 
 
 data "btp_subaccount_service_plan" "dest_lite" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   name          = "lite"
   offering_name = "destination"
   depends_on    = [btp_subaccount_entitlement.destination]
@@ -186,7 +186,7 @@ data "btp_subaccount_service_plan" "dest_lite" {
 
 
 resource "btp_subaccount_service_instance" "dest_bootstrap" {
-  subaccount_id  = var.subaccount_id
+  subaccount_id  = data.btp_subaccount.context.id
   serviceplan_id = data.btp_subaccount_service_plan.dest_lite.id
   name           = "dest_bootstrap"
 }
@@ -196,7 +196,7 @@ resource "btp_subaccount_service_instance" "dest_provider" {
     btp_subaccount_service_instance.my_sap_hana_cloud_instance[0]
   ]
 
-  subaccount_id  = var.subaccount_id
+  subaccount_id  = data.btp_subaccount.context.id
   serviceplan_id = data.btp_subaccount_service_plan.dest_lite.id
   name           = "dest_provider"
   parameters     = jsonencode({
@@ -313,7 +313,7 @@ resource "btp_subaccount_service_instance" "dest_provider" {
 
 # create a service binding in a subaccount
 resource "btp_subaccount_service_binding" "dest_binding" {
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = btp_subaccount_service_instance.dest_bootstrap.id
   name                = "dest-binding"
 
@@ -325,7 +325,7 @@ resource "btp_subaccount_service_binding" "dest_binding" {
 
 # create a service binding data source
 data "btp_subaccount_service_binding" "dest_binding_data" {
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   name                = "dest-binding"
     
   depends_on = [

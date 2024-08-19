@@ -1,6 +1,6 @@
 
 resource "btp_subaccount_entitlement" "sm" {
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   service_name  = "service-manager"
   plan_name     = "service-operator-access"
 }
@@ -8,7 +8,7 @@ resource "btp_subaccount_entitlement" "sm" {
 data "btp_subaccount_service_plan" "sm" {
   depends_on     = [btp_subaccount_entitlement.sm]
 
-  subaccount_id = var.subaccount_id
+  subaccount_id = data.btp_subaccount.context.id
   offering_name = "service-manager"
   name          = "service-operator-access"
 }
@@ -17,7 +17,7 @@ data "btp_subaccount_service_plan" "sm" {
 resource "btp_subaccount_service_instance" "provider-k8s" {
   depends_on     = [btp_subaccount_entitlement.sm]
 
-  subaccount_id  = var.subaccount_id
+  subaccount_id  = data.btp_subaccount.context.id
   name           = "provider-k8s"
   serviceplan_id = data.btp_subaccount_service_plan.sm.id
 
@@ -29,7 +29,7 @@ resource "btp_subaccount_service_instance" "provider-k8s" {
 resource "btp_subaccount_service_binding" "provider_sm" {
   depends_on          = [btp_subaccount_service_instance.provider-k8s]
   
-  subaccount_id       = var.subaccount_id
+  subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = btp_subaccount_service_instance.provider-k8s.id
   name                = "provider-sm-binding"
 }

@@ -19,3 +19,5 @@ btp-context/runtime-context/modules/custom-idp.sav/variables.tf
 /btp-context/runtime-context/modules/sap-kyma-runtime.sav
 /btp-context/bootstrap-context/modules/custom-idp.sav
 btp-context/provider-context/modules/sap-hana-cloud/hc_instance/provider_sm.json
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/provider_sm.json
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/subaccount_id.txt
