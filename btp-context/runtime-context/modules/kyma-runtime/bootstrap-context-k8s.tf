@@ -1,4 +1,3 @@
-resource "random_uuid" "uuid" {}
 
 # https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id
 resource "random_id" "context_id" {
@@ -7,12 +6,9 @@ resource "random_id" "context_id" {
 }
 
 locals {
-  random_uuid       = random_uuid.uuid.result
   context_id        = random_id.context_id.hex
   subaccount_domain = lower("${var.BTP_SUBACCOUNT}-${local.context_id}")
   subaccount_name   = lower("${var.BTP_SUBACCOUNT}-${local.context_id}")
-  #subaccount_domain = lower("${var.BTP_SUBACCOUNT}-${local.random_uuid}")
-  #subaccount_name   = lower("${var.BTP_SUBACCOUNT}-${local.random_uuid}")
   region            = lower("${var.BTP_SA_REGION}")
 }
 
@@ -21,7 +17,7 @@ locals {
 # https://github.com/SAP-samples/btp-terraform-samples/blob/main/released/discovery_center/mission_3061/step1/main.tf#L6
 ###############################################################################################
 resource "btp_subaccount" "create_subaccount" {
-  count     = var.subaccount_id == "" ? 1 : 0
+  count       = var.subaccount_id == "" ? 1 : 0
 
   name        = local.subaccount_name
   subdomain   = local.subaccount_domain
@@ -34,7 +30,7 @@ resource "btp_subaccount" "create_subaccount" {
 }
 
 data "btp_subaccount" "context" {
-  depends_on  = [btp_subaccount.create_subaccount]
+#  depends_on  = [btp_subaccount.create_subaccount]
   id = var.subaccount_id != "" ? var.subaccount_id : btp_subaccount.create_subaccount[0].id
 }
 
@@ -57,7 +53,7 @@ resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
 │ Cannot delete last admin user of subaccount.
 ╵
   */
-  depends_on           = [data.btp_subaccount.context, btp_subaccount_trust_configuration.custom_idp]
+  depends_on           = [btp_subaccount_trust_configuration.custom_idp]
 
   for_each             = toset("${var.emergency_admins}")
   subaccount_id        = data.btp_subaccount.context.id
