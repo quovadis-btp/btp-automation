@@ -1,5 +1,5 @@
 
-module "custom_idp" {
+module "runtime_context" {
   source             = "../../kyma-runtime"
 
   BTP_GLOBAL_ACCOUNT = var.BTP_GLOBAL_ACCOUNT
