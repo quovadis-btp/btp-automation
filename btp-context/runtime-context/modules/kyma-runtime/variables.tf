@@ -62,30 +62,11 @@ variable "BTP_CUSTOM_IDP" {
   default     = ""
 }
 
-variable "BTP_CUSTOM_IAS_TENANT" {
-  type        = string
-  description = "Custom IAS tenant"
-  default     = ""
-}
-
-variable "BTP_CUSTOM_IAS_DOMAIN" {
-  type        = string
-  description = "Custom IAS domain"
-  default     = ""
-}
-
 variable "BTP_KYMA_REGION" {
   type        = string
   description = "Kyma region"
   default     = "eu-de-1"
 }
-
-variable "BTP_PROVIDER_SUBACCOUNT_ID" {
-  type        = string
-  description = "Subaccount ID"
-  default     = "subaccount-id"
-}
-
 
 variable "service_plan__sap_build_apps" {
   type        = string

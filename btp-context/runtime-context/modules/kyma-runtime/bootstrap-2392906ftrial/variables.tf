@@ -26,6 +26,12 @@ variable "BTP_SUBACCOUNT" {
   description = "Subaccount name"
 }
 
+variable "subaccount_id" {
+  type        = string
+  description = "The subaccount ID."
+  default     = ""
+}
+
 variable "BTP_KYMA_DRY_RUN" {
   type        = bool
   description = "do not create kyma environment"
@@ -62,13 +68,6 @@ variable "BTP_KYMA_REGION" {
   default     = "eu-de-1"
 }
 
-variable "BTP_PROVIDER_SUBACCOUNT_ID" {
-  type        = string
-  description = "Subaccount ID"
-  default     = "subaccount-id"
-}
-
-
 variable "service_plan__sap_build_apps" {
   type        = string
   description = "The plan for SAP Build Apps subscription"
@@ -102,4 +101,29 @@ variable "launchpad_admins" {
 variable "cluster_admins" {
   type        = list(string)
   description = "Designates kyma cluster administrators."
+}
+
+variable "argocd_username" {
+  type        = string
+  description = "argocd technical user name"
+}
+
+variable "argocd_password" {
+  type        = string
+  description = "argocd technical user password"
+}
+
+variable "argocd_clientid" {
+  type        = string
+  description = "argocd OIDC provider client id"
+}
+
+variable "argocd_tokenurl" {
+  type        = string
+  description = "argocd token URL"
+}
+
+variable "argocd_url" {
+  type        = string
+  description = "ArgoCDaaS backend URL"
 }

@@ -18,4 +18,11 @@ module "runtime_context" {
   BTP_KYMA_DRY_RUN   = var.BTP_KYMA_DRY_RUN
 
   service_plan__build_workzone = var.service_plan__build_workzone
+
+  argocd_username    = var.argocd_username
+  argocd_password    = var.argocd_password
+  argocd_tokenurl    = var.argocd_tokenurl
+  argocd_clientid    = var.argocd_clientid
+
+  argocd_url         = var.argocd_url
 }
