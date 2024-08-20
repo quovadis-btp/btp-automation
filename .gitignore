@@ -29,3 +29,6 @@ btp-context/provider-context/modules/sap-hana-cloud/hc_instance/cis-secret.json
 /btp-context/runtime-context/modules/custom-idp.sav
 btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap.sh.sav
 btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap2.sh
+btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap-cluster.mk
+btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/pubkey.pem
+btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/toto.cert
