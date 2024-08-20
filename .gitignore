@@ -27,3 +27,5 @@ btp-context/provider-context/modules/sap-hana-cloud/hc-rthtiosouji/subaccount_id
 btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/cis-secret.json
 btp-context/provider-context/modules/sap-hana-cloud/hc_instance/cis-secret.json
 /btp-context/runtime-context/modules/custom-idp.sav
+btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap.sh.sav
+btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap2.sh
