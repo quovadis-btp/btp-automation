@@ -121,3 +121,28 @@ variable "cluster_admins" {
   type        = list(string)
   description = "Designates kyma cluster administrators."
 }
+
+variable "argocd_username" {
+  type        = string
+  description = "argocd technical user name"
+}
+
+variable "argocd_password" {
+  type        = string
+  description = "argocd technical user password"
+}
+
+variable "argocd_clientid" {
+  type        = string
+  description = "argocd OIDC provider client id"
+}
+
+variable "argocd_tokenurl" {
+  type        = string
+  description = "argocd token URL"
+}
+
+variable "argocd_url" {
+  type        = string
+  description = "ArgoCDaaS backend URL"
+}
