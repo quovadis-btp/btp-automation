@@ -88,7 +88,20 @@ resource "terraform_data" "replacement" {
 }
 
 # https://stackoverflow.com/questions/21297853/how-to-determine-ssl-cert-expiration-date-from-a-pem-encoded-certificate
-#
+# https://tldp.org/LDP/abs/html/process-sub.html
+/*
+      if openssl x509 -checkend 86400 -noout -in <(echo "${local.bot_certificate}" )
+      then
+        echo "Certificate is good for another day!" 
+      else
+        echo "Certificate has expired or will do so within 24 hours!" 
+        echo "(or is invalid/not found)" 
+      fi
+      echo "${local.bot_certificate}" | openssl x509 -checkend 86400
+
+
+*/
+
 resource "terraform_data" "check-cert" {
   triggers_replace = {
     always_run = "${timestamp()}"
@@ -97,17 +110,18 @@ resource "terraform_data" "check-cert" {
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
-     (
-     set -e -o pipefail ;\
-      if openssl x509 -checkend 86400 -noout -in ${local.bot-cert.certificate}
+   (
+      set -e -o pipefail   
+      echo "${local.bot_certificate}" | openssl x509 -text -noout
+      if openssl x509 -checkend 3600 -noout -in <(echo "${local.bot_certificate}" )
       then
-        echo "Certificate is good for another day!"
+        echo "Certificate is good for at least another hour!" 
       else
-        echo "Certificate has expired or will do so within 24 hours!"
-        echo "(or is invalid/not found)"
+        echo "Certificate has expired or will do so within 1 hour!" 
       fi
-     )
-   EOF
+
+    ) 
+ EOF
  }
 }
 
@@ -138,6 +152,11 @@ resource "btp_subaccount_service_binding" "ias-bot-binding-cert" {
 
 locals {
   bot-cert = jsondecode(btp_subaccount_service_binding.ias-bot-binding-cert.credentials)
+  bot_certificate = nonsensitive(local.bot-cert.certificate) 
+}
+
+output "bot_certificate" {
+  value = local.bot_certificate
 }
 
 resource "local_sensitive_file" "bot-cert" {
