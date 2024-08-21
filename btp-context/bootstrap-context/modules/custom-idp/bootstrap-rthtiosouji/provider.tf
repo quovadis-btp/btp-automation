@@ -7,6 +7,15 @@ terraform {
   }
 }
 
+terraform {
+  backend "kubernetes" {
+    secret_suffix = "state-rthtiosouji"
+    config_path   = "~/.kube/kubeconfig--c-4860efd-default.yaml"
+    namespace     = "tf-bootstrap-context"
+  }
+}
+
+
 provider "btp" {
   globalaccount = var.globalaccount
   username      = var.username
