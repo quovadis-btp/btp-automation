@@ -41,4 +41,24 @@ Both cf and k8s runtimes can be used jointly or seperately in their respective r
   * https://stackoverflow.com/questions/75840856/how-to-trigger-resource-replacement-in-terraform-if-resource-atrtibute-changed
   * https://xebia.com/blog/replace-terraform-resources-based-on-other-changes-with-replace-triggered-by/
   * https://developer.hashicorp.com/terraform/language/resources/terraform-data
-  * 
+  * https://developer.hashicorp.com/terraform/language/resources/terraform-data#output
+  * https://developer.hashicorp.com/terraform/language/resources/terraform-data#example-usage-null_resource-replacement
+  * https://developer.hashicorp.com/terraform/language/functions/nonsensitive
+  * https://balaskas.gr/blog/2022/11/11/gitlab-as-a-terraform-state-backend/
+  * https://medium.com/@vinoji2005/using-terraform-with-kubernetes-a-comprehensive-guide-237f6bbb0586
+  * https://developer.hashicorp.com/terraform/language/settings/backends/kubernetes
+  * https://spacelift.io/blog/terraform-alternatives#1-opentofu
+  * https://developer.hashicorp.com/terraform/language/state/remote-state-data#the-terraform_remote_state-data-source
+  * https://ourcloudschool.medium.com/read-terraform-provisioned-resources-with-terraform-remote-state-datasource-ab9cf882ab63
+  * https://spacelift.io/blog/terraform-remote-state
+  * https://developer.hashicorp.com/terraform/tutorials/state/troubleshooting-workflow#correct-a-for_each-error
+  * https://kodekloud.com/blog/terraform-for_each/#:~:text=for_each%20is%20commonly%20used%20to,%2C%20data%2C%20or%20module%20blocks.
+  * https://developer.hashicorp.com/terraform/tutorials/configuration-language/for-each
+  * https://developer.hashicorp.com/terraform/language/meta-arguments/for_each
+
+  * https://github.com/eugenp/tutorials/blob/master/linux-bash-modules/linux-bash-json/src/main/bash/jq.sh
+  * https://ec.haxx.se/how-to-read.html
+  * https://jqlang.github.io/jq/manual/
+  * https://kubernetes.io/blog/2023/08/21/kubernetes-1-28-jobapi-update/#pod-replacement-policy
+
+  * https://help.sap.com/docs/btp/sap-business-technology-platform/provisioning-and-update-parameters-in-kyma-environment#loioe2e13bfaa2f54a4fb179f0f1f840353a__section_Machine_Type
