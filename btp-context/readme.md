@@ -55,6 +55,7 @@ Both cf and k8s runtimes can be used jointly or seperately in their respective r
   * https://kodekloud.com/blog/terraform-for_each/#:~:text=for_each%20is%20commonly%20used%20to,%2C%20data%2C%20or%20module%20blocks.
   * https://developer.hashicorp.com/terraform/tutorials/configuration-language/for-each
   * https://developer.hashicorp.com/terraform/language/meta-arguments/for_each
+  * https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax
 
   * https://github.com/eugenp/tutorials/blob/master/linux-bash-modules/linux-bash-json/src/main/bash/jq.sh
   * https://ec.haxx.se/how-to-read.html
