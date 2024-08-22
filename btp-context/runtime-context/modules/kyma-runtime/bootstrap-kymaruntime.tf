@@ -23,7 +23,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
   environment_type = "kyma"
   service_name     = btp_subaccount_entitlement.kymaruntime.service_name
   plan_name        = btp_subaccount_entitlement.kymaruntime.plan_name
-  parameters = jsonencode({
+  parameters       = jsonencode({
     modules = {
       list = [
         {
