@@ -82,10 +82,11 @@ resource "local_sensitive_file" "bot" {
 
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data#argument-reference
 #
+
 resource "terraform_data" "replacement" {
-# if openssl x509 -checkend 86400 -noout -in file.pem
   input = "${timestamp()}"
 }
+
 
 # https://stackoverflow.com/questions/21297853/how-to-determine-ssl-cert-expiration-date-from-a-pem-encoded-certificate
 # https://tldp.org/LDP/abs/html/process-sub.html
@@ -103,10 +104,11 @@ resource "terraform_data" "replacement" {
 */
 
 resource "terraform_data" "check-cert" {
+
   triggers_replace = {
     always_run = "${timestamp()}"
   }
-
+  
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
@@ -119,7 +121,6 @@ resource "terraform_data" "check-cert" {
       else
         echo "Certificate has expired or will do so within 1 hour!" 
       fi
-
     ) 
  EOF
  }
