@@ -5,6 +5,10 @@ bootstrap context
 
 Bootstrap a global account to make it ready for contextual automation
 
+<img width="1695" alt="image" src="https://github.com/user-attachments/assets/326f2e3c-d7bf-4fcf-b177-6834d63d8577">
+
+
+
 ```
 terraform init -upgrade                             
 Initializing the backend...
