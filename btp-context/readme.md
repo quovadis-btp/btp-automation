@@ -1,12 +1,15 @@
 btp contexts
 =============
 
-BTP contexts are a way of defining logical entities to host amd implement various contexts.  
+BTP contexts are a way of defining logical entities to host amd implement various contexts, namely bootstrap, runtime, provider and consumer.  
 
-The main idea behind is to break silos of global account, subaccounts across different regions and break free from 
+The main idea behind the contexts is to break silos of global account, subaccounts across different regions and break free from 
 the rigidity of the cloud foundry runtime org structure.
 
-Having said that both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
+In a nutshell, contexts are declarative entities, defined as terraform scripts and orchestrated by CI/CD pipelines. 
+
+PS.
+Both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
 
 
 
