@@ -41,7 +41,9 @@ resource "btp_subaccount_environment_instance" "kyma" {
         {
             "name": "serverless",
             "channel": "regular"
-        },
+        }
+        /*
+        ,
         {
             "name": "connectivity-proxy",
             "channel": "regular"
@@ -50,6 +52,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
             "name": "cloud-manager",
             "channel": "regular"
         }
+        */
       ]
     }
     oidc = {
@@ -65,7 +68,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
     administrators = var.cluster_admins
   })
   timeouts = {
-    create = "30m"
+    create = "40m"
     update = "30m"
     delete = "60m"
   }
@@ -192,9 +195,222 @@ resource "terraform_data" "kubectl_getnodes" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
      (
-     set -e -o pipefail ;\
-     echo "${local.kubeconfig}" > kubeconfig-headless.yaml ;\
-     echo | kubectl get nodes --kubeconfig kubeconfig-headless.yaml ;\
+    set -e -o pipefail ;\
+    echo "${local.kubeconfig}" > kubeconfig-headless.yaml ;\
+    echo | kubectl get nodes --kubeconfig kubeconfig-headless.yaml ;\
+     )
+   EOF
+ }
+}
+
+# https://www.gnu.org/software/bash/manual/bash.html
+resource "terraform_data" "argocd_bootstrap" {
+
+/*
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.replacement
+    ]
+  }
+ */ 
+  
+  triggers_replace = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes,
+        local_sensitive_file.argocd_config
+  ]
+
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = "${path.module}/argocd-bootstrap.sh"
+ }
+}
+
+
+data "http" "argocd_token" {
+  url = "${var.argocd_tokenurl}"
+  method = "POST"
+  request_headers = {
+    Content-Type  = "application/x-www-form-urlencoded"
+  }  
+  request_body = "grant_type=password&username=${var.argocd_username}&password=${var.argocd_password}&client_id=${var.argocd_clientid}&scope=groups,email"
+}
+
+locals {
+  argocd_config = jsonencode({
+
+    "contexts": [
+        {
+            "name": "${var.argocd_url}",
+            "server": "${var.argocd_url}",
+            "user": "${var.argocd_url}"
+        }
+    ],
+    "current-context": "${var.argocd_url}",
+    "servers": [
+        {
+            "grpc-web-root-path": "",
+            "server": "${var.argocd_url}"
+        }
+    ],
+    "users": [
+        {
+            "auth-token": jsondecode(data.http.argocd_token.response_body).id_token,
+            "name": "${var.argocd_url}",
+            "refresh-token": jsondecode(data.http.argocd_token.response_body).refresh_token
+        }
+    ]
+  })
+}
+
+resource "local_sensitive_file" "argocd_config" {
+  content         = local.argocd_config
+  file_permission = "0600"
+  filename        = "argocd_config.json"
+}
+
+
+# https://discuss.hashicorp.com/t/is-there-any-way-to-inspect-module-variables-and-outputs/25702
+#
+output "argocd_config" {
+  value = local.argocd_config
+}
+
+/*
+// the argo_cd information could be fetched from the argocd service bindings - TO DO
+// 
+data "external" "argocd-bootstrap" {
+  depends_on = [
+         terraform_data.kubectl_getnodes
+     ]
+
+  program = ["bash", "${path.module}/argocd-bootstrap2.sh"]
+
+  query = {
+    username = "${var.argocd_username}"
+    password = "${var.argocd_password}"
+    token = "${var.argocd_tokenurl}"
+    host = "${var.argocd_url}"
+    client_id = "${var.argocd_clientid}"
+  }
+}
+*/
+
+/*  
+resource "btp_subaccount_entitlement" "postgresql" {
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "postgresql-db"
+  plan_name     = "trial"
+  amount        = 1
+}
+*/
+
+resource "terraform_data" "egress_ips" {
+
+/*
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+*/
+
+  triggers_replace = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes
+  ]
+
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    set -e -o pipefail ;\
+    for zone in $(kubectl get nodes --kubeconfig kubeconfig-headless.yaml -o 'custom-columns=NAME:.metadata.name,REGION:.metadata.labels.topology\.kubernetes\.io/region,ZONE:.metadata.labels.topology\.kubernetes\.io/zone' -o json | jq -r '.items[].metadata.labels["topology.kubernetes.io/zone"]' | sort | uniq); do
+    overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
+    kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >>/tmp/cluster_ips 2>/dev/null
+    done
+    cat /tmp/cluster_ips
+    awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips
+    rm /tmp/cluster_ips
+     )
+   EOF
+ }
+}
+
+# https://developer.hashicorp.com/terraform/language/state/remote-state-data#the-terraform_remote_state-data-source
+#
+data "terraform_remote_state" "provider_context" {
+  backend = "kubernetes"
+  config = {
+    secret_suffix    = "state-89982f73trial"
+    config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
+    namespace        = "tf-provider-context"
+    load_config_file = true
+  }
+}
+
+/*
+resource "provider_context" "provider_k8s" {
+  provider_k8s = "${data.terraform_remote_state.provider_context.outputs.provider_k8s}"
+
+}*/
+
+locals {
+  provider_k8s = jsonencode(data.terraform_remote_state.provider_context.outputs.provider_k8s)
+
+}
+
+resource "terraform_data" "provider_context" {
+/*
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+*/
+
+  triggers_replace = [
+        terraform_data.kubectl_getnodes
+  ]
+/*
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    KUBECONFIG=kubeconfig-headless.yaml
+    NAMESPACE=quovadis-btp
+    set -e -o pipefail ;\
+    TOKEN=${local.provider_k8s}
+    echo | kubectl get nodes --kubeconfig $KUBECONFIG ;\
+    kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+    kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+    kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json > btp-service-operator-kyma.json
+    CONFIG=$(cat btp-service-operator-kyma.json | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
+    echo $CONFIG
+    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+    | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+     )
+   EOF
+ }
+
+*/
+
+
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    KUBECONFIG=kubeconfig-headless.yaml
+    NAMESPACE=quovadis-btp
+    set -e -o pipefail ;\
+    TOKEN=${local.provider_k8s}
+    echo | kubectl get nodes --kubeconfig $KUBECONFIG ;\
+    kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+    kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+    SECRET=$(kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
+    echo $SECRET
+    CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
+    echo $CONFIG
+    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+    | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
      )
    EOF
  }
