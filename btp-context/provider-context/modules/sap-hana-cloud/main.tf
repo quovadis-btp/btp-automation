@@ -18,6 +18,15 @@ locals {
   }
 }
 
+# adding postgresql-db entitlement (quota-based)
+resource "btp_subaccount_entitlement" "postgresql" {
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "postgresql-db"
+  plan_name     = "trial"
+  amount        = 1
+}
+
+
 resource "btp_subaccount_entitlement" "hana_cloud" {
   subaccount_id = data.btp_subaccount.context.id
   service_name  = var.service_name

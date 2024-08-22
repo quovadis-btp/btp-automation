@@ -35,6 +35,28 @@ data "external" "free-trial-kymaruntime-quota" {
   }
 }
 
+resource "terraform_data" "replacement" {
+  input = "${timestamp()}"
+}
+
+
+data "external" "free-trial-postgresql-quota" {
+  depends_on = [
+         terraform_data.replacement
+     ]
+
+
+  program = ["bash", "${path.module}/free-trial-kymaruntime-quota.sh"]
+
+  query = {
+    # arbitrary map from strings to strings, passed
+    # to the external program as the data query.
+    username = "${var.username}"
+    password = "${var.password}"
+    globalaccount = "${var.globalaccount}"
+    url = "https://cli.btp.cloud.sap" 
+  }
+}
 
 /*
 terraform console
