@@ -13,10 +13,18 @@ resource "btp_subaccount_entitlement" "kymaruntime" {
   amount        = 1
 }
 
-
+# https://developer.hashicorp.com/terraform/language/resources/provisioners/null_resource
+# https://serverfault.com/questions/988222/where-to-put-local-exec-command-to-run-before-terraform-destroy
+# https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#destroy-time-provisioners
+#
 resource "btp_subaccount_environment_instance" "kyma" {
   count            = var.BTP_KYMA_DRY_RUN ? 0 : 1
-  depends_on       = [btp_subaccount_service_binding.ias-local-binding, btp_subaccount_service_binding.ias-local-binding-secret, btp_subaccount_service_binding.ias-local-binding-cert, btp_subaccount_entitlement.connectivity]
+  depends_on       = [
+      btp_subaccount_service_binding.ias-local-binding, 
+      btp_subaccount_service_binding.ias-local-binding-secret, 
+      btp_subaccount_service_binding.ias-local-binding-cert, 
+      btp_subaccount_entitlement.connectivity
+  ]
 
   subaccount_id    = data.btp_subaccount.context.id
   name             = "${var.BTP_SUBACCOUNT}-kyma"
@@ -42,7 +50,6 @@ resource "btp_subaccount_environment_instance" "kyma" {
             "name": "serverless",
             "channel": "regular"
         }
-        /*
         ,
         {
             "name": "connectivity-proxy",
@@ -52,7 +59,6 @@ resource "btp_subaccount_environment_instance" "kyma" {
             "name": "cloud-manager",
             "channel": "regular"
         }
-        */
       ]
     }
     oidc = {
@@ -68,9 +74,41 @@ resource "btp_subaccount_environment_instance" "kyma" {
     administrators = var.cluster_admins
   })
   timeouts = {
-    create = "40m"
+    create = "60m"
     update = "30m"
     delete = "60m"
+  }
+
+/* 
+  // will need to make sure there is a valid kubeconfig at the time of resource destruction
+  //
+  provisioner "local-exec" {
+    # delete the connectivity proxy module if present
+    when        = destroy
+    on_failure  = continue
+
+    interpreter = ["/bin/bash", "-c"]
+     command = <<EOF
+       (
+      KUBECONFIG=kubeconfig-headless.yaml
+      MODULE_NAME=connectivity-proxy
+      kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json \
+      | jq 'del(.spec.modules[] | select(.name == "$MODULE_NAME" ) )'  | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
+      sleep 10
+       )
+     EOF
+  } 
+*/  
+}
+
+
+resource "terraform_data" "kyma" {
+  # Replacement of any instance of the cluster requires re-provisioning
+  triggers_replace = btp_subaccount_environment_instance.kyma[*]
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command = "echo 'terraform_data.kyma provisioner'"
   }
 }
 
@@ -112,12 +150,15 @@ locals {
 #
 data "jq_query" "kubeconfig" {
     data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
-    #query = "del(.users[] | .user | .exec)"
     query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { token: ${local.id_token} } }"
 }
 
 output "kubeconfig" {
   value = jsondecode(data.jq_query.kubeconfig.result)
+}
+
+output "kubeconfig_raw" {
+  value = data.jq_query.kubeconfig.result
 }
 
 resource "local_sensitive_file" "kubeconfig-headless" {
