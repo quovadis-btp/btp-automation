@@ -3,6 +3,9 @@ BTP landscapes automation. Applying context semantics.
 
 <img width="1109" alt="image" src="https://github.com/user-attachments/assets/bff29409-2b47-466f-9773-59c7ec977127">
 
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/742bc0db-512a-4b81-83c2-7dc9b1833f66">
+
+
 
 ### bootstrap a global account
 
