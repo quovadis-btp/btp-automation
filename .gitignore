@@ -32,3 +32,5 @@ btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap2.sh
 btp-context/runtime-context/modules/kyma-runtime/argocd-bootstrap-cluster.mk
 btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/pubkey.pem
 btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/toto.cert
+/btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/terraform-visual-report
+btp-context/runtime-context/modules/kyma-runtime/kyma-cluster/plan.out
