@@ -16,12 +16,17 @@ terraform
 
   * https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli  
   * https://github.com/hieven/terraform-visual?tab=readme-ov-file
+  * https://developer.hashicorp.com/terraform/tutorials/state/refresh
 
 ```
 terraform plan -var-file="89982f73trial/btp-trial.tfvars" -out=plan.out
 terraform show -json plan.out > plan.json
 terraform-visual --plan plan.json
 open terraform-visual-report/index.html
+
+
+
+kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --kubeconfig ~/.kube/kubeconfig--c-4860efd-default.yaml -o jsonpath="{.data.tfstate}" | base64 -d | gzip -d > toto.json
 ```
 
 ### Useful links  
