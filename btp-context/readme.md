@@ -32,6 +32,8 @@ open terraform-visual-report/index.html
 ```
 terraform graph --help
 terraform graph -type=plan | dot -Tpng -o graph.png
+
+terraform graph -draw-cycles | dot -Tpng -o graph.png
 ```
 
 ### Keeping the terraform state in a Kubernetes Secret  
