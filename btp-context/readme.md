@@ -23,11 +23,19 @@ terraform plan -var-file="89982f73trial/btp-trial.tfvars" -out=plan.out
 terraform show -json plan.out > plan.json
 terraform-visual --plan plan.json
 open terraform-visual-report/index.html
+```
+![image](https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf)
 
 
+### Keeping the terraform state in a Kubernetes Secret  
 
+  * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
+```
 kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --kubeconfig ~/.kube/kubeconfig--c-4860efd-default.yaml -o jsonpath="{.data.tfstate}" | base64 -d | gzip -d > toto.json
 ```
+
+
+
 
 ### Useful links  
   * https://spacelift.io/blog/terraform-best-practices
