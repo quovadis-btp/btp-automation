@@ -9,7 +9,7 @@ the rigidity of the cloud foundry runtime org structure.
 In a nutshell, contexts are declarative entities, defined as terraform scripts and orchestrated by CI/CD pipelines. 
 
 
-# Useful links
+# Useful links  
 
   * https://spacelift.io/blog/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content/tree/master/terraform-best-practices
@@ -20,7 +20,6 @@ In a nutshell, contexts are declarative entities, defined as terraform scripts a
   * https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
   * https://developers.sap.com/tutorials/btp-terraform-get-started.html
   * https://github.com/aydin-ozcan/terraform-btp-sap-btp-entitlements/tree/main
-  * 
 
   * https://spacelift.io/blog/terraform-ignore-changes
   * https://spacelift.io/blog/terraform-yaml#what-is-the-yamldecode-function-in-terraform
