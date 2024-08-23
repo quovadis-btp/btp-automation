@@ -9,6 +9,21 @@ the rigidity of the cloud foundry runtime org structure.
 In a nutshell, contexts are declarative entities, defined as terraform scripts and orchestrated by CI/CD pipelines. 
 
 
+terraform
+========
+
+### Terraform Visual CLI  
+
+  * https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli  
+  * https://github.com/hieven/terraform-visual?tab=readme-ov-file
+
+```
+terraform plan -var-file="89982f73trial/btp-trial.tfvars" -out=plan.out
+terraform show -json plan.out > plan.json
+terraform-visual --plan plan.json
+open terraform-visual-report/index.html
+```
+
 ### Useful links  
   * https://spacelift.io/blog/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content/tree/master/terraform-best-practices
