@@ -40,4 +40,4 @@ module "provider_context" {
 
 ### Outputs
 
-
+<img width="1292" alt="image" src="https://github.com/user-attachments/assets/4f0c8cdd-a22e-4b95-8b70-a3569e7175c5">
