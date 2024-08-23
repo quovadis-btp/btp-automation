@@ -36,6 +36,19 @@ Terraform has been successfully initialized!
 
 ``` 
 
+PS.
+Both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
+
+
+
+[cf architecture](https://docs.cloudfoundry.org/concepts/architecture/)  
+![image](https://github.com/user-attachments/assets/83226447-29d4-4ae4-89d7-47354154dd9f)
+
+
+[k8s architecture](https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams)  
+![image](https://github.com/user-attachments/assets/649532ff-d679-4ea9-884d-c3fbd6edc528)
+
+
 ### configure provider context
 
 
