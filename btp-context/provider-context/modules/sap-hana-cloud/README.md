@@ -1,8 +1,7 @@
 # Terraform provider_context module
 
 This Terraform module provisions and manages providr context resources on the SAP Business Technology Platform (BTP). 
-It simplifies the process of setting up SAP HANA Cloud databases, assigning role collections, and managing entitlements within a subaccount.
-
+It simplifies the process of setting up SAP HANA Cloud databases, destinations and all other BTP resources that may be required to implement a SaaS provider application 
 
 ### Module usage
 
