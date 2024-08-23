@@ -15,7 +15,7 @@ Terraform allows to plan, apply and maintain the desired state of the contextual
 This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
 Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.  
 
-For instance, the dedicated SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the BTP CLI API (on the server side).
+For instance, the dedicated SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the BTP CLI API (on the server side).  
 Additionally, each provider has its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
 For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/latest
 
