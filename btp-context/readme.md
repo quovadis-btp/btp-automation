@@ -1,16 +1,24 @@
 btp contexts
 =============
 
-BTP contexts are a way of defining logical entities to host amd implement various contexts, namely bootstrap, runtime, provider and consumer.  
+BTP contexts are a way of defining logical entities to host and implement various contexts, namely bootstrap, runtime, provider and consumer.  
 
-The main idea behind the contexts is to break silos of global account, subaccounts across different regions and break free from 
+The main idea behind the contexts is to break silos of global accounts with subaccounts across different regions and break free from 
 the rigidity of the cloud foundry runtime org structure.
 
-In a nutshell, contexts are declarative entities, defined as terraform scripts and orchestrated by CI/CD pipelines. 
+In a nutshell, contexts are declarative entities, defined as terraform scripts and, eventually, orchestrated by CI/CD pipelines. 
 
 
 terraform
 ========
+Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
+This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
+Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.  
+
+For instance, the dedicated SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging a BTP CLI server side API.  
+
+![287445_GettyImages-1251238553_small](https://github.com/user-attachments/assets/d8d10240-ea9d-458c-b4a3-892532b6f3eb)
+
 
 ### Terraform Visual CLI  
 
