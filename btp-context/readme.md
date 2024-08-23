@@ -9,8 +9,7 @@ the rigidity of the cloud foundry runtime org structure.
 In a nutshell, contexts are declarative entities, defined as terraform scripts and orchestrated by CI/CD pipelines. 
 
 
-# Useful links  
-
+### Useful links  
   * https://spacelift.io/blog/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content/tree/master/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content
