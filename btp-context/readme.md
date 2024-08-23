@@ -27,6 +27,13 @@ open terraform-visual-report/index.html
 ![image](https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf)
 
 
+### terraform graph
+
+```
+terraform graph --help
+terraform graph -type=plan | dot -Tpng -o graph.png
+```
+
 ### Keeping the terraform state in a Kubernetes Secret  
 
   * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
