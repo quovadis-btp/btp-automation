@@ -26,7 +26,6 @@ open terraform-visual-report/index.html
 ```
 ![image](https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf)
 
-
 ### terraform graph
 
 ```
