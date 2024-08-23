@@ -4,7 +4,7 @@ This Terraform module provisions and manages providr context resources on the SA
 It simplifies the process of setting up SAP HANA Cloud databases, assigning role collections, and managing entitlements within a subaccount.
 
 
-### Usage
+### Module usage
 
 ```hcl
 module "provider_context" {
