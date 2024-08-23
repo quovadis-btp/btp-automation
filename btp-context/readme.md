@@ -32,9 +32,17 @@ open terraform-visual-report/index.html
 ```
 terraform graph --help
 terraform graph -type=plan | dot -Tpng -o graph.png
+```
+  * https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform
+  * https://medium.com/vmacwrites/tools-to-visualize-your-terraform-plan-d421c6255f9f
+  * https://www.graphviz.org/download/
 
+```
 terraform graph -draw-cycles | dot -Tpng -o graph.png
 ```
+
+![graph](https://github.com/user-attachments/assets/77bfab00-c255-42fa-9384-d222e9e692ee)
+
 
 ### Keeping the terraform state in a Kubernetes Secret  
 
