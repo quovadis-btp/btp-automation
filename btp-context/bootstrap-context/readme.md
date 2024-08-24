@@ -47,11 +47,11 @@ emergency_admins          = ["admin1@acme.com", "admin2@acme.com"]
 platform_admins           = ["platform-admin1@acme.com", "platform-admin2@acme.com"]
 
 ```
-The user who created a global account has already an S-user identifier and is already known to the SAP Identity Provider (SAP ID).  
+The user who created a global account has already an S-user identifier and is known to the SAP Identity Provider (SAP ID).  
 
 The bootstrap script must be run by this global account owner/administrator.  
 
-This will result in a bootstrap context subaccount having been created as a placeholder for the custom identity provider.
+This will result in a bootstrap context subaccount having been created as a placeholder for the custom identity provider, as depicted below:  
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
@@ -73,10 +73,11 @@ This will result in a bootstrap context subaccount having been created as a plac
 The terraform script will create a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
 
 This custom SAP Cloud Identity services tenant is different from SAP ID/Universal ID.  
-The tf script runner will be sent an onboarding email to this custom idp.
+The tf script runner will be sent an onboarding email to this custom idp.  
+It is important the tf runner user gets onboarded to the custom idp as its administrator.  
 
 The platform admins will be addtiional users allowed to manage the global account assets.  
-The tf script runner becomes the custom idp administrators and thus may choose these additional users however he likes.  
+As the tf script runner becomes the custom idp administrator, he may choose these additional users however he likes.  
 My recommendation is one of these additional platform users is a technical user.  
 
 ```
