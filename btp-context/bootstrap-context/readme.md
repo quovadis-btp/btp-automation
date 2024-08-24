@@ -20,9 +20,10 @@ What does bootstrapping mean ? It's like one needs an oven to bake a pizza. No o
 ### bootstrap a global account
 
 Likewise, one needs to get a btp global account in order to have all the services entitled and ready for use.  
+
 In a nutshell, a BTP global account has an owner (administrator) and comes with a set of entitled services based on a commercial agreement.  
 
-For instance, whenever one creates a BTP trial account one becomes the legal owner and a designated administrator of it.  
+For instance, whenever one creates a BTP trial account, one becomes the legal owner and a designated administrator of it.  
 As this is a trial agreement, (limited to a maximum period of 90 days), a predefined set of services with their entitlements is already baked into the agreement. 
 
 
@@ -45,8 +46,9 @@ emergency_admins          = ["admin1@acme.com", "admin2@acme.com"]
 platform_admins           = ["platform-admin1@acme.com", "platform-admin2@acme.com"]
 
 ```
-A user who created a global account has already an S-user identifier and is already known to the SAP Identity Provider (SAP ID).  
-The booster script must be run by any SAP ID global account owner/administrator.  
+The user who created a global account has already an S-user identifier and is already known to the SAP Identity Provider (SAP ID).  
+
+The bootstrap script must be run by this global account owner/administrator.  
 
 This will result in a bootstrap context subaccount having been created as a placeholder for the custom identity provider.
 
@@ -67,13 +69,13 @@ This will result in a bootstrap context subaccount having been created as a plac
 </table>
 
 
-
 The terraform script will create a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
+
 This custom SAP Cloud Identity services tenant is different from SAP ID/Universal ID.  
-The the tf script runner will receive an onboarding email to this custom idp.
+The tf script runner will be sent an onboarding email to this custom idp.
 
 The platform admins will be addtiional users allowed to manage the global account assets.  
-The tf script runner becomes the custom idp administrators and thus may choose these users additional however he likes.  
+The tf script runner becomes the custom idp administrators and thus may choose these additional users however he likes.  
 My recommendation is one of these additional platform users is a technical user.  
 
 ```
