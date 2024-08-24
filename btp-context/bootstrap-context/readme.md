@@ -147,4 +147,4 @@ No changes. Your infrastructure still matches the configuration.
 Terraform has checked that the real remote objects still match the result of your most recent changes, and found no differences.
 Releasing state lock. This may take a few moments...
 ```
-Additionally, the tf script will create a bootstap context - dedicated 
+
