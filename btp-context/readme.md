@@ -9,6 +9,18 @@ the rigidity of the cloud foundry runtime org structure.
 In a nutshell, contexts are declarative entities, defined as terraform scripts and, eventually, orchestrated by CI/CD pipelines. 
 
 
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/07e1758d-610e-4e16-b90a-ad9524ed9b4d" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
 terraform
 ========
 Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
