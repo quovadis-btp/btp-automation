@@ -43,7 +43,7 @@ Business Landscape Automation
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>
 
 Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.  
-This btp contexts form a generic receipe that makes the setup of a BTP landscape with kyma runtime environment and the BTP backing services a rather pleasant experience for the business users.  
+The btp contexts abstraction lays ground for a generic receipe that makes the provisioning and houskeeping of a BTP landscape with kyma runtime environment and BTP backing services a rather pleasant experience for the business users.  
 
 To make this receipe a reality, I have coined a term of a _depleted_ runtime environment that comprises one or several kyma clusters accompanied with a restricted set of BTP services (for instance, a _depleted_ environment may not need to have the XSUAA service entitlement.)
 
