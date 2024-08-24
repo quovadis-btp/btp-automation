@@ -153,7 +153,7 @@ terraform graph -draw-cycles | dot -Tpng -o graph.png
 
 > Terraform uses persisted state data to keep track of the resources it manages. Most non-trivial Terraform configurations either integrate with HCP Terraform or use a backend to store state remotely. This lets multiple people access the state data and work together on that collection of infrastructure resources.
 
-I've chosen the kubernetes scerets as a terraform backend.  
+I've chosen the kubernetes secrets as a terraform backend.  I did it with a managed kyma cluster.  
 
 ```
 kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --kubeconfig ~/.kube/kubeconfig--c-***-default.yaml -o jsonpath="{.data.tfstate}" | base64 -d | gzip -d > tfstate.json
