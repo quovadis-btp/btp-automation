@@ -3,7 +3,7 @@ btp contexts
 
 BTP contexts are logical entities defined to host and implement various infrastructure contexts, namely bootstrap, runtime, provider and consumer.  
 
-The main idea behind the contexts is the ability to combine and maintain resources from global accounts with their subaccounts across different regions and break free from 
+The main idea behind the contexts is the ability to combine and maintain resources from multiple global accounts with their subaccounts across different regions and break free from 
 the rigidity of the cloud foundry runtime org structure.
 
 In a nutshell, the contexts are declarative entities, defined as terraform scripts, eventually orchestrated by CI/CD pipelines.  
