@@ -21,6 +21,30 @@ In a nutshell, contexts are declarative entities, defined as terraform scripts a
 </tbody>
 </table>
 
+<h2 id="bdc-automation">1. Bootstrap toolkit for business users.</h2>
+
+Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.
+
+This brief describes a generic receipe that makes the setup of a BTP landscape with the kyma runtime environment a pleasant experience for the business users.  
+
+To make this receipe a reality, I have coined a term of a _depleted_ runtime environment that comprises one or many kyma clusters accompanied with a restricted set of BTP services.  
+(For instance, a _depleted_ environment may not need to have the XSUAA service entitlement.)
+
+However, all the kernel and business BTP services are available in a dedicated provider context (a provider subaccount) and are mereley referenced from the kyma clusters (via a service sharing mechanism).  
+
+This makes it possible for a kyma cluster to be torn down, detached, (re-)attached to a provider context.  
+
+Additionally, a provider can be located in a different BTP landscape (with a different global account and/or in different BTP region (data center) as well).  
+
+Or, even one could have the provider implemented with either a hybrid or a foreign, non-BTP landscape.  
+For instance, a provider context could be implemented with hyperscaler's services or with a mix of BTP and multicloud hyperscalers services.
+
+Furthermore, this approach allows for _location and data center transparency_ with the _intrinsic failover_ between runtime and provider(s) contexts.  
+
+<h3 id="bdc-landscape">1.1 Landscape topology.</h3>  
+
+As depicted below, the BDC landscape comprises, at minima, a runtime and a provider contexts.  
+
 terraform
 ========
 Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
