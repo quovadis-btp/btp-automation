@@ -11,4 +11,5 @@ module "custom_idp" {
   emergency_admins   = var.emergency_admins
   platform_admins    = var.platform_admins
   BTP_KYMA_PLAN      = var.BTP_KYMA_PLAN
+  subaccount_id      = var.subaccount_id
 }
