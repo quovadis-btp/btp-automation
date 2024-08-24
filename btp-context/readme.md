@@ -149,6 +149,12 @@ terraform graph -draw-cycles | dot -Tpng -o graph.png
 
 <h3 id="terraform-k8s-backed">2.3. Keeping the terraform state in a Kubernetes Secret.</h3>
 
+> A backend defines where Terraform stores its state data files.
+
+> Terraform uses persisted state data to keep track of the resources it manages. Most non-trivial Terraform configurations either integrate with HCP Terraform or use a backend to store state remotely. This lets multiple people access the state data and work together on that collection of infrastructure resources.
+
+I've chosen the kubernetes scerets as a terraform backend.  
+
 ```
 kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --kubeconfig ~/.kube/kubeconfig--c-***-default.yaml -o jsonpath="{.data.tfstate}" | base64 -d | gzip -d > tfstate.json
 ```
