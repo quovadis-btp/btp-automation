@@ -22,7 +22,7 @@ What does bootstrapping mean ? It's like one needs an oven to bake a pizza. No o
 Likewise, one needs to get a btp global account in order to have all the services entitled and ready for use.  
 In a nutshell, a BTP global account has an owner (administrator) with a set of entitled services based on the commercial agreement.  
 
-For instance, when one creates a BTP trial account one becomes the legal owner and administrator of it.  
+For instance, when one creates a BTP trial account one becomes the legal owner and the administrator of it.  
 As this is a trial agreement, [limited to a maximum period of 90 days], a predefined set of services with their entitllements is already baked in. 
 
 
