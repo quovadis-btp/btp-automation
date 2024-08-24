@@ -33,7 +33,13 @@ Business Landscape Automation
 <ol>
  	<li><a href="#btp-automation">Bootstrap toolkit for business users.</a></li>
  	<li><a href="#terraform-automation">terraform.</a></li>
- 	<li><a href="#terraform-k8s-backed">terraform kubernetes backend.</a></li>
+<ol>
+ 	<li><a href="#terraform-visual-cli">terraform visual cli.</a></li>
+ 	<li><a href="#terraform-graph">terraform graph</a>.</li>
+ 	<li><a href="#terraform-k8s-backed">terraform kubernetes backend</a>.</li>
+</ol>
+
+ <li><a href="#terraform-k8s-backed">terraform kubernetes backend.</a></li>
 </ol>
 
 </details></td>
@@ -107,7 +113,7 @@ open terraform-visual-report/index.html
 </tbody>
 </table>
 
-<h3 id="terraform-graph">2.1 terraform graph</h3>  
+<h3 id="terraform-graph">2.2 terraform graph</h3>  
 
 
 ```
