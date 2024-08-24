@@ -31,6 +31,7 @@ As this is a trial agreement, (limited to a maximum period of 90 days), a predef
 ### prepare a global account for contextual automation.  
 
 All that is required to bootstrap the global account context is to provide following information:
+  * btp-trial.tfvars
 
 ```
 globalaccount             = "<global account subdomain name>"
