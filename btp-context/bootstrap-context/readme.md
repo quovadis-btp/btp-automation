@@ -23,7 +23,7 @@ Likewise, one needs to get a btp global account in order to have all the service
 In a nutshell, a BTP global account has an owner (administrator) and comes with a set of entitled services based on a commercial agreement.  
 
 For instance, whenever one creates a BTP trial account one becomes the legal owner and a designated administrator of it.  
-As this is a trial agreement, (limited to a maximum period of 90 days), a predefined set of services with their entitlements is already baked into the contract. 
+As this is a trial agreement, (limited to a maximum period of 90 days), a predefined set of services with their entitlements is already baked into the agreement. 
 
 
 
