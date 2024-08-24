@@ -33,6 +33,7 @@ Business Landscape Automation
 <ol>
  	<li><a href="#btp-automation">Bootstrap toolkit for business users.</a></li>
  	<li><a href="#terraform-automation">terraform.</a></li>
+ 	<li><a href="#terraform-k8s-backed">terraform kubernetes backend.</a></li>
 </ol>
 
 </details></td>
@@ -81,7 +82,7 @@ For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/lates
 </tbody>
 </table>
 
-### Terraform Visual CLI  
+<h3 id="terraform-visual-cli">2.1 terraform visual cli</h3>  
 
   * https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli  
   * https://github.com/hieven/terraform-visual?tab=readme-ov-file
@@ -93,9 +94,21 @@ terraform show -json plan.out > plan.json
 terraform-visual --plan plan.json
 open terraform-visual-report/index.html
 ```
-![image](https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf)
 
-### terraform graph
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli"><img class="aligncenter" src="https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="terraform-graph">2.1 terraform graph</h3>  
+
 
 ```
 terraform graph --help
@@ -109,10 +122,21 @@ terraform graph -type=plan | dot -Tpng -o graph.png
 terraform graph -draw-cycles | dot -Tpng -o graph.png
 ```
 
-![graph](https://github.com/user-attachments/assets/77bfab00-c255-42fa-9384-d222e9e692ee)
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform"><img class="aligncenter" src="https://github.com/user-attachments/assets/77bfab00-c255-42fa-9384-d222e9e692ee" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 
-### Keeping the terraform state in a Kubernetes Secret  
+<h2 id="terraform-k8s-backed">3. Keeping the terraform state in a Kubernetes Secret.</h2>
+
 
   * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
 ```
