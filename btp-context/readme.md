@@ -41,12 +41,8 @@ For instance, a provider context could be implemented with hyperscaler's service
 
 Furthermore, this approach allows for _location and data center transparency_ with the _intrinsic failover_ between runtime and provider(s) contexts.  
 
-<h3 id="bdc-landscape">1.1 Landscape topology.</h3>  
+<h2 id="bdc-landscape">2. terraform.</h2>  
 
-As depicted below, the BDC landscape comprises, at minima, a runtime and a provider contexts.  
-
-terraform
-========
 Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
 This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
 Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.  
@@ -55,8 +51,17 @@ For instance, the dedicated SAP BTP [terraform provider](https://registry.terraf
 Additionally, each provider has its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
 For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/latest
 
-![287445_GettyImages-1251238553_small](https://github.com/user-attachments/assets/d8d10240-ea9d-458c-b4a3-892532b6f3eb)
-
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/d8d10240-ea9d-458c-b4a3-892532b6f3eb" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 ### Terraform Visual CLI  
 
