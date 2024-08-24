@@ -115,3 +115,27 @@ var.password
 </tbody>
 </table>
 
+```
+terraform plan -var-file="btp-trial.tfvars" -refresh-only
+Acquiring state lock. This may take a few moments...
+var.password
+  The password of the SAP BTP Global Account Administrator
+
+  Enter a value: <password of one of the ga administrators>
+
+module.custom_idp.data.external.free-trial-postgresql-quota: Reading...
+module.custom_idp.data.external.free-trial-kymaruntime-quota: Reading...
+module.custom_idp.data.btp_subaccounts.all: Reading...
+module.custom_idp.data.btp_subaccount.context: Reading...
+module.custom_idp.data.btp_subaccounts.all: Read complete after 0s [id=2392906ftrial-ga]
+module.custom_idp.data.btp_subaccount_environment_instances.trial: Reading...
+module.custom_idp.data.btp_subaccount.context: Read complete after 0s [id=4bb888d1-57c1-4c48-884c-04c079889b06]
+module.custom_idp.data.btp_subaccount_environment_instances.trial: Read complete after 1s [id=32d6af28-d355-43ef-a4ff-aeaeb62bfe3e]
+module.custom_idp.data.external.free-trial-kymaruntime-quota: Read complete after 4s [id=-]
+module.custom_idp.data.external.free-trial-postgresql-quota: Read complete after 4s [id=-]
+
+No changes. Your infrastructure still matches the configuration.
+
+Terraform has checked that the real remote objects still match the result of your most recent changes, and found no differences.
+Releasing state lock. This may take a few moments...
+```
