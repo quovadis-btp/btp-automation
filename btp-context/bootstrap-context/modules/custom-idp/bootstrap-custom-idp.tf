@@ -14,7 +14,7 @@ locals {
 
 
 resource "btp_subaccount" "this" {
-  count     = var.subaccount_id == "" ? 1 : 0
+  count       = var.subaccount_id == "" ? 1 : 0
 
   name        = local.subaccount_name
   subdomain   = local.subaccount_domain
