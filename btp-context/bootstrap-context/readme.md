@@ -1,6 +1,24 @@
 bootstrap context
 ==============
 
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/678b73a3-a1d0-4b71-a436-ed3eab50dea8" alt="" /></a></h1>
+</div>
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/568b7cbc-edc7-4947-a0fc-1fa972943cfa" alt="" /></a></h1>
+</div>
+
+</td>
+</tr>
+</tbody>
+</table>
+
+
 ### bootstrap a global account
 
 What does bootstrapping mean ? It's like you need an oven to bake a pizza. No oven, no pizza.
@@ -69,20 +87,4 @@ var.password
 
   Enter a value: <password of one of the ga administrators>
 ```
-
-<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
-<tbody>
-<tr style="height: 193px;">
-<td style="width: 71.6%; height: 193px;">
-<div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/678b73a3-a1d0-4b71-a436-ed3eab50dea8" alt="" /></a></h1>
-</div>
-<div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/568b7cbc-edc7-4947-a0fc-1fa972943cfa" alt="" /></a></h1>
-</div>
-
-</td>
-</tr>
-</tbody>
-</table>
 
