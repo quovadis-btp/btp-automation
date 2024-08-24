@@ -90,10 +90,6 @@ For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/lates
 
 <h3 id="terraform-visual-cli">2.1 terraform visual cli</h3>  
 
-  * https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli  
-  * https://github.com/hieven/terraform-visual?tab=readme-ov-file
-  * https://developer.hashicorp.com/terraform/tutorials/state/refresh
-
 ```
 terraform plan -var-file="89982f73trial/btp-trial.tfvars" -out=plan.out
 terraform show -json plan.out > plan.json
@@ -113,6 +109,13 @@ open terraform-visual-report/index.html
 </tbody>
 </table>
 
+#### References
+
+  * https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli  
+  * https://github.com/hieven/terraform-visual?tab=readme-ov-file
+  * https://developer.hashicorp.com/terraform/tutorials/state/refresh
+
+
 <h3 id="terraform-graph">2.2 terraform graph</h3>  
 
 
@@ -120,9 +123,6 @@ open terraform-visual-report/index.html
 terraform graph --help
 terraform graph -type=plan | dot -Tpng -o graph.png
 ```
-  * https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform
-  * https://medium.com/vmacwrites/tools-to-visualize-your-terraform-plan-d421c6255f9f
-  * https://www.graphviz.org/download/
 
 ```
 terraform graph -draw-cycles | dot -Tpng -o graph.png
@@ -139,6 +139,12 @@ terraform graph -draw-cycles | dot -Tpng -o graph.png
 </tr>
 </tbody>
 </table>
+
+#### References
+
+  * https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform
+  * https://medium.com/vmacwrites/tools-to-visualize-your-terraform-plan-d421c6255f9f
+  * https://www.graphviz.org/download/
 
 
 <h3 id="terraform-k8s-backed">2.3. Keeping the terraform state in a Kubernetes Secret.</h3>
