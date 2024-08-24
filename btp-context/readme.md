@@ -39,7 +39,7 @@ Business Landscape Automation
  	<li><a href="#terraform-k8s-backed">terraform kubernetes backend</a>.</li>
 </ol>
 
- <li><a href="#terraform-k8s-backed">terraform kubernetes backend.</a></li>
+ <li><a href="#references">Useful links.</a></li>
 </ol>
 
 </details></td>
@@ -141,8 +141,7 @@ terraform graph -draw-cycles | dot -Tpng -o graph.png
 </table>
 
 
-<h2 id="terraform-k8s-backed">3. Keeping the terraform state in a Kubernetes Secret.</h2>
-
+<h3 id="terraform-k8s-backed">2.3. Keeping the terraform state in a Kubernetes Secret.</h3>
 
   * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
 ```
@@ -150,9 +149,8 @@ kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --
 ```
 
 
+<h2 id="references">3. Useful links.</h2>
 
-
-### Useful links  
   * https://spacelift.io/blog/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content/tree/master/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content
