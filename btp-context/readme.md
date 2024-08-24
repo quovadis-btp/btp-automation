@@ -21,7 +21,7 @@ In a nutshell, contexts are declarative entities, defined as terraform scripts a
 </tbody>
 </table>
 
-Business Data Cloud Landscape Automation
+Business Landscape Automation
 ==========
 
 
@@ -42,21 +42,19 @@ Business Data Cloud Landscape Automation
 
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>
 
-Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.
+Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.  
+This btp contexts form a generic receipe that makes the setup of a BTP landscape with kyma runtime environment and the BTP backing services a rather pleasant experience for the business users.  
 
-This brief describes a generic receipe that makes the setup of a BTP landscape with the kyma runtime environment a pleasant experience for the business users.  
+To make this receipe a reality, I have coined a term of a _depleted_ runtime environment that comprises one or several kyma clusters accompanied with a restricted set of BTP services (for instance, a _depleted_ environment may not need to have the XSUAA service entitlement.)
 
-To make this receipe a reality, I have coined a term of a _depleted_ runtime environment that comprises one or many kyma clusters accompanied with a restricted set of BTP services.  
-(For instance, a _depleted_ environment may not need to have the XSUAA service entitlement.)
+However, all the kernel and business BTP services are available in a dedicated provider context (a provider subaccount) and are mereley referenced from kyma clusters (via a service sharing mechanism).  
 
-However, all the kernel and business BTP services are available in a dedicated provider context (a provider subaccount) and are mereley referenced from the kyma clusters (via a service sharing mechanism).  
-
-This makes it possible for a kyma cluster to be torn down, detached, (re-)attached to a provider context.  
+This makes it possible for each kyma cluster to be torn down, detached, (re-)attached to a provider context.  
 
 Additionally, a provider can be located in a different BTP landscape (with a different global account and/or in different BTP region (data center) as well).  
 
 Or, even one could have the provider implemented with either a hybrid or a foreign, non-BTP landscape.  
-For instance, a provider context could be implemented with hyperscaler's services or with a mix of BTP and multicloud hyperscalers services.
+For instance, a provider context could be implemented with other hyperscaler's services or with a mix of BTP and multicloud hyperscalers services.
 
 Furthermore, this approach allows for _location and data center transparency_ with the _intrinsic failover_ between runtime and provider(s) contexts.  
 
