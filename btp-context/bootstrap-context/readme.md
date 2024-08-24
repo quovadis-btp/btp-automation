@@ -20,11 +20,35 @@ What does bootstrapping mean ? It's like one needs an oven to bake a pizza. No o
 ### bootstrap a global account
 
 Likewise, one needs to get a btp global account in order to have all the services entitled and ready for use.  
-In a nutshell, a BTP global account has an owner (administrator) with a set of entitled services based on the commercial agreement.  
+In a nutshell, a BTP global account has an owner (administrator) and comes with a set of entitled services based on a commercial agreement.  
 
-For instance, when one creates a BTP trial account one becomes the legal owner and the administrator of it.  
-As this is a trial agreement, [limited to a maximum period of 90 days], a predefined set of services with their entitllements is already baked in. 
+For instance, whenever one creates a BTP trial account one becomes the legal owner and a designated administrator of it.  
+As this is a trial agreement, (limited to a maximum period of 90 days), a predefined set of services with their entitlements is already baked into the contract. 
 
+
+
+### prepare a global account for contextual automation.  
+
+All that is required to bootstrap the global account context is to provide following information:
+
+```
+globalaccount             = "<global account subdomain name>"
+username                  = "<email address of the ga administrator>"
+region                    = "btp region: ap21 or us10"
+subaccount_name           = "btp-bootstrap"
+subdomain                 = "btp-bootstrap"
+
+#
+# the global account owner must be excluded from the emergency admin list
+#
+emergency_admins          = ["admin1@acme.com", "admin2@acme.com"]
+platform_admins           = ["platform-admin1@acme.com", "platform-admin2@acme.com"]
+
+```
+A user who created a global account has already an S-user identifier and is already known to the SAP Identity Provider (SAP ID).  
+The booster script must be run by any SAP ID global account owner/administrator.  
+
+This will result in a bootstrap context subaccount having been created as a placeholder for the custom identity provider.
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
@@ -42,27 +66,7 @@ As this is a trial agreement, [limited to a maximum period of 90 days], a predef
 </tbody>
 </table>
 
-### prepare a global account for contextual automation.  
 
-All that is required the following information:
-
-```
-globalaccount             = "<global account subdomain name>"
-username                  = "<email address of the ga administrator>"
-region                    = "btp region: ap21 or us10"
-subaccount_name           = "btp-bootstrap"
-subdomain                 = "btp-bootstrap"
-
-#
-# the global account owner must be excluded from the emergency admin list
-#
-emergency_admins          = ["admin1@acme.com", "admin2@acme.com"]
-platform_admins           = ["platform-admin1@acme.com", "platform-admin2@acme.com"]
-
-```
-
-A user who created a global account has already an S-user identifier and is known to the SAP Identity Provider (SAP ID).  
-The booster script must be run by any SAP ID global account owner/administrator.  
 
 The terraform script will create a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
 This custom SAP Cloud Identity services tenant is different from SAP ID/Universal ID.  
@@ -139,3 +143,4 @@ No changes. Your infrastructure still matches the configuration.
 Terraform has checked that the real remote objects still match the result of your most recent changes, and found no differences.
 Releasing state lock. This may take a few moments...
 ```
+Additionally, the tf script will create a bootstap context - dedicated 
