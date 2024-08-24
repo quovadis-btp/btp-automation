@@ -21,7 +21,26 @@ In a nutshell, contexts are declarative entities, defined as terraform scripts a
 </tbody>
 </table>
 
-<h2 id="bdc-automation">1. Bootstrap toolkit for business users.</h2>
+Business Data Cloud Landscape Automation
+==========
+
+
+<table style="width: 100%; border-collapse: collapse; background-color: #ebf8ff;" border="1">
+<tbody>
+<tr>
+<td style="width: 100%;"><details open="open"><summary>Table of Contents</summary>
+
+<ol>
+ 	<li><a href="#btp-automation">Bootstrap toolkit for business users.</a></li>
+ 	<li><a href="#terraform-automation">terraform.</a></li>
+</ol>
+
+</details></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>
 
 Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.
 
@@ -41,7 +60,7 @@ For instance, a provider context could be implemented with hyperscaler's service
 
 Furthermore, this approach allows for _location and data center transparency_ with the _intrinsic failover_ between runtime and provider(s) contexts.  
 
-<h2 id="bdc-landscape">2. terraform.</h2>  
+<h2 id="terraform-automation">2. terraform.</h2>  
 
 Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
 This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
