@@ -66,6 +66,11 @@ For instance, a provider context could be implemented with other hyperscaler's s
 
 Furthermore, this approach allows for _location and data center transparency_ with the _intrinsic failover_ between runtime and provider(s) contexts.  
 
+#### References  
+
+  * [Seamless deployment of SaaS provider applications to kyma environments](https://github.com/kyma-project/kyma/issues/18666)
+
+
 <h2 id="terraform-automation">2. terraform.</h2>  
 
 Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
@@ -75,6 +80,8 @@ Providers are a logical abstraction of an upstream API. They are responsible for
 For instance, the dedicated SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the server side BTP CLI API.  
 Additionally, each provider has its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
 For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/latest
+
+
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
