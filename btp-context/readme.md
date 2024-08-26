@@ -8,21 +8,9 @@ the rigidity of the cloud foundry runtime org structure.
 
 In a nutshell, the contexts are declarative entities, defined as terraform scripts, eventually orchestrated by CI/CD pipelines.  
 
-
-<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
-<tbody>
-<tr style="height: 193px;">
-<td style="width: 71.6%; height: 193px;">
-<div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/07e1758d-610e-4e16-b90a-ad9524ed9b4d" alt="" /></a></h1>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-
 Business Landscape Automation
 ==========
+
 
 
 <table style="width: 100%; border-collapse: collapse; background-color: #ebf8ff;" border="1">
@@ -47,7 +35,22 @@ Business Landscape Automation
 </tbody>
 </table>
 
-<h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>
+
+<h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>  
+
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/1c10ebb7-819f-44df-91c7-731ae3209354" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
 
 Likewise, driving a car, seldom requires opening the bonnet, business users focus on functionality.  
 
