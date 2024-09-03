@@ -1,7 +1,7 @@
 bootstrap a kyma cluster
 ==============
 
-### configure runtime context with a terrafrom modul;e
+### configure runtime context using a terrafrom module
 
 ```
 module "runtime_context" {
