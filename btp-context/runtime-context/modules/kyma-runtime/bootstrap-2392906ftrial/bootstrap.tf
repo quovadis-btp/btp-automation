@@ -1,6 +1,7 @@
 
 module "runtime_context" {
   source             = "../../kyma-runtime"
+##  source             = "ptesny/btp-context/runtime-context/modules/kyma-runtime"
 
   BTP_GLOBAL_ACCOUNT = var.BTP_GLOBAL_ACCOUNT
   BTP_BOT_USER       = var.BTP_BOT_USER
