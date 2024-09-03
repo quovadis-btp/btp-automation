@@ -50,10 +50,31 @@ module "runtime_context" {
 
 
 
-### configure provider context
+## Troubleshooting 
+
+### Removing Resources 
+
+  * [Removing Resources](https://developer.hashicorp.com/terraform/language/resources/syntax#removing-resources)  
+
+```
+terraform state rm -dry-run btp_subaccount_environment_instance.kyma
+
+Would have removed nothing.
+
+```
+
+```
+terraform state rm module.runtime_context.btp_subaccount_environment_instance.kyma
 
 
-### miscallenous
+Removed module.runtime_context.btp_subaccount_environment_instance.kyma[0]
+```
+
+  * add the import.tf with the resources to import
+  * run the terraform apply
+
+
+## Miscallenous
 
 Here are the references for the IAS Trust Setup:  
 Terraform Resource: 
