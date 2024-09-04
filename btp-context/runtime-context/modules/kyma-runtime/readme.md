@@ -73,6 +73,49 @@ Removed module.runtime_context.btp_subaccount_environment_instance.kyma[0]
   * add the import.tf with the resources to import
   * run the terraform apply
 
+#### Error acquiring the state lock  
+
+If you have abruptly closed a terraform apply command and now it's throwing the below error while using the terraform commands in the terminal, namely Error acquiring the state lock.  
+
+
+```
+terraform apply -var-file="89982f73trial/btp-trial.tfvars"
+╷
+│ Error: Error acquiring the state lock
+│ 
+│ Error message: the state is already locked by another terraform client
+│ Lock Info:
+│   ID:        e82af8c1-8bb0-0507-6b1a-c7909a9cbcb2
+│   Path:      
+│   Info:      
+│ 
+│ Terraform acquires a state lock to protect the state from being written
+│ by multiple users at the same time. Please resolve the issue above and try
+│ again. For most commands, you can disable locking with the "-lock=false"
+│ flag, but this is not recommended.
+╵
+terraform apply -var-file="89982f73trial/btp-trial.tfvars" -lock=false
+```
+
+##### How does one break the lease of a state file ?
+
+One can forcefully unlock the state: https://developer.hashicorp.com/terraform/cli/commands/force-unlock
+
+```
+terraform force-unlock e82af8c1-8bb0-0507-6b1a-c7909a9cbcb2
+Do you really want to force-unlock?
+  Terraform will remove the lock on the remote state.
+  This will allow local Terraform commands to modify this state, even though it
+  may still be in use. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+
+Terraform state has been successfully unlocked!
+
+The state has been unlocked, and Terraform commands should now be able to
+obtain a new lock on the remote state.
+
+```
 
 ## Miscallenous
 
