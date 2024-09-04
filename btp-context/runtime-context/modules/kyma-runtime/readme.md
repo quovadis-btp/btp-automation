@@ -52,8 +52,9 @@ module "runtime_context" {
 
 ## Troubleshooting 
 
-### Communication breakdown the BTP CLI server
+### Communication breakdown with the BTP CLI server
 
+This may happen due to the loss of the internet connectivity 
 
 ```
 ╷
@@ -69,10 +70,10 @@ module "runtime_context" {
 ```
 In the afermath of this we may need re-synchronize the terraform state with the actual infrastructure configuration.  
 
-One can check the terraform state if there is already an entry via terraform state list
-If yes, first remove the entry from the state via terraform state rm: Command: state rm | Terraform | HashiCorp Developer
+One can check the terraform state if there is already an entry via terraform state list.  
+And if yes, first remove the entry from the state via terraform state rm: Command: state rm | Terraform | HashiCorp Developer
  
-Then I would import the Kyma resource via import block
+Then, import the Kyma resource via an import block
 
 ### Removing Resources 
 
