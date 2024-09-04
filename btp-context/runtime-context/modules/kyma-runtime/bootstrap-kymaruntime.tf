@@ -462,30 +462,6 @@ resource "terraform_data" "provider_context" {
   triggers_replace = [
         terraform_data.kubectl_getnodes
   ]
-/*
- provisioner "local-exec" {
-   interpreter = ["/bin/bash", "-c"]
-   command = <<EOF
-     (
-    KUBECONFIG=kubeconfig-headless.yaml
-    NAMESPACE=quovadis-btp
-    set -e -o pipefail ;\
-    TOKEN=${local.provider_k8s}
-    echo | kubectl get nodes --kubeconfig $KUBECONFIG ;\
-    kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
-    kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
-    kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json > btp-service-operator-kyma.json
-    CONFIG=$(cat btp-service-operator-kyma.json | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
-    echo $CONFIG
-    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
-    | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
-
-     )
-   EOF
- }
-
-*/
-
 
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
@@ -502,11 +478,7 @@ resource "terraform_data" "provider_context" {
     INDEX=$(kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
     echo $INDEX
 
-    kubectl wait --for=jsonpath='{.status.modules[0].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
-    kubectl wait --for=jsonpath='{.status.modules[1].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
-    kubectl wait --for=jsonpath='{.status.modules[2].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
-
-    kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
+    kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 3m --kubeconfig $KUBECONFIG
 
 
     echo | kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 3m
