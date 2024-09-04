@@ -52,6 +52,28 @@ module "runtime_context" {
 
 ## Troubleshooting 
 
+### Communication breakdown the BTP CLI server
+
+
+```
+╷
+│ Error: API Error Creating Resource Environment Instance (Subaccount)
+│ 
+│   with module.runtime_context.btp_subaccount_environment_instance.kyma[0],
+│   on ../../kyma-runtime/bootstrap-kymaruntime.tf line 20, in resource "btp_subaccount_environment_instance" "kyma":
+│   20: resource "btp_subaccount_environment_instance" "kyma" {
+│ 
+│ Post "https://cli.btp.cloud.sap/command/v2.64.0/accounts/environment-instance?get": read tcp 10.xx.xx.xx:49302->3.xx.xx.xx:443: read: connection
+│ reset by peer
+╵
+```
+In the afermath of this we may need re-synchronize the terraform state with the actual infrastructure configuration.  
+
+One can check the terraform state if there is already an entry via terraform state list
+If yes, first remove the entry from the state via terraform state rm: Command: state rm | Terraform | HashiCorp Developer
+ 
+Then I would import the Kyma resource via import block
+
 ### Removing Resources 
 
   * [Removing Resources](https://developer.hashicorp.com/terraform/language/resources/syntax#removing-resources)  
@@ -73,7 +95,7 @@ Removed module.runtime_context.btp_subaccount_environment_instance.kyma[0]
   * add the import.tf with the resources to import
   * run the terraform apply
 
-#### Error acquiring the state lock  
+### Error acquiring the state lock  
 
 If you have abruptly closed a terraform apply command and now it's throwing the below error while using the terraform commands in the terminal, namely Error acquiring the state lock.  
 
