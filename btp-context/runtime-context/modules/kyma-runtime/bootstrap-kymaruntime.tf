@@ -434,7 +434,7 @@ resource "terraform_data" "egress_ips" {
 data "terraform_remote_state" "provider_context" {
   backend = "kubernetes"
   config = {
-    secret_suffix    = "state-89982f73trial"
+    secret_suffix    = var.provider_state_suffix ### "state-89982f73trial"
     config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
     namespace        = "tf-provider-context"
     load_config_file = true

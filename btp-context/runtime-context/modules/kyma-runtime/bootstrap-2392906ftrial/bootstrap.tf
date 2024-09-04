@@ -26,4 +26,5 @@ module "runtime_context" {
   argocd_clientid    = var.argocd_clientid
 
   argocd_url         = var.argocd_url
+  provider_state_suffix = var.provider_state_suffix  
 }
