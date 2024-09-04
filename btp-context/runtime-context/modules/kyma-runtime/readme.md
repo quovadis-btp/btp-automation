@@ -94,6 +94,12 @@ Removed module.runtime_context.btp_subaccount_environment_instance.kyma[0]
 ```
 
   * add the import.tf with the resources to import
+```
+import {
+  to = module.runtime_context.btp_subaccount_environment_instance.kyma[0]
+  id = "<subaccount id>,<environment id>"
+}
+```
   * run the terraform apply
 
 ### Error acquiring the state lock  
