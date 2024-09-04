@@ -54,11 +54,14 @@ resource "btp_subaccount_environment_instance" "kyma" {
         {
             "name": "connectivity-proxy",
             "channel": "regular"
-        },
+        }
+/*      
+        ,
         {
             "name": "cloud-manager",
             "channel": "regular"
         }
+*/        
       ]
     }
     oidc = {
@@ -79,7 +82,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
     delete = "60m"
   }
 
-/* 
+/*
   // will need to make sure there is a valid kubeconfig at the time of resource destruction
   //
   provisioner "local-exec" {
@@ -91,20 +94,70 @@ resource "btp_subaccount_environment_instance" "kyma" {
      command = <<EOF
        (
       KUBECONFIG=kubeconfig-headless.yaml
-      MODULE_NAME=connectivity-proxy
-      kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json \
-      | jq 'del(.spec.modules[] | select(.name == "$MODULE_NAME" ) )'  | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
-      sleep 10
+      MODULE=connectivity-proxy
+      set -e -o pipefail ;\
+
+      kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
+
+      KYMAS_DEFAULT_CONFIG=$(kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
+      NEW_KYMAS_CONFIG=$(echo $KYMAS_DEFAULT_CONFIG | jq --arg m "$MODULE" 'del(.spec.modules[] | select(.name == $m) )' )
+      echo $NEW_KYMAS_CONFIG
+      echo $NEW_KYMAS_CONFIG | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
+      kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
        )
      EOF
   } 
-*/  
+*/
+
+}
+
+#
+# https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep#delay-destroy-usage
+#
+# The btp_subaccount_environment_instance.kyma resource will destroy (at least) 180 seconds after null_resource.next
+
+resource "time_sleep" "wait_180_seconds" {
+  depends_on = [btp_subaccount_environment_instance.kyma]
+
+  destroy_duration = "60s"
+}
+
+# This resource will create (potentially immediately) after btp_subaccount_environment_instance.kyma
+resource "null_resource" "next" {
+  depends_on = [time_sleep.wait_180_seconds]
+
+  // will need to make sure there is a valid kubeconfig at the time of resource destruction
+  //
+  provisioner "local-exec" {
+    # delete the connectivity proxy module if present
+    when        = destroy
+    on_failure  = continue
+
+    interpreter = ["/bin/bash", "-c"]
+     command = <<EOF
+       (
+      KUBECONFIG=kubeconfig-headless.yaml
+      MODULE=connectivity-proxy
+      set -e -o pipefail ;\
+
+      kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
+
+      KYMAS_DEFAULT_CONFIG=$(kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
+      NEW_KYMAS_CONFIG=$(echo $KYMAS_DEFAULT_CONFIG | jq --arg m "$MODULE" 'del(.spec.modules[] | select(.name == $m) )' )
+      echo $NEW_KYMAS_CONFIG
+      echo $NEW_KYMAS_CONFIG | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
+      
+      kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
+       )
+     EOF
+  }   
 }
 
 
 resource "terraform_data" "kyma" {
   # Replacement of any instance of the cluster requires re-provisioning
   triggers_replace = btp_subaccount_environment_instance.kyma[*]
+  depends_on = [time_sleep.wait_180_seconds]
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
@@ -445,6 +498,19 @@ resource "terraform_data" "provider_context" {
     echo | kubectl get nodes --kubeconfig $KUBECONFIG ;\
     kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
     kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+
+    INDEX=$(kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
+    echo $INDEX
+
+    kubectl wait --for=jsonpath='{.status.modules[0].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
+    kubectl wait --for=jsonpath='{.status.modules[1].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
+    kubectl wait --for=jsonpath='{.status.modules[2].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
+
+    kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --kubeconfig $KUBECONFIG
+
+
+    echo | kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 3m
+
     SECRET=$(kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
     echo $SECRET
     CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
