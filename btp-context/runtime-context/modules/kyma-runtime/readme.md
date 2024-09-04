@@ -97,7 +97,7 @@ Removed module.runtime_context.btp_subaccount_environment_instance.kyma[0]
 
 ### Error acquiring the state lock  
 
-If you have abruptly closed a terraform apply command and now it's throwing the below error while using the terraform commands in the terminal, namely Error acquiring the state lock.  
+If one has abruptly closed/aborted a terraform plan/apply command and now it's throwing the below error message when using terraform commands in the terminal, namely **Error acquiring the state lock**.  
 
 
 ```
@@ -116,10 +116,15 @@ terraform apply -var-file="89982f73trial/btp-trial.tfvars"
 │ again. For most commands, you can disable locking with the "-lock=false"
 │ flag, but this is not recommended.
 ╵
-terraform apply -var-file="89982f73trial/btp-trial.tfvars" -lock=false
 ```
 
-##### How does one break the lease of a state file ?
+Disabling the lock state is not recommended but may be the first ad-hoc remedy
+
+```
+terraform apply -var-file="btp-trial.tfvars" -lock=false
+```
+
+#### How does one break the lease of a state file ?
 
 One can forcefully unlock the state: https://developer.hashicorp.com/terraform/cli/commands/force-unlock
 
