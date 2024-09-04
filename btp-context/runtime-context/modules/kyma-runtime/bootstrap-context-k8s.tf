@@ -105,6 +105,10 @@ resource "btp_subaccount_subscription" "identity_instance" {
   parameters    = jsonencode({
     cloud_service = "PROD"
   })
+  timeouts = {
+    create = "25m"
+    delete = "15m"
+  }  
 }
 
 resource "btp_subaccount_trust_configuration" "custom_idp" {
