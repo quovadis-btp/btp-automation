@@ -46,10 +46,13 @@ subdomain                 = "btp-bootstrap"
 emergency_admins          = ["admin1@acme.com", "admin2@acme.com"]
 platform_admins           = ["platform-admin1@acme.com", "platform-admin2@acme.com"]
 
+# optionally, you may pick an existing SAP Cloud Identity Services tenant as your custom idp
+idp                       = ""
+
 ```
 The user who created a global account has already an S-user identifier and is known to the SAP Identity Provider (SAP ID).  
 
-The bootstrap script must be run by this global account owner/administrator.  
+**The bootstrap script must be run by this global account owner/administrator.**    
 
 This will result in a bootstrap context subaccount having been created as a placeholder for the custom identity provider, as depicted below:  
 
@@ -70,14 +73,14 @@ This will result in a bootstrap context subaccount having been created as a plac
 </table>
 
 
-The terraform script will create a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
+The terraform script will create/re-use a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
 
 This custom SAP Cloud Identity services tenant is different from SAP ID/Universal ID.  
-The tf script runner will be sent an onboarding email to this custom idp.  
+In case of creation, the tf script runner will be sent an onboarding email to this custom idp.  
 It is important the tf runner user gets onboarded to the custom idp as its administrator.  
 
-The platform admins will be addtiional users allowed to manage the global account assets.  
-As the tf script runner becomes the custom idp administrator, he may choose these additional users however he likes.  
+The platform admins will be the addtiional users allowed to manage the global account assets.   
+As the tf script runner becomes the custom idp administrator, she or he may choose these additional users however she or he likes.  
 My recommendation is one of these additional platform users is a technical user.  
 
 ```
