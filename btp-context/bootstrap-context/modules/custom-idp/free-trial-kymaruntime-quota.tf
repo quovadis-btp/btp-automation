@@ -23,6 +23,8 @@ jq -n --arg issuer "$ISSUER" '{"username": $issuer}'
 # https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
 #
 data "external" "free-trial-kymaruntime-quota" {
+  for_each = { for acc in data.btp_subaccounts.all.values : acc.id => acc if acc.name == "trial" && var.BTP_KYMA_PLAN == "trial"}
+
   program = ["bash", "${path.module}/free-trial-kymaruntime-quota.sh"]
 
   query = {
@@ -41,6 +43,8 @@ resource "terraform_data" "replacement" {
 
 
 data "external" "free-trial-postgresql-quota" {
+  for_each   = { for acc in data.btp_subaccounts.all.values : acc.id => acc if acc.name == "trial" && var.BTP_KYMA_PLAN == "trial"}
+
   depends_on = [
          terraform_data.replacement
      ]
@@ -82,17 +86,19 @@ terraform console
 */  
 
 
+
+
 # look up all available subaccounts of a global account
 data "btp_subaccounts" "all" {}
 
+/*
 data "btp_subaccount_environment_instances" "trial" { subaccount_id = local.trial.id }
 
 locals {
-  trial             = [for acc in data.btp_subaccounts.all.values : acc if acc.name == "trial"][0]
+  trial             = [for acc in data.btp_subaccounts.all.values : acc if acc.name == "trial"][*]
 }
 
 
-/*
 resource "btp_subaccount_entitlement" "free-trial-kymaruntime-quota" {
   for_each      = { for acc in data.btp_subaccounts.all.values : acc.id => acc if acc.name == "trial" && var.BTP_KYMA_PLAN == "trial"}
 
