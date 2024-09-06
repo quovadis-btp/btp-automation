@@ -308,3 +308,59 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
    EOF
  }
 }
+
+
+data "http" "token-bot" {
+  url = "${local.idp.url}/oauth2/token"
+  method = "POST"
+  request_headers = {
+    Content-Type  = "application/x-www-form-urlencoded"
+  }  
+  request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.bot.clientid}&scope=groups,email"
+}
+
+resource "local_sensitive_file" "headless-token-bot" {
+  content  = data.http.token-bot.response_body
+  filename = "headless-token-bot.json"
+}
+
+
+data "http" "token-secret-bot" {
+  url = "${local.idp-secret.url}/oauth2/token"
+  method = "POST"
+  request_headers = {
+    Content-Type  = "application/x-www-form-urlencoded"
+  }  
+  request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.bot-secret.clientid}&client_secret=${local.bot-secret.clientsecret}&scope=groups,email"
+}
+
+resource "local_sensitive_file" "headless-token-bot-secret" {
+  content  = data.http.token-secret-bot.response_body
+  filename = "headless-token-bot-secret.json"
+}
+
+# https://github.com/hashicorp/terraform-provider-http/blob/main/docs/data-sources/http.md
+# https://medium.com/@haroldfinch01/how-to-create-an-ssh-key-in-terraform-0c5cfd3d46dd
+# https://registry.terraform.io/providers/salrashid123/http-full/latest/docs/data-sources/http
+# https://github.com/salrashid123/terraform-provider-http-full
+
+data "http" "token-cert-bot" {
+  provider = http-full
+
+  url = "${local.bot-cert.url}/oauth2/token"
+  #ca_cert_pem = 
+  method = "POST"
+  request_headers = {
+    Content-Type  = "application/x-www-form-urlencoded"
+  }
+  client_crt = local.bot-cert.certificate
+  client_key = local.bot-cert.key
+
+  request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.bot-cert.clientid}&scope=groups,email"
+
+}
+
+resource "local_sensitive_file" "headless-token-bot-cert" {
+  content  = data.http.token-cert-bot.response_body
+  filename = "headless-token-bot-cert.json"
+}
