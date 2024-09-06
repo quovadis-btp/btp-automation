@@ -192,3 +192,116 @@ resource "local_sensitive_file" "bot-secret" {
   })
   filename = "bot-secret.json"
 }
+
+
+/*
+.PHONY: bootstrap-kymaruntime-bot
+bootstrap-kymaruntime-bot: ## bootstrap kyma openidconnect resource
+  btp get services/binding --name ias-bot-binding | jq '.credentials | { clientid,  url }' > bot.json
+  jq 'input as  $$idp  | .metadata |= . + {name: $$idp.clientid} | .spec |= . + { clientID: $$idp.clientid , issuerURL: $$idp.url, usernameClaim: "sub", usernamePrefix: "bot-identity:" , groupsClaim: "", groupsPrefix: "" }' kyma-bot-template.json bot.json
+  kubectl create ns $(NAMESPACE) --kubeconfig $(KUBECONFIG) --dry-run=client -o yaml | kubectl apply --kubeconfig $(KUBECONFIG) -f -
+  kubectl label namespace $(NAMESPACE) istio-injection=enabled --kubeconfig $(KUBECONFIG)
+  jq 'input as  $$idp  | .metadata |= . + {name: $$idp.clientid} | .spec |= . + { clientID: $$idp.clientid , issuerURL: $$idp.url, usernameClaim: "email", usernamePrefix: "bot-identity:" , groupsClaim: "", groupsPrefix: "" }' kyma-bot-template.json bot.json \
+  | kubectl apply --kubeconfig $(KUBECONFIG) -n $(NAMESPACE) -f - 
+
+
+    echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+    jq -r '.' <<< "$OpenIDConnect"  > bootstrap-kymaruntime-bot.json
+
+*/
+
+locals {
+  OpenIDConnect = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "${local.bot-cert.clientid}"
+        },
+        "spec": {
+            "issuerURL": "${local.bot-cert.url}",
+            "clientID": "${local.bot-cert.clientid}",
+            "usernameClaim": "sub",
+            "usernamePrefix": "bot-identity:",
+            "groupsClaim": "",
+            "groupsPrefix": ""
+        }
+  })
+}
+
+resource "local_sensitive_file" "OpenIDConnect" {
+  content         = local.OpenIDConnect
+  file_permission = "0600"
+  filename        = "OpenIDConnect.json"
+}
+
+
+# https://discuss.hashicorp.com/t/is-there-any-way-to-inspect-module-variables-and-outputs/25702
+#
+output "OpenIDConnect" {
+  value = nonsensitive(local.OpenIDConnect)
+}
+
+# https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
+# https://developer.hashicorp.com/terraform/language/resources/terraform-data
+# https://developer.hashicorp.com/terraform/language/functions/nonsensitive
+#
+# bootstrap kyma openidconnect resource
+#
+resource "terraform_data" "bootstrap-kymaruntime-bot" {
+/*
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+*/
+
+  triggers_replace = [
+        terraform_data.kubectl_getnodes
+  ]
+
+  # the input becomes a definition of an OpenIDConnect provider as a non-sensitive json encoded string 
+  #
+  input = nonsensitive(
+    jsonencode({
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "${local.bot-cert.clientid}"
+        },
+        "spec": {
+            "issuerURL": "${local.bot-cert.url}",
+            "clientID": "${local.bot-cert.clientid}",
+            "usernameClaim": "sub",
+            "usernamePrefix": "bot-identity:",
+            "groupsClaim": "",
+            "groupsPrefix": ""
+        }
+    })
+  )
+
+ # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
+ # https://stackoverflow.com/questions/75255995/how-to-echo-a-jq-json-with-double-quotes-escaped-with-backslash
+ #
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    KUBECONFIG=kubeconfig-headless.yaml
+    NAMESPACE=quovadis-btp
+    set -e -o pipefail ;\
+    
+    OpenIDConnect='${self.input}'
+    echo $(jq -r '.' <<< $OpenIDConnect)
+    echo $OpenIDConnect
+
+    echo | kubectl get nodes --kubeconfig $KUBECONFIG
+    kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+    kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+
+    echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-bot.json
+    echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+     )
+   EOF
+ }
+}
