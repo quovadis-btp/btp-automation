@@ -210,6 +210,7 @@ bootstrap-kymaruntime-bot: ## bootstrap kyma openidconnect resource
 
 */
 
+/* debug only
 locals {
   OpenIDConnect = jsonencode({
 
@@ -235,12 +236,12 @@ resource "local_sensitive_file" "OpenIDConnect" {
   filename        = "OpenIDConnect.json"
 }
 
-
 # https://discuss.hashicorp.com/t/is-there-any-way-to-inspect-module-variables-and-outputs/25702
 #
 output "OpenIDConnect" {
   value = nonsensitive(local.OpenIDConnect)
 }
+*/
 
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data
@@ -298,8 +299,10 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
     kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
     kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
 
+    # a debug line until the OpenIDConnect CRD is installed via the oidc shoot extension
+    #
     echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-bot.json
-    echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+    #echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
 
      )
    EOF
