@@ -59,10 +59,15 @@ variable "BTP_KYMA_NAME" {
   description = "Plan name"
 }
 
-
 variable "BTP_KYMA_REGION" {
   type        = string
   description = "Kyma region"
+}
+
+variable "BTP_KYMA_MACHINE_TYPE" {
+  type        = string
+  description = "Kyma service plan machine type"
+  default     = ""  
 }
 
 variable "service_plan__sap_build_apps" {

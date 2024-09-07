@@ -13,6 +13,48 @@ resource "btp_subaccount_entitlement" "kymaruntime" {
   amount        = 1
 }
 
+
+/*
+  btp list accounts/available-environment | jq -r '.availableEnvironments[] | select(.serviceName == "kymaruntime" and .planName =="$(KYMARUNTIME_PLAN)") | .createSchema | fromjson | { machineType: .parameters.properties.machineType.enum[1], region: .parameters.properties.region.enum[0] }' > kyma-params.json
+*/
+
+# Fetch all available environments for the subaccount
+#
+data "btp_subaccount_environments" "all" {
+  subaccount_id = data.btp_subaccount.context.id
+  depends_on    = [btp_subaccount_entitlement.kymaruntime]
+}
+
+# Take the first kyma region from the first kyma environment if no kyma instance parameters are provided
+resource "null_resource" "cache_kyma_region" {
+  count   = var.BTP_KYMA_PLAN != "trial" ? 1 : 0
+  triggers = {
+    region = var.BTP_KYMA_REGION != "" ? var.BTP_KYMA_REGION  : jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.region.enum[0]
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "null_resource" "cache_kyma_machine_type" {
+  count   = var.BTP_KYMA_PLAN != "trial" ? 1 : 0
+
+  triggers = {
+    machineType = var.BTP_KYMA_MACHINE_TYPE != "" ? var.BTP_KYMA_MACHINE_TYPE  : jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.machineType.enum[1]
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+locals {
+  machineType = one(null_resource.cache_kyma_machine_type[*].triggers.machineType)
+  cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
+}
+
+
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/null_resource
 # https://serverfault.com/questions/988222/where-to-put-local-exec-command-to-run-before-terraform-destroy
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#destroy-time-provisioners
@@ -32,6 +74,10 @@ resource "btp_subaccount_environment_instance" "kyma" {
   service_name     = btp_subaccount_entitlement.kymaruntime.service_name
   plan_name        = btp_subaccount_entitlement.kymaruntime.plan_name
   parameters       = jsonencode({
+    name              = "${var.BTP_SUBACCOUNT}-${var.BTP_KYMA_NAME}"
+    region            = var.BTP_KYMA_PLAN != "trial" ? local.cluster_region : ""
+    machine_type      = var.BTP_KYMA_PLAN != "trial" ? local.machineType : ""
+
     modules = {
       list = [
         {
@@ -72,9 +118,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
       clientID       = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).clientid
       issuerURL      = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).url
     }
-    name   = "${var.BTP_SUBACCOUNT}-kyma"
-    region = var.BTP_KYMA_PLAN != "trial" ? var.BTP_KYMA_REGION : ""
-    administrators = var.cluster_admins
+    administrators   = var.cluster_admins
   })
   timeouts = {
     create = "60m"
