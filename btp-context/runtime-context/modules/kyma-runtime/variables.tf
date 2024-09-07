@@ -32,6 +32,17 @@ variable "subaccount_id" {
   default     = ""
 }
 
+variable "BTP_SA_REGION" {
+  type        = string
+  description = "Region name"
+}
+
+variable "BTP_CUSTOM_IDP" {
+  type        = string
+  description = "Custom IAS tenant fully qualified host name"
+  default     = ""
+}
+
 variable "BTP_KYMA_DRY_RUN" {
   type        = bool
   description = "do not create kyma environment"
@@ -41,31 +52,17 @@ variable "BTP_KYMA_DRY_RUN" {
 variable "BTP_KYMA_PLAN" {
   type        = string
   description = "Plan name"
-  default     = "trial"
 }
 
 variable "BTP_KYMA_NAME" {
   type        = string
   description = "Plan name"
-  default     = "quovadis-kyma"
 }
 
-variable "BTP_SA_REGION" {
-  type        = string
-  description = "Region name"
-  default     = "eu20"
-}
-
-variable "BTP_CUSTOM_IDP" {
-  type        = string
-  description = "Custom IAS tenant fully qualified host name"
-  default     = ""
-}
 
 variable "BTP_KYMA_REGION" {
   type        = string
   description = "Kyma region"
-  default     = "eu-de-1"
 }
 
 variable "service_plan__sap_build_apps" {
