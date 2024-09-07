@@ -55,6 +55,39 @@ locals {
 }
 
 
+locals {
+  modules = [
+          {
+            "name": "api-gateway",
+            "channel": "regular"
+          },
+          {
+            "name": "istio",
+            "channel": "regular"
+          },
+          {
+            "name": "btp-operator",
+            "channel": "regular"
+          },
+          {
+            "name": "serverless",
+            "channel": "regular"
+          },
+          {
+            "name": "connectivity-proxy",
+            "channel": "regular"
+          }
+/*      
+        ,
+        {
+            "name": "cloud-manager",
+            "channel": "regular"
+        }
+*/ 
+        ]
+}
+
+
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/null_resource
 # https://serverfault.com/questions/988222/where-to-put-local-exec-command-to-run-before-terraform-destroy
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#destroy-time-provisioners
@@ -74,51 +107,25 @@ resource "btp_subaccount_environment_instance" "kyma" {
   service_name     = btp_subaccount_entitlement.kymaruntime.service_name
   plan_name        = btp_subaccount_entitlement.kymaruntime.plan_name
   parameters       = jsonencode({
-    name              = "${var.BTP_SUBACCOUNT}-${var.BTP_KYMA_NAME}"
-    region            = var.BTP_KYMA_PLAN != "trial" ? local.cluster_region : ""
-    machine_type      = var.BTP_KYMA_PLAN != "trial" ? local.machineType : ""
-
-    modules = {
-      list = [
-        {
-          name    = "api-gateway"
-          channel = "regular"
-        },
-        {
-          name    = "istio"
-          channel = "regular"
-        },
-        {
-          name    = "btp-operator"
-          channel = "regular"
-        },
-        {
-            "name": "serverless",
-            "channel": "regular"
-        }
-        ,
-        {
-            "name": "connectivity-proxy",
-            "channel": "regular"
-        }
-/*      
-        ,
-        {
-            "name": "cloud-manager",
-            "channel": "regular"
-        }
-*/        
-      ]
-    }
-    oidc = {
-      groupsClaim    = "groups"
-      signingAlgs    = ["RS256"]
-      usernameClaim  = "sub"
-      usernamePrefix = "-"
-      clientID       = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).clientid
-      issuerURL      = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).url
-    }
-    administrators   = var.cluster_admins
+      "name": "${var.BTP_SUBACCOUNT}-${var.BTP_KYMA_NAME}",
+      "region": var.BTP_KYMA_PLAN != "trial" ? local.cluster_region : "",
+      "machineType": var.BTP_KYMA_PLAN != "trial" ? local.machineType : "",
+      "autoScalerMin": 3,
+      "autoScalerMax": 5,
+      "modules": {
+        "list": local.modules
+      },
+      "administrators": var.cluster_admins,
+      "oidc": {
+        "clientID": jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).clientid,
+        "groupsClaim": "groups",
+        "issuerURL": jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).url,
+        "signingAlgs": [
+          "RS256"
+        ],
+        "usernameClaim": "sub",
+        "usernamePrefix": "-"
+      }
   })
   timeouts = {
     create = "60m"
