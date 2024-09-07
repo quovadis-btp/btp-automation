@@ -47,12 +47,13 @@ module "runtime_context" {
 </table>
 
 
+## Postmortem activities
 
 ## Troubleshooting kyma cluster
 
 ### Working with kyma modules
 
-More often then seldom, after the kymaruntime environment has been created, its kyma cluster is still not necessarily ready.  
+More often than seldom, after the kymaruntime environment has been created, its kyma cluster is still not necessarily ready.  
 This stems from the fact that kyma modules are being deployed asynchronously and no-blocking the kymaruntime environment rendering.  
 For instance, the api-gateway module mat still not be ready severla minutes after the kymaruntime environment creation.  
 
