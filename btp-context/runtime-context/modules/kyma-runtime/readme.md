@@ -48,9 +48,29 @@ module "runtime_context" {
 
 
 
+## Troubleshooting kyma cluster
+
+### Working with kyma modules
+
+More often then seldom, after the kymaruntime environment has been created, its kyma cluster is still not necessarily ready.  
+This stems from the fact that kyma modules are being deployed asynchronously and no-blocking the kymaruntime environment rendering.  
+For instance, the api-gateway module mat still not be ready severla minutes after the kymaruntime environment creation.  
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://gist.github.com/ptesny/2a6fce8d06a027f9e3b86967aeddf984#file-working-with-kyma-modules-md"><img class="aligncenter" src="https://github.com/user-attachments/assets/348e69bf-faf6-413d-9a6d-7c463e738170" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 
-## Troubleshooting 
+
+## Troubleshooting terraform
 
 ### Communication breakdown with the BTP CLI server
 
