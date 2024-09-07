@@ -69,7 +69,23 @@ For instance, the api-gateway module mat still not be ready severla minutes afte
 </tbody>
 </table>
 
+### Updating the machine type
 
+If the machine type is not defined then the second lowest machine type will be chosen, 4vCPUs with 16GB per each node.  
+If this is not what you want you can re-run the terraform script defining your own machine type.  
+The change of the machine type will be applied automatically without causing disruption to customer workloads under condition these have been properly configured with the pod budget and topology settings
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://gist.github.com/ptesny/a56f092a0e4474444a75bb11cdc60836#file-troubleshooting-notes-md"><img class="aligncenter" src="https://github.com/user-attachments/assets/a2613e57-61b5-4fc5-90a1-2d083224af27" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 ## Troubleshooting terraform
 
