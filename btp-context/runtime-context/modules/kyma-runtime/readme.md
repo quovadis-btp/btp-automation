@@ -82,6 +82,9 @@ The change of the machine type will be applied automatically without causing dis
 <div>
 <h1><a href="https://gist.github.com/ptesny/a56f092a0e4474444a75bb11cdc60836#file-troubleshooting-notes-md"><img class="aligncenter" src="https://github.com/user-attachments/assets/a2613e57-61b5-4fc5-90a1-2d083224af27" alt="" /></a></h1>
 </div>
+<div>
+<h1><a href="https://gist.github.com/ptesny/a56f092a0e4474444a75bb11cdc60836#file-troubleshooting-notes-md"><img class="aligncenter" src="https://github.com/user-attachments/assets/625422b6-ef48-4e1b-9cd2-19ce3f8975d6" alt="" /></a></h1>
+</div>  
 </td>
 </tr>
 </tbody>
