@@ -503,7 +503,7 @@ resource "terraform_data" "httpbin" {
       kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
     fi
 
-    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 30s)
+    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 3m)
     if [ "$HTTPBIN" = "deployment \"httpbin\" successfully rolled out" ]
     then 
       echo $HTTPBIN 
@@ -571,6 +571,8 @@ locals {
 }
 
 resource "terraform_data" "provider_context" {
+  depends_on = [terraform_data.kubectl_getnodes]
+
 /*
   triggers_replace = {
     always_run = "${timestamp()}"
