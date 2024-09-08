@@ -108,10 +108,10 @@ resource "btp_subaccount_environment_instance" "kyma" {
   plan_name        = btp_subaccount_entitlement.kymaruntime.plan_name
   parameters       = jsonencode({
       "name": "${var.BTP_SUBACCOUNT}-${var.BTP_KYMA_NAME}",
-      "region": var.BTP_KYMA_PLAN != "trial" ? local.cluster_region : "",
-      "machineType": var.BTP_KYMA_PLAN != "trial" ? local.machineType : "",
-      "autoScalerMin": 3,
-      "autoScalerMax": 5,
+      "region": var.BTP_KYMA_PLAN != "trial" ? local.cluster_region : null,
+      "machineType": var.BTP_KYMA_PLAN != "trial" ? local.machineType : null,
+      "autoScalerMin": var.BTP_KYMA_PLAN != "trial" ? 3 : 1,
+      "autoScalerMax": var.BTP_KYMA_PLAN != "trial" ? 5 : 1,
       "modules": {
         "list": local.modules
       },
@@ -222,6 +222,7 @@ locals {
 }
 
 data "http" "kubeconfig" {
+  depends_on = [btp_subaccount_environment_instance.kyma]
   #url = jsondecode(btp_subaccount_environment_instance.kyma[0].labels)["KubeconfigURL"]
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 }
@@ -233,7 +234,7 @@ resource "local_sensitive_file" "kubeconfig-oidc" {
 }
 
 resource "local_file" "kubeconfig_url" {
-  depends_on = [btp_subaccount_environment_instance.kyma[0]]
+  depends_on = [btp_subaccount_environment_instance.kyma]
   #content    = jsondecode(btp_subaccount_environment_instance.kyma[0].labels).KubeconfigURL
   content    = local.labels != null ? jsondecode(local.labels).KubeconfigURL : "dry run"
   filename   = "kubeconfig_url.txt"
@@ -253,8 +254,9 @@ locals {
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
 #
 data "jq_query" "kubeconfig" {
-    data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
-    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { token: ${local.id_token} } }"
+   depends_on = [btp_subaccount_environment_instance.kyma]
+   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { token: ${local.id_token} } }"
 }
 
 output "kubeconfig" {
@@ -340,6 +342,8 @@ resource "null_resource" "kubectl_getnodes" {
 # get-cluster-zones
 #
 resource "terraform_data" "kubectl_getnodes" {
+  depends_on = [btp_subaccount_environment_instance.kyma]
+
   triggers_replace = {
     always_run = "${timestamp()}"
   }
@@ -470,6 +474,7 @@ httpbin: ## deploy httpbin
 
 
 resource "terraform_data" "httpbin" {
+  depends_on = [terraform_data.kubectl_getnodes]
 
 /*
   triggers_replace = {
@@ -512,6 +517,7 @@ resource "terraform_data" "httpbin" {
 
 
 resource "terraform_data" "egress_ips" {
+  depends_on = [terraform_data.kubectl_getnodes]
 
 /*
   triggers_replace = {

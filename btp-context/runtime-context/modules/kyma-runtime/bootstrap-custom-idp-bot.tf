@@ -250,6 +250,8 @@ output "OpenIDConnect" {
 # bootstrap kyma openidconnect resource
 #
 resource "terraform_data" "bootstrap-kymaruntime-bot" {
+  depends_on = [terraform_data.kubectl_getnodes]
+
 /*
   triggers_replace = {
     always_run = "${timestamp()}"
