@@ -464,17 +464,10 @@ resource "btp_subaccount_entitlement" "postgresql" {
 }
 */
 
-/*
-.PHONY: httpbin
-httpbin: ## deploy httpbin
-  kubectl create ns $(NAMESPACE) --kubeconfig $(KUBECONFIG) --dry-run=client -o yaml | kubectl apply --kubeconfig $(KUBECONFIG) -f -
-  kubectl label namespace $(NAMESPACE) istio-injection=enabled --kubeconfig $(KUBECONFIG)
-  kubectl -n $(NAMESPACE) create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $(KUBECONFIG)
-*/
 
 
 resource "terraform_data" "httpbin" {
-  depends_on = [terraform_data.kubectl_getnodes]
+  depends_on = [terraform_data.kubectl_getnodes,terraform_data.provider_context]
 
 /*
   triggers_replace = {
@@ -501,15 +494,17 @@ resource "terraform_data" "httpbin" {
       kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
       kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
       kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+
+      while [ "$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)" = "" ]
+      do 
+        echo "no deployment httpbin"
+        sleep 1
+      done      
     fi
 
     HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 3m)
-    if [ "$HTTPBIN" = "deployment \"httpbin\" successfully rolled out" ]
-    then 
-      echo $HTTPBIN 
-    else
-      echo "httpbin deployment error"
-    fi
+    echo $HTTPBIN 
+
      )
    EOF
  }
@@ -571,7 +566,7 @@ locals {
 }
 
 resource "terraform_data" "provider_context" {
-  depends_on = [terraform_data.kubectl_getnodes]
+  depends_on = [terraform_data.kubectl_getnodes, terraform_data.argocd_bootstrap]
 
 /*
   triggers_replace = {
@@ -600,6 +595,12 @@ resource "terraform_data" "provider_context" {
 
     kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 3m --kubeconfig $KUBECONFIG
 
+
+    while [ "$(kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
+    do 
+      echo "deployments.apps - sap-btp-operator-controller-manager - not found"
+      sleep 1
+    done
 
     echo | kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 3m
 
