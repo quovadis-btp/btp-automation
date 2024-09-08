@@ -324,14 +324,21 @@ resource "null_resource" "kubectl_getnodes" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
      (
-     set -e -o pipefail ;\
-     echo "${local.kubeconfig}" > kubeconfig-headless2.yaml ;\
-     echo | kubectl get nodes --kubeconfig kubeconfig-headless2.yaml ;\
+     set -e -o pipefail
+     echo "${local.kubeconfig}" > kubeconfig-headless2.yaml
+     echo | kubectl get nodes --kubeconfig kubeconfig-headless2.yaml
+     
+     ## get-cluster-zones:
+     echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless2.yaml
+
      )
    EOF
  }
 }
 
+#
+# get-cluster-zones
+#
 resource "terraform_data" "kubectl_getnodes" {
   triggers_replace = {
     always_run = "${timestamp()}"
@@ -341,8 +348,11 @@ resource "terraform_data" "kubectl_getnodes" {
    command = <<EOF
      (
     set -e -o pipefail ;\
-    echo "${local.kubeconfig}" > kubeconfig-headless.yaml ;\
-    echo | kubectl get nodes --kubeconfig kubeconfig-headless.yaml ;\
+    echo "${local.kubeconfig}" > kubeconfig-headless.yaml
+    #echo | kubectl get nodes --kubeconfig kubeconfig-headless.yaml
+
+    ## get-cluster-zones:
+    echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless.yaml
      )
    EOF
  }
@@ -480,14 +490,20 @@ resource "terraform_data" "httpbin" {
     NAMESPACE=quovadis-btp
 
     set -e -o pipefail
+    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)
+    if [ "$HTTPBIN" = "" ]
+    then
+      kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+      kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+      kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+    fi
+
     HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 30s)
     if [ "$HTTPBIN" = "deployment \"httpbin\" successfully rolled out" ]
     then 
       echo $HTTPBIN 
     else
-      kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
-      kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
-      kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+      echo "httpbin deployment error"
     fi
      )
    EOF
