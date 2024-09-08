@@ -378,7 +378,7 @@ data "http" "argocd_token" {
   request_headers = {
     Content-Type  = "application/x-www-form-urlencoded"
   }  
-  request_body = "grant_type=password&username=${var.argocd_username}&password=${var.argocd_password}&client_id=${var.argocd_clientid}&scope=groups,email"
+  request_body = "grant_type=password&username=${var.argocd_username}&password=${var.argocd_password}&client_id=${var.argocd_clientid}&scope=groups email"
 }
 
 locals {
@@ -449,6 +449,51 @@ resource "btp_subaccount_entitlement" "postgresql" {
   amount        = 1
 }
 */
+
+/*
+.PHONY: httpbin
+httpbin: ## deploy httpbin
+  kubectl create ns $(NAMESPACE) --kubeconfig $(KUBECONFIG) --dry-run=client -o yaml | kubectl apply --kubeconfig $(KUBECONFIG) -f -
+  kubectl label namespace $(NAMESPACE) istio-injection=enabled --kubeconfig $(KUBECONFIG)
+  kubectl -n $(NAMESPACE) create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $(KUBECONFIG)
+*/
+
+
+resource "terraform_data" "httpbin" {
+
+/*
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+*/
+
+  triggers_replace = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes
+  ]
+
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    KUBECONFIG=kubeconfig-headless.yaml
+    NAMESPACE=quovadis-btp
+
+    set -e -o pipefail
+    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 30s)
+    if [ "$HTTPBIN" = "deployment \"httpbin\" successfully rolled out" ]
+    then 
+      echo $HTTPBIN 
+    else
+      kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+      kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+      kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+    fi
+     )
+   EOF
+ }
+}
+
 
 resource "terraform_data" "egress_ips" {
 
