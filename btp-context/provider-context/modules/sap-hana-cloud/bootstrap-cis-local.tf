@@ -226,13 +226,18 @@ data "btp_subaccount_subscription" "build_workzone" {
 
 }
 
+# https://stackoverflow.com/a/74460150
+locals {
+  subscription_url = one(data.btp_subaccount_subscription.build_workzone[*].subscription_url)
+}
+
 output "sap_build_workzone_subscription_url" {
-  value       = one(data.btp_subaccount_subscription.build_workzone[*].subscription_url)
+  value       = local.subscription_url != null ? local.subscription_url : ""
   description = "SAP Build Workzone subscription URL."
 }
 
 locals {
-  sap_approuter_dynamic_dest = "${replace(one(data.btp_subaccount_subscription.build_workzone[*].subscription_url), ".dt", "")}/dynamic_dest"
+  sap_approuter_dynamic_dest = local.subscription_url != null ? "${replace(local.subscription_url, ".dt", "")}/dynamic_dest" : ""
 }
 
 output "httpbin_headers_url" {
