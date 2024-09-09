@@ -134,6 +134,55 @@ locals {
   service_name__build_workzone = "SAPLaunchpad"
 }
 
+/*
+TODO: need to check if there is enough free SAPLaunchpad service quota
+
+launchpad_free = {
+  "SAPLaunchpad" = {
+    "category" = "QUOTA_BASED_APPLICATION"
+    "plan_description" = "The free plan has quota restrictions. Please note, only community support is available for free service plans and these are not subject to SLAs. Use of free tier service plans are subject to additional terms and conditions as provided in the Business Technology Platform Supplemental Terms and Conditions linked in the Additional Links tab displayed in the Service tile."
+    "plan_display_name" = "free"
+    "plan_name" = "free"
+    "quota_assigned" = 1
+    "quota_remaining" = 0
+    "service_display_name" = "SAP Build Work Zone, standard edition"
+    "service_name" = "SAPLaunchpad"
+  }
+}
+
+in order to mitigate the following error message:
+
+╷
+│ Error: API Error Creating Resource Entitlement (Subaccount)
+│ 
+│ Cannot assign the quota for service 'SAPLaunchpad' and service plan 'free' to subaccount da63f705-0009-4f6f-a5ef-f543747c7d1a. The requested
+│ quota (1) exceeds the maximum allowed amount (2) for this service plan across all subaccounts in this global account or directory. [Error:
+│ 30009/409]
+╵
+https://stackoverflow.com/questions/58594506/how-to-for-each-through-a-listobjects-in-terraform-0-12
+
+https://github.com/recognizegroup/terraform/tree/develop/modules
+
+https://developer.hashicorp.com/terraform/tutorials/configuration-language/for-each
+
+*/
+data "btp_subaccounts" "all" {}
+data "btp_globalaccount_entitlements" "all" {}
+
+data "btp_subaccount_entitlements" "all" {
+  subaccount_id = data.btp_subaccount.context.id
+}
+
+locals {
+  
+  free_entitlements = { 
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "free"
+  }
+}
+
+output "free_entitlements" {
+  value = local.free_entitlements
+}
 
 resource "btp_subaccount_entitlement" "build_workzone" {
   subaccount_id = data.btp_subaccount.context.id
@@ -164,6 +213,11 @@ data "btp_subaccount_subscription" "build_workzone" {
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
   depends_on    = [btp_subaccount_subscription.build_workzone]
+
+  timeouts = {
+    create = "25m"
+    delete = "15m"
+  }
 }
 
 output "sap_build_workzone_subscription_url" {

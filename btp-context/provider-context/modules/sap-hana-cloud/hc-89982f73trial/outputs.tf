@@ -35,3 +35,7 @@ output "postgresql_db" {
 output "launchpad_free" {
   value       = module.provider_context.launchpad_free
 }
+
+output "free_entitlements" {
+  value = module.provider_context.free_entitlements
+}
