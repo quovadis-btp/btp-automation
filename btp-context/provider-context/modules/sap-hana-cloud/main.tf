@@ -18,8 +18,24 @@ locals {
   }
 }
 
+# Read the entiltement data
+data "btp_subaccount_entitlements" "all" {
+  subaccount_id = data.btp_subaccount.context.id
+}
+
+# Extract the right entry from all entitlements
+locals {
+  result = {
+    for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement
+    #if entitlement.service_name == var.service_name && entitlement.plan_name == var.service_plan_name
+    if entitlement.service_name == "postgresql-db" && entitlement.plan_name == trial"
+  }
+}
+
+
 # adding postgresql-db entitlement (quota-based)
 resource "btp_subaccount_entitlement" "postgresql" {
+  count         = local.results != null ? 1 : 0
   subaccount_id = data.btp_subaccount.context.id
   service_name  = "postgresql-db"
   plan_name     = "trial"
