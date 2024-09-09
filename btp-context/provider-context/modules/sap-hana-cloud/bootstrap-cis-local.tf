@@ -181,6 +181,8 @@ output "free_entitlements" {
 }
 
 resource "btp_subaccount_entitlement" "build_workzone" {
+  count         = var.BTP_FREE_LAUNCHPAD_QUOTA ? 1 : 0
+
   subaccount_id = data.btp_subaccount.context.id
   service_name  = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
@@ -214,6 +216,8 @@ resource "btp_subaccount_role_collection_assignment" "launchpad_admin" {
 }
 
 data "btp_subaccount_subscription" "build_workzone" {
+  count         = var.BTP_FREE_LAUNCHPAD_QUOTA ? 1 : 0
+
   depends_on    = [btp_subaccount_subscription.build_workzone]
 
   subaccount_id = data.btp_subaccount.context.id
@@ -223,12 +227,12 @@ data "btp_subaccount_subscription" "build_workzone" {
 }
 
 output "sap_build_workzone_subscription_url" {
-  value       = data.btp_subaccount_subscription.build_workzone.subscription_url
+  value       = one(data.btp_subaccount_subscription.build_workzone[*].subscription_url)
   description = "SAP Build Workzone subscription URL."
 }
 
 locals {
-  sap_approuter_dynamic_dest = "${replace(data.btp_subaccount_subscription.build_workzone.subscription_url, ".dt", "")}/dynamic_dest"
+  sap_approuter_dynamic_dest = "${replace(one(data.btp_subaccount_subscription.build_workzone[*].subscription_url), ".dt", "")}/dynamic_dest"
 }
 
 output "httpbin_headers_url" {
