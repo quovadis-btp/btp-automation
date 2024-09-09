@@ -71,9 +71,9 @@ output "launchpad_free" {
 # adding postgresql-db entitlement (quota-based)
 #
 resource "btp_subaccount_entitlement" "postgresql" {
-  count          = module.provider_context.plan_found == 1 ? 1 : 0
-  #count         = module.provider_context.postgresql_db == null ? 0 : 1
-  #count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+
+
+  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
   #count         = local.postgresql_db != null ? 1 : 0
   #for_each      = { for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial" }
 
