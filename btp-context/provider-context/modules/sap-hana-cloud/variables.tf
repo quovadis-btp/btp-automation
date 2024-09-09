@@ -91,7 +91,7 @@ variable "plan_name" {
 variable "BTP_POSTGRESQL_PLAN" {
   description = "The name of the Postgresql-db Hyperscaler edition"
   type        = string
-  default     = "trial"     
+  default     = "freesbie"     
 }
 
 variable "instance_name" {
