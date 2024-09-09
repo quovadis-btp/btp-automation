@@ -19,27 +19,6 @@ locals {
 }
 
 
-data "btp_subaccount_service_offering" "by_name" {
-  subaccount_id = data.btp_subaccount.context.id
-  name          = "postgresql-db"
-}
-
-# Retrieve all service plans for the service offering'
-data "btp_subaccount_service_plans" "all" {
-  subaccount_id = data.btp_subaccount.context.id
-  fields_filter = "service_offering_id eq '${data.btp_subaccount_service_offering.by_name.id}'"
-}
-
-# Check if the service plan with the specified name exists (0 = not found, 1 = found)
-locals {
-  serviceplan_found = length([for plan in data.btp_subaccount_service_plans.all.values : plan if plan.name == "trial"]) == 0 ? 0 : 1
-}
-
-# Return the result of the check
-output "plan_found" {
-  value = local.serviceplan_found
-}
-
 # Read the entiltement data
 data "btp_subaccount_entitlements" "all" {
   subaccount_id = data.btp_subaccount.context.id
