@@ -169,10 +169,6 @@ https://developer.hashicorp.com/terraform/tutorials/configuration-language/for-e
 data "btp_subaccounts" "all" {}
 data "btp_globalaccount_entitlements" "all" {}
 
-data "btp_subaccount_entitlements" "all" {
-  subaccount_id = data.btp_subaccount.context.id
-}
-
 locals {
   
   free_entitlements = { 
