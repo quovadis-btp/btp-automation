@@ -18,6 +18,28 @@ locals {
   }
 }
 
+
+data "btp_subaccount_service_offering" "by_name" {
+  subaccount_id = data.btp_subaccount.context.id
+  name          = "postgresql-db"
+}
+
+# Retrieve all service plans for the service offering'
+data "btp_subaccount_service_plans" "all" {
+  subaccount_id = data.btp_subaccount.context.id
+  fields_filter = "service_offering_id eq '${data.btp_subaccount_service_offering.by_name.id}'"
+}
+
+# Check if the service plan with the specified name exists (0 = not found, 1 = found)
+locals {
+  serviceplan_found = length([for plan in data.btp_subaccount_service_plans.all.values : plan if plan.name == "trial"]) == 0 ? 0 : 1
+}
+
+# Return the result of the check
+output "plan_found" {
+  value = local.serviceplan_found
+}
+
 # Read the entiltement data
 data "btp_subaccount_entitlements" "all" {
   subaccount_id = data.btp_subaccount.context.id
@@ -47,8 +69,10 @@ output "launchpad_free" {
 
 
 # adding postgresql-db entitlement (quota-based)
+#
 resource "btp_subaccount_entitlement" "postgresql" {
-  count         = module.provider_context.postgresql_db == null ? 0 : 1
+  count          = module.provider_context.plan_found == 1 ? 1 : 0
+  #count         = module.provider_context.postgresql_db == null ? 0 : 1
   #count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
   #count         = local.postgresql_db != null ? 1 : 0
   #for_each      = { for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial" }
