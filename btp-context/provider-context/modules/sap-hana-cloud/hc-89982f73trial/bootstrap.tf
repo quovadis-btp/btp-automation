@@ -28,4 +28,5 @@ module "provider_context" {
   service_plan__build_workzone = var.service_plan__build_workzone
   subaccount_id              = var.subaccount_id
   whitelist_ips              = ["0.0.0.0/0"]
+  BTP_POSTGRESQL_PLAN       = module.provider_context.postgresql_db == {} ? "" : "trial"
 }
