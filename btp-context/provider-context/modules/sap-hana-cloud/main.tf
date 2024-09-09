@@ -36,9 +36,6 @@ locals {
   }
 }
 
-output "postgresql_db" {
-  value = local.postgresql_db
-}
 
 # adding postgresql-db entitlement (quota-based)
 resource "btp_subaccount_entitlement" "postgresql" {
