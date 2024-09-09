@@ -208,7 +208,7 @@ resource "btp_subaccount_subscription" "build_workzone" {
 
 # Assign users to Role Collection: Launchpad_Admin
 resource "btp_subaccount_role_collection_assignment" "launchpad_admin" {
-  for_each             = toset("${var.launchpad_admins}")
+  for_each             = var.BTP_FREE_LAUNCHPAD_QUOTA ? toset("${var.launchpad_admins}") : {}
   subaccount_id        = data.btp_subaccount.context.id
   role_collection_name = "Launchpad_Admin"
   user_name            = each.value
