@@ -211,11 +211,12 @@ data "btp_subaccount_subscription" "build_workzone" {
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
 
-  /**/
+  /*
   timeouts = {
     create = "25m"
     delete = "15m"
-  }/**/
+  }
+  */
 }
 
 output "sap_build_workzone_subscription_url" {
