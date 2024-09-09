@@ -29,5 +29,5 @@ module "provider_context" {
   subaccount_id              = var.subaccount_id
   whitelist_ips              = ["0.0.0.0/0"]
   BTP_POSTGRESQL_PLAN       = module.provider_context.postgresql_db == {} ? "" : "trial"
-  BTP_FREE_LAUNCHPAD_QUOTA  = module.provider_context.launchpad_free == {} ? 0 : 1
+  BTP_FREE_LAUNCHPAD_QUOTA  = true
 }

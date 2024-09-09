@@ -39,3 +39,19 @@ output "launchpad_free" {
 output "free_entitlements" {
   value = module.provider_context.free_entitlements
 }
+
+output "sap_build_workzone_subscription_url" {
+  value       = module.provider_context.sap_build_workzone_subscription_url
+  description = "SAP Build Workzone subscription URL."
+}
+
+
+output "httpbin_headers_url" {
+  value       = module.provider_context.httpbin_headers_url
+  description = "HTTPBIN headers."
+}
+
+output "provisioning_service_environments_url" {
+  value       = module.provider_context.provisioning_service_environments_url
+  description = "SAP Cloud Management Service APIs (provisioning_service_url)."
+}

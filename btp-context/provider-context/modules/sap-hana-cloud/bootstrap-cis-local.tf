@@ -189,10 +189,19 @@ resource "btp_subaccount_entitlement" "build_workzone" {
 
 # Create app subscription to SAP Build Workzone, standard edition (depends on entitlement)
 resource "btp_subaccount_subscription" "build_workzone" {
+  count         = var.BTP_FREE_LAUNCHPAD_QUOTA ? 1 : 0
+
   subaccount_id = data.btp_subaccount.context.id
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
   depends_on    = [btp_subaccount_entitlement.build_workzone]
+
+  /*
+  timeouts = {
+    create = "25m"
+    delete = "15m"
+  }
+  */
 }
 
 # Assign users to Role Collection: Launchpad_Admin
@@ -205,19 +214,12 @@ resource "btp_subaccount_role_collection_assignment" "launchpad_admin" {
 }
 
 data "btp_subaccount_subscription" "build_workzone" {
-  count         = var.BTP_FREE_LAUNCHPAD_QUOTA == 0 ? 0 : 1
   depends_on    = [btp_subaccount_subscription.build_workzone]
 
   subaccount_id = data.btp_subaccount.context.id
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
 
-  /*
-  timeouts = {
-    create = "25m"
-    delete = "15m"
-  }
-  */
 }
 
 output "sap_build_workzone_subscription_url" {
