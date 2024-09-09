@@ -50,11 +50,3 @@ output "subaccount_labels" {
   description = "The labels of the subaccount."
   value       = data.btp_subaccount.context.labels
 }
-
-output "postgresql_db" {
-  value       = local.postgresql_db
-}
-
-output "launchpad_free" {
-  value       = local.launchpad_free
-}
