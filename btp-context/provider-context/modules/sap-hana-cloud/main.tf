@@ -35,7 +35,7 @@ locals {
 
 # adding postgresql-db entitlement (quota-based)
 resource "btp_subaccount_entitlement" "postgresql" {
-  count         = local.results != null ? 1 : 0
+  count         = local.result != null ? 1 : 0
   subaccount_id = data.btp_subaccount.context.id
   service_name  = "postgresql-db"
   plan_name     = "trial"
