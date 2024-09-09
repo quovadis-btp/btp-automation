@@ -27,3 +27,11 @@ output "provider_k8s" {
   sensitive = true
   value = module.provider_context.provider_k8s["content"]
 }
+
+output "postgresql_db" {
+  value       = module.provider_context.postgresql_db
+}
+
+output "launchpad_free" {
+  value       = module.provider_context.launchpad_free
+}
