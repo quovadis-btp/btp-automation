@@ -205,6 +205,7 @@ resource "btp_subaccount_role_collection_assignment" "launchpad_admin" {
 }
 
 data "btp_subaccount_subscription" "build_workzone" {
+  count         = var.BTP_FREE_LAUNCHPAD_QUOTA == 0 ? 0 : 1
   depends_on    = [btp_subaccount_subscription.build_workzone]
 
   subaccount_id = data.btp_subaccount.context.id

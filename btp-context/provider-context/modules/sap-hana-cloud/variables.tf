@@ -94,6 +94,13 @@ variable "BTP_POSTGRESQL_PLAN" {
   default     = "freesbie"     
 }
 
+variable "BTP_FREE_LAUNCHPAD_QUOTA" {
+  description = "Any free launchapd service available for the subaccount"
+  type        = bool 
+}
+
+
+
 variable "instance_name" {
   description = "The name of the SAP HANA Cloud instance"
   type        = string
