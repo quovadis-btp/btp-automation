@@ -35,7 +35,8 @@ locals {
 
 # adding postgresql-db entitlement (quota-based)
 resource "btp_subaccount_entitlement" "postgresql" {
-  count         = local.result != null ? 1 : 0
+  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+  #count         = local.result != null ? 1 : 0
   #for_each      = { for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial" }
 
   subaccount_id = data.btp_subaccount.context.id

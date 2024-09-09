@@ -88,6 +88,12 @@ variable "plan_name" {
   default     = "hana"     
 }
 
+variable "BTP_POSTGRESQL_PLAN" {
+  description = "The name of the Postgresql-db Hyperscaler edition"
+  type        = string
+  default     = "trial"     
+}
+
 variable "instance_name" {
   description = "The name of the SAP HANA Cloud instance"
   type        = string
