@@ -1,25 +1,3 @@
-
-/*
-.PHONY: free-trial-kymaruntime-quota
-free-trial-kymaruntime-quota: 
-  btp assign accounts/entitlement --to-subaccount $$(btp list accounts/subaccount | jq -r '.value[] | select(.displayName == "trial") | .guid ') --for-service kymaruntime --plan trial --amount 0
-
-I need to implement it with an external tf provider by passing the username, pssword and the ga subdomain to do the login with btp cli...
-
-for the BTPCLI passwords that have special characters and need to be wrapped into single quotes:
-https://superuser.com/questions/1506499/surround-field-from-json-with-quotes
-
-
-
-#!/bin/bash
-
-set -e -o pipefail 
-ISSUER=$(jq -r '{url: "\(.url)", username: "\(.username)", password: "\(.password)", globalaccount: "\(.globalaccount)" }' )
-jq -n --arg issuer "$ISSUER" '{"username": $issuer}'
-
-
-*/
-
 # https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
 #
 data "external" "free-trial-kymaruntime-quota" {
