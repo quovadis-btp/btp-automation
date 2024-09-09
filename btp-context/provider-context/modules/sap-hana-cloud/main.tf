@@ -26,15 +26,26 @@ data "btp_subaccount_entitlements" "all" {
 
 # Extract the right entry from all entitlements
 locals {
+/*
   postgresql_db = {
     for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement 
-    #if entitlement.service_name == var.service_name && entitlement.plan_name == var.service_plan_name
     if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial"
   }
+
+
   launchpad_free = {
     for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement 
     if entitlement.service_name == "SAPLaunchpad" && entitlement.plan_name == "free"
+  }*/
+
+  postgresql_db = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "trial" && service.service_name == "postgresql-db"
   }
+
+
+  launchpad_free = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "QUOTA_BASED_APPLICATION" && service.plan_name == "free" && service.service_name == "SAPLaunchpad"
+  }  
 }
 
 
