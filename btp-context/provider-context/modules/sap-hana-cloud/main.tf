@@ -28,7 +28,7 @@ locals {
   result = {
     for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement
     #if entitlement.service_name == var.service_name && entitlement.plan_name == var.service_plan_name
-    if entitlement.service_name == "postgresql-db" && entitlement.plan_name == trial"
+    if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial"
   }
 }
 
