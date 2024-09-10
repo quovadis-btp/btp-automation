@@ -92,13 +92,56 @@ resource "btp_subaccount_entitlement" "tools" {
   plan_name     = var.hana_cloud_tools_plan_name
 }
 
-/*
-resource "btp_subaccount_entitlement" "destination" {
+resource "btp_subaccount_entitlement" "admin_api_access" {
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+
   subaccount_id = data.btp_subaccount.context.id
-  service_name  = "destination"
-  plan_name     = "lite"
+  service_name  = var.service_name
+  plan_name     = "admin-api-access"
 }
-*/
+
+data "btp_subaccount_service_plan" "admin_api_access" {
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+
+  subaccount_id = data.btp_subaccount.context.id
+  name          = "admin-api-access"
+  offering_name = var.service_name
+  depends_on = [
+    btp_subaccount_entitlement.admin_api_access
+  ]
+}
+
+#
+# https://help.sap.com/docs/hana-cloud/sap-hana-cloud-administration-guide/access-administration-api
+#
+resource "btp_subaccount_service_instance" "admin_api_access" {
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+
+  subaccount_id  = data.btp_subaccount.context.id
+  serviceplan_id = data.btp_subaccount_service_plan.admin_api_access[0].id
+  name           = "admin-api-access"
+
+  # https://help.sap.com/docs/btp/sap-business-technology-platform/application-security-descriptor-configuration-syntax#oauth2-configuration-(custom-option)
+  #
+  parameters = jsonencode({
+    "technicalUser": true,
+    "oauth2Configuration": {
+        "token-validity": 43200,
+        "grant-types": [
+            "client_credentials"
+        ],
+        "credential-types": ["binding-secret","x509"]
+    }
+  })
+  timeouts = {
+    create = "5m"
+    update = "5m"
+    delete = "5m"
+  }
+  depends_on = [
+    btp_subaccount_entitlement.admin_api_access
+  ]
+}
 
 resource "btp_subaccount_role_collection_assignment" "hana_admin" {
   subaccount_id        = data.btp_subaccount.context.id

@@ -99,6 +99,14 @@ variable "BTP_FREE_LAUNCHPAD_QUOTA" {
   type        = bool 
 }
 
+#
+# https://help.sap.com/docs/hana-cloud/sap-hana-cloud-administration-guide/access-administration-api
+#
+variable "HC_ADMIN_API_ACCESS" {
+  description = "SAP HANA Cloud administration API service plan"
+  type        = bool 
+}
+
 
 
 variable "instance_name" {
