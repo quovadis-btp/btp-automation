@@ -329,6 +329,7 @@ resource "null_resource" "kubectl_getnodes" {
      set -e -o pipefail
      echo "${local.kubeconfig}" > kubeconfig-headless2.yaml
      echo | kubectl get nodes --kubeconfig kubeconfig-headless2.yaml
+     echo | kubectl resource-capacity --kubeconfig kubeconfig-headless2.yaml
      
      ## get-cluster-zones:
      echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless2.yaml
@@ -357,6 +358,9 @@ resource "terraform_data" "kubectl_getnodes" {
 
     ## get-cluster-zones:
     echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless.yaml
+    
+    echo | kubectl resource-capacity --kubeconfig kubeconfig-headless.yaml
+
      )
    EOF
  }
