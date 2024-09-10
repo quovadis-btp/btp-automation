@@ -44,11 +44,17 @@ locals {
 
 
   launchpad_free = {
-    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "QUOTA_BASED_APPLICATION" && service.plan_name == "free" && service.service_name == "SAPLaunchpad" && service.quota_remaining >= 0
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "QUOTA_BASED_APPLICATION" && service.plan_name == "free" && service.service_name == "SAPLaunchpad" && service.quota_remaining >=  0
   }  
+
+  admin_api_access = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "admin-api-access" && service.service_name == "hana-cloud"
+
+  }
 }
 
-
+// only use the trial postresql plan, the reson being even the free postfresql plan incurs a charge
+#
 output "postgresql_db" {
   value       = local.postgresql_db
 }
@@ -57,15 +63,15 @@ output "launchpad_free" {
   value       = local.launchpad_free
 }
 
+output "admin_api_access" {
+  value       = local.admin_api_access
+}
+
 
 # adding postgresql-db entitlement (quota-based)
 #
 resource "btp_subaccount_entitlement" "postgresql" {
-
-
   count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
-  #count         = local.postgresql_db != null ? 1 : 0
-  #for_each      = { for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial" }
 
   subaccount_id = data.btp_subaccount.context.id
   service_name  = "postgresql-db"
@@ -454,4 +460,33 @@ data "external" "openssl_cert" {
 
 locals {
   hc-x509-p12 = data.external.openssl_cert.result
+}
+
+
+output "dest-httpbin" {
+  value       = "${local.sap_approuter_dynamic_dest}/dest-httpbin/headers"
+  description = "dest-httpbin"
+}
+
+output "subaccountDestinations" {
+  value       = "${local.sap_approuter_dynamic_dest}/destination-service/subaccountDestinations"
+  description = "destination-service: subaccountDestinations"
+}
+
+output "instanceDestinations" {
+  value       = "${local.sap_approuter_dynamic_dest}/destination-service/instanceDestinations"
+  description = "destination-service: instanceDestinations"
+}
+
+output "hc-metrics" {
+  value       = "${local.sap_approuter_dynamic_dest}/hc-services/metrics/v1/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/values"
+  description = "SAP HANA Cloud Management APIs"
+}
+output "hc-alerts" {
+  value       = "${local.sap_approuter_dynamic_dest}/hc-services/alerts/v1/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/events?alertState=All&severity=INFO,NOTICE,WARNING,ERROR"
+  description = "SAP HANA Cloud Management APIs"
+}
+output "hc-inventory" {
+  value       = "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
+  description = "SAP HANA Cloud Management APIs"
 }

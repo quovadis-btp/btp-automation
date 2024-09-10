@@ -36,6 +36,10 @@ output "launchpad_free" {
   value       = module.provider_context.launchpad_free
 }
 
+output "admin_api_access" {
+  value       = module.provider_context.admin_api_access
+}
+
 output "free_entitlements" {
   value = module.provider_context.free_entitlements
 }
@@ -54,4 +58,32 @@ output "httpbin_headers_url" {
 output "provisioning_service_environments_url" {
   value       = module.provider_context.provisioning_service_environments_url
   description = "SAP Cloud Management Service APIs (provisioning_service_url)."
+}
+
+output "dest-httpbin" {
+  value       = module.provider_context.dest-httpbin
+  description = "dest-httpbin"
+}
+
+output "subaccountDestinations" {
+  value       = module.provider_context.subaccountDestinations
+  description = "destination-service: subaccountDestinations"
+}
+
+output "instanceDestinations" {
+  value       = module.provider_context.instanceDestinations
+  description = "destination-service: instanceDestinations"
+}
+
+output "hc-metrics" {
+  value       = module.provider_context.hc-metrics
+  description = "SAP HANA Cloud Management APIs"
+}
+output "hc-alerts" {
+  value       = module.provider_context.hc-alerts
+  description = "SAP HANA Cloud Management APIs"
+}
+output "hc-inventory" {
+  value       = module.provider_context.hc-inventory
+  description = "SAP HANA Cloud Management APIs"
 }
