@@ -42,3 +42,8 @@ btp-context/runtime-context/modules/kyma-runtime/kyma-adoption-stage.sav/bootstr
 btp-context/runtime-context/modules/kyma-runtime/kyma-adoption-stage.sav/import.sav
 btp-context/runtime-context/modules/kyma-runtime/kyma-adoption-stage.sav/provider.tf
 btp-context/runtime-context/modules/kyma-runtime/kyma-adoption-stage.sav/variables.tf
+/btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/terraform-visual-report
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/plan.json
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/plan.out
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/plan2.json
+btp-context/provider-context/modules/sap-hana-cloud/hc-89982f73trial/plan2.out
