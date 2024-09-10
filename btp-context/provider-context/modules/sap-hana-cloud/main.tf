@@ -48,7 +48,7 @@ locals {
   }  
 
   admin_api_access = {
-    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "admin-api-access" && service.service_name == "hana-cloud"
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.plan_name == "admin-api-access" && service.service_name == "hana-cloud"
 
   }
 }
