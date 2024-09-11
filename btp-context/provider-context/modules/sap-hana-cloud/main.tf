@@ -143,6 +143,38 @@ resource "btp_subaccount_service_instance" "admin_api_access" {
   ]
 }
 
+
+# create an admin_api_access service binding in a subaccount
+#
+resource "btp_subaccount_service_binding" "admin_api_access_binding" {
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+
+  subaccount_id       = data.btp_subaccount.context.id
+  service_instance_id = btp_subaccount_service_instance.admin_api_access[0].id
+  name                = "admin-api-access-key"
+  depends_on = [
+    //btp_subaccount_service_instance.admin_api_access[0]
+    btp_subaccount_service_instance.admin_api_access
+  ]
+}
+
+# create a parameterized admin_api_access service binding in a subaccount
+#
+resource "btp_subaccount_service_binding" "admin_api_access_binding_x509" {
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+
+  subaccount_id       = data.btp_subaccount.context.id
+  service_instance_id = btp_subaccount_service_instance.admin_api_access[0].id
+  name                = "admin-api-access-x509"
+  parameters = jsonencode({
+    credential-type = "x509"
+    x509 = {    "key-length": 4096,"validity": 365,"validity-type": "DAYS" }
+  })
+  depends_on = [
+    btp_subaccount_service_instance.admin_api_access[0]
+  ]
+}
+
 resource "btp_subaccount_role_collection_assignment" "hana_admin" {
   subaccount_id        = data.btp_subaccount.context.id
   for_each             = var.admins == null ? {} : { for user in var.admins : user => user }
