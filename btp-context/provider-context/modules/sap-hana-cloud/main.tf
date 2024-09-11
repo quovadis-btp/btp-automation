@@ -465,7 +465,7 @@ resource "btp_subaccount_service_binding" "dest_binding" {
   ]
 }
 
-
+/*
 # create a service binding data source
 data "btp_subaccount_service_binding" "dest_binding_data" {
   subaccount_id       = data.btp_subaccount.context.id
@@ -475,6 +475,7 @@ data "btp_subaccount_service_binding" "dest_binding_data" {
     btp_subaccount_service_binding.dest_binding
   ]
 }
+*/
 
 locals {
   dest-secret = jsondecode(btp_subaccount_service_binding.dest_binding.credentials)
