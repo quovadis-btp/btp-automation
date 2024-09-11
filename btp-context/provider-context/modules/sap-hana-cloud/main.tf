@@ -444,11 +444,13 @@ resource "btp_subaccount_service_instance" "dest_provider" {
   
   })
 
+/*
   lifecycle {
     replace_triggered_by = [
       btp_subaccount_service_binding.dest_binding
     ]
   }
+*/
 
 }
 
