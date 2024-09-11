@@ -18,7 +18,8 @@ variable "BTP_BOT_PASSWORD" {
 
 variable "BTP_BACKEND_URL" {
   type        = string
-  description = "BTP backend URL"
+  description = "BTP CLI backend URL - defaults to live/trial BTP landscapes"
+  default     = "https://cli.btp.cloud.sap"
 }
 
 variable "BTP_SUBACCOUNT" {
