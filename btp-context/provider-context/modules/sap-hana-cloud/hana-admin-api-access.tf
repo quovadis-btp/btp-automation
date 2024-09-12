@@ -169,7 +169,7 @@ locals {
 }
 
 locals {
-  admin_api_access-secret = local.admin_api_access-credentials != null ? jsondecode(local.admin_api_access-credentials)["uaa"] : ""
+  admin_api_access-secret = local.admin_api_access-credentials != null ? jsondecode(local.admin_api_access-credentials)["uaa"] : {clientid: "", clientsecret: "", url: "",}
 }
 
 locals {
@@ -177,7 +177,8 @@ locals {
 }
 
 locals {
-  admin_api_access-x509 = local.admin_api_access_x509-credentials != null ? jsondecode(local.admin_api_access_x509-credentials)["uaa"] : ""
+  admin_api_access-x509 = local.admin_api_access_x509-credentials != null ? jsondecode(local.admin_api_access_x509-credentials)["uaa"] : {clientid: "", url: "",}
+}
 }
 
 locals {
