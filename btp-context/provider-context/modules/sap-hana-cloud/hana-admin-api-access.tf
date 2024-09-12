@@ -182,7 +182,7 @@ locals {
 
 
 locals {
-  admin_api_access-api = local.admin_api_access_x509-credentials != null ? jsondecode(local.admin_api_access_x509-credentials)["baseurl"] : ""
+  admin_api_access-api = local.admin_api_access_x509-credentials != null ? "https://${jsondecode(local.admin_api_access_x509-credentials)["baseurl"]}"" : ""
 }
 
 data "external" "openssl_cert_admin_api_access" {
