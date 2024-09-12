@@ -487,7 +487,3 @@ output "hc-alerts" {
   value       = "${local.sap_approuter_dynamic_dest}/hc-services/alerts/v1/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/events?alertState=All&severity=INFO,NOTICE,WARNING,ERROR"
   description = "SAP HANA Cloud Management APIs"
 }
-output "hc-inventory" {
-  value       = "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
-  description = "SAP HANA Cloud Management APIs"
-}
