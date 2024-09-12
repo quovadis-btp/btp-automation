@@ -92,89 +92,6 @@ resource "btp_subaccount_entitlement" "tools" {
   plan_name     = var.hana_cloud_tools_plan_name
 }
 
-resource "btp_subaccount_entitlement" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
-
-  subaccount_id = data.btp_subaccount.context.id
-  service_name  = var.service_name
-  plan_name     = "admin-api-access"
-}
-
-data "btp_subaccount_service_plan" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
-
-  subaccount_id = data.btp_subaccount.context.id
-  name          = "admin-api-access"
-  offering_name = var.service_name
-  depends_on = [
-    btp_subaccount_entitlement.admin_api_access
-  ]
-}
-
-#
-# https://help.sap.com/docs/hana-cloud/sap-hana-cloud-administration-guide/access-administration-api
-#
-resource "btp_subaccount_service_instance" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
-
-  subaccount_id  = data.btp_subaccount.context.id
-  serviceplan_id = data.btp_subaccount_service_plan.admin_api_access[0].id
-  name           = "admin-api-access"
-
-  # https://help.sap.com/docs/btp/sap-business-technology-platform/application-security-descriptor-configuration-syntax#oauth2-configuration-(custom-option)
-  #
-  parameters = jsonencode({
-    "technicalUser": true,
-    "oauth2Configuration": {
-        "token-validity": 43200,
-        "grant-types": [
-            "client_credentials"
-        ],
-        "credential-types": ["binding-secret","x509"]
-    }
-  })
-  timeouts = {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
-  depends_on = [
-    btp_subaccount_entitlement.admin_api_access
-  ]
-}
-
-
-# create an admin_api_access service binding in a subaccount
-#
-resource "btp_subaccount_service_binding" "admin_api_access_binding" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
-
-  subaccount_id       = data.btp_subaccount.context.id
-  service_instance_id = btp_subaccount_service_instance.admin_api_access[0].id
-  name                = "admin-api-access-key"
-  depends_on = [
-    //btp_subaccount_service_instance.admin_api_access[0]
-    btp_subaccount_service_instance.admin_api_access
-  ]
-}
-
-# create a parameterized admin_api_access service binding in a subaccount
-#
-resource "btp_subaccount_service_binding" "admin_api_access_binding_x509" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
-
-  subaccount_id       = data.btp_subaccount.context.id
-  service_instance_id = btp_subaccount_service_instance.admin_api_access[0].id
-  name                = "admin-api-access-x509"
-  parameters = jsonencode({
-    credential-type = "x509"
-    x509 = {    "key-length": 4096,"validity": 365,"validity-type": "DAYS" }
-  })
-  depends_on = [
-    btp_subaccount_service_instance.admin_api_access[0]
-  ]
-}
-
 resource "btp_subaccount_role_collection_assignment" "hana_admin" {
   subaccount_id        = data.btp_subaccount.context.id
   for_each             = var.admins == null ? {} : { for user in var.admins : user => user }
@@ -319,6 +236,7 @@ data "btp_subaccount_service_plan" "dest_lite" {
   subaccount_id = data.btp_subaccount.context.id
   name          = "lite"
   offering_name = "destination"
+
   depends_on    = [btp_subaccount_entitlement.destination]
 }
 
@@ -500,6 +418,8 @@ locals {
   hc-x509 = jsondecode(btp_subaccount_service_binding.hc_binding_x509.credentials)["uaa"]
 }
 
+
+
 /*
 resource "terraform_data" "openssl_cert" {
   triggers_replace = {
@@ -535,6 +455,7 @@ data "external" "openssl_cert" {
     key = "${local.hc-x509.key}"    
     certificate = "${local.hc-x509.certificate}" 
     url = "${local.hc-x509.certurl}/oauth/token" 
+    location = "hc-x509.p12"
   }
 }
 
@@ -542,7 +463,6 @@ data "external" "openssl_cert" {
 locals {
   hc-x509-p12 = data.external.openssl_cert.result
 }
-
 
 output "dest-httpbin" {
   value       = "${local.sap_approuter_dynamic_dest}/dest-httpbin/headers"
