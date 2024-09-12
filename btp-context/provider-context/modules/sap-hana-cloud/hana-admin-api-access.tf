@@ -104,7 +104,7 @@ resource "btp_subaccount_service_instance" "dest_admin_api_access" {
                     "Name": "hana-admin-api-access",
                     "tokenServiceURL": "${local.admin_api_access-secret.url}/oauth/token",
                     "ProxyType": "Internet",
-                    "URL": "${local.admin_api_access-api}",
+                    "URL": "https://${local.admin_api_access-api}",
                     "tokenServiceURLType": "Dedicated",
                     "clientSecret": "${local.admin_api_access-secret.clientsecret}"
                   },
@@ -132,7 +132,7 @@ resource "btp_subaccount_service_instance" "dest_admin_api_access" {
                     "Name": "hana-admin-api-access-x509",
                     "tokenServiceURL": "${local.admin_api_access-x509.url}/oauth/token",
                     "ProxyType": "Internet",
-                    "URL": "${local.admin_api_access-api}",
+                    "URL": "https://${local.admin_api_access-api}",
                     "tokenServiceURLType": "Dedicated",
                     "tokenService.KeyStoreLocation": "admin-api-access-x509.p12",
                     "tokenService.KeyStorePassword": "Password1"  
@@ -182,7 +182,7 @@ locals {
 
 
 locals {
-  admin_api_access-api = local.admin_api_access_x509-credentials != null ? "https://${jsondecode(local.admin_api_access_x509-credentials)["baseurl"]}"" : ""
+  admin_api_access-api = local.admin_api_access_x509-credentials != null ? jsondecode(local.admin_api_access_x509-credentials)["baseurl"] : ""
 }
 
 data "external" "openssl_cert_admin_api_access" {
