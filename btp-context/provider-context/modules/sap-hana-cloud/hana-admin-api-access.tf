@@ -208,9 +208,7 @@ locals {
 }
 
 output "hc-inventory" {
-  value       = local.admin_api_access_x509-credentials == null ?
-          "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" :
-          "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
+  value       = local.admin_api_access_x509-credentials == null ? "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" : "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
   
   description = "SAP HANA Cloud Management APIs"
 }
