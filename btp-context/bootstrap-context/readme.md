@@ -9,7 +9,7 @@ What does bootstrapping mean ? It's like one needs an oven to bake a pizza. No o
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/3cb11e9e-a9af-4b9e-8e84-908ad0afa301" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/73d4722d-bd26-4d08-a318-8b0e1b2ff435" alt="" /></a></h1>
 </div>
 </td>
 </tr>
