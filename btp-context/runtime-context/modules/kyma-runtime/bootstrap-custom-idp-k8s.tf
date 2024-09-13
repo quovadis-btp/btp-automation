@@ -82,11 +82,11 @@ resource "btp_subaccount_service_binding" "ias-local-binding" {
 }
 
 locals {
-  idp = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials)
+  idp = nonsensitive(jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials))
 }
 
 output "idp" {
-  value = nonsensitive(local.idp)
+  value = local.idp
 }
 
 /*
