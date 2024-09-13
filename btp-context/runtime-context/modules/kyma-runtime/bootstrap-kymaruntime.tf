@@ -260,7 +260,7 @@ data "jq_query" "kubeconfig" {
 
 locals {
   
-kubeconfig_exec = jsonencode({
+kubeconfig_exec = jsondecode({
     "apiVersion": "client.authentication.k8s.io/v1",
     "interactiveMode": "Never",
     "command": "bash",
