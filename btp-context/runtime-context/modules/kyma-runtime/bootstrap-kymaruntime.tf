@@ -260,14 +260,13 @@ data "jq_query" "kubeconfig" {
 
 locals {
   
-kubeconfig_exec = jsonencode(yamldecode({
+kubeconfig_exec = jsonencode({
       "apiVersion": "client.authentication.k8s.io/v1"
       "interactiveMode": "Never"
       "command": "bash"
-      "args":
-        - "-c"
-        - |
-          set -e -o pipefail
+      "args": [
+        "-c",        
+        "set -e -o pipefail
 
           ISSUER="${local.idp}"
           echo ::debug:: ISSUER content: "$(echo "$ISSUER" )" >&2
@@ -294,9 +293,9 @@ kubeconfig_exec = jsonencode(yamldecode({
               "token": "$IDTOKEN"
             }
           }
-          EOF
-})
-)          
+          EOF"
+        ]
+})         
 }
 
 data "jq_query" "kubeconfig_exec" {
