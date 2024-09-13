@@ -86,8 +86,7 @@ locals {
 }
 
 output "idp" {
-  sensitive = false
-  value = local.idp
+  value = nonsensitive(local.idp)
 }
 
 /*
