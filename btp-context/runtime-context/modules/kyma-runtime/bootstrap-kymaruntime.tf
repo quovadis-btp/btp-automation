@@ -278,7 +278,8 @@ data "jq_query" "kubeconfig_exec" {
 }
 
 output "kubeconfig_exec" {
-  value = jsondecode(data.jq_query.kubeconfig_exec.result)
+#  value = jsondecode(data.jq_query.kubeconfig_exec.result)
+  value = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result))
 }
 
 
