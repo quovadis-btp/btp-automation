@@ -261,10 +261,10 @@ data "jq_query" "kubeconfig" {
 locals {
   
 kubeconfig_exec = jsonencode(yamldecode(
-      apiVersion: "client.authentication.k8s.io/v1"
-      interactiveMode: "Never"
-      command: "bash"
-      args:
+      "apiVersion": "client.authentication.k8s.io/v1"
+      "interactiveMode": "Never"
+      "command": "bash"
+      "args":
         - "-c"
         - |
           set -e -o pipefail
