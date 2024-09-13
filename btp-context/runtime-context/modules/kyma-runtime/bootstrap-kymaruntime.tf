@@ -300,6 +300,17 @@ resource "local_sensitive_file" "kubeconfig-yaml" {
   filename = "kubeconfig.yaml"
   content  = yamlencode(jsondecode(data.jq_query.kubeconfig.result) )
 }
+
+resource "null_resource" "write_yaml" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+ provisioner "local-exec" {
+   command = <<EOF
+     echo "${local.kubeconfig}" > config.yaml
+EOF
+ }
+}
 */
 
 # headless kubeconfig
@@ -307,19 +318,12 @@ locals {
   kubeconfig  = yamlencode(jsondecode(data.jq_query.kubeconfig.result) )
 }
 
-# https://spacelift.io/blog/terraform-yaml#what-is-the-yamldecode-function-in-terraform
-#
-resource "null_resource" "write_yaml" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
- provisioner "local-exec" {
-   command = <<EOF
-     echo "${local.kubeconfig_exec}" > config.yaml
-EOF
- }
+resource "local_sensitive_file" "kubeconfig_exec" {
+  content  = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result) )
+  filename = "kubeconfig_exec.yaml"
 }
 
+# https://spacelift.io/blog/terraform-yaml#what-is-the-yamldecode-function-in-terraform
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data#the-terraform_data-managed-resource-type
 #
 resource "terraform_data" "write_yaml" {
