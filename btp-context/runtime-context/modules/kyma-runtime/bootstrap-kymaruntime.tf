@@ -223,7 +223,6 @@ locals {
 
 data "http" "kubeconfig" {
   depends_on = [btp_subaccount_environment_instance.kyma]
-  #url = jsondecode(btp_subaccount_environment_instance.kyma[0].labels)["KubeconfigURL"]
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 }
 
@@ -259,6 +258,31 @@ data "jq_query" "kubeconfig" {
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { token: ${local.id_token} } }"
 }
 
+
+locals {
+  kubeconfig_exec = jsonencode({
+
+        "apiVersion": "client.authentication.k8s.io/v1",
+        "interactiveMode": "Never",
+        "command": "bash",
+        "args": [
+            "-c",
+            "set -e -o pipefail\n\nISSUER=\"${local.idp}\"\necho ::debug:: ISSUER content: \"$(echo \"$ISSUER\" )\" >&2\n\nIDTOKEN=$(curl -X POST  $(jq -r '. | .url'  <<< $ISSUER  ) \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"$var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='$(jq -r '. | .clientid' <<< $ISSUER ) \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
+        ]
+
+  })
+}
+data "jq_query" "kubeconfig_exec" {
+   depends_on = [btp_subaccount_environment_instance.kyma]
+   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_exec} } }"
+}
+
+output "kubeconfig_exec" {
+  value = jsondecode(data.jq_query.kubeconfig_exec.result)
+}
+
+
 output "kubeconfig" {
   value = jsondecode(data.jq_query.kubeconfig.result)
 }
@@ -267,6 +291,7 @@ output "kubeconfig_raw" {
   value = data.jq_query.kubeconfig.result
 }
 
+/*
 resource "local_sensitive_file" "kubeconfig-headless" {
   filename = "kubeconfig-headless.json"
   content  = data.jq_query.kubeconfig.result
@@ -276,6 +301,7 @@ resource "local_sensitive_file" "kubeconfig-yaml" {
   filename = "kubeconfig.yaml"
   content  = yamlencode(jsondecode(data.jq_query.kubeconfig.result) )
 }
+*/
 
 # headless kubeconfig
 locals {
@@ -290,7 +316,7 @@ resource "null_resource" "write_yaml" {
   }
  provisioner "local-exec" {
    command = <<EOF
-     echo "${local.kubeconfig}" > config.yaml
+     echo "${local.kubeconfig_exec}" > config.yaml
 EOF
  }
 }
@@ -308,10 +334,6 @@ EOF
  }
 }
 
-
-# kubectl config view --minify --raw  --kubeconfig <(echo ${local.kubeconfig})  > kubeconfig2.yaml ;\
-#      kubectl config view --minify --raw  --kubeconfig <(echo $data.jq_query.kubeconfig.result})  > kubeconfig2.yaml ;\
-#     echo ${data.jq_query.kubeconfig.result} > kubeconfig2.yaml ;\
  
 
 # https://stackoverflow.com/questions/72607500/how-to-handle-multiple-lines-within-a-command-block-in-terraform
