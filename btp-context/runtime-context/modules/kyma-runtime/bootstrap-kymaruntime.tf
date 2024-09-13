@@ -261,33 +261,13 @@ data "jq_query" "kubeconfig" {
 locals {
   
 kubeconfig_exec = jsonencode({
-      "apiVersion": "client.authentication.k8s.io/v1"
-      "interactiveMode": "Never"
-      "command": "bash"
-      "args": [
-        "-c",        
-        "set -e -o pipefail\n
-          ISSUER="${local.idp}"\n
-          echo ::debug:: ISSUER content: "$(echo "$ISSUER" )" >&2\n
-          IDTOKEN=$(curl -X POST  $(jq -r '. | .url'  <<< $ISSUER  ) \\n
-          -H 'Content-Type: application/x-www-form-urlencoded' \\n
-          -d 'grant_type=password' \\n
-          -d 'username='"${var.BTP_BOT_USER}" \\n
-          -d 'password='"${var.BTP_BOT_PASSWORD}" \\n
-          -d 'client_id='$(jq -r '. | .clientid' <<< $ISSUER ) \\n
-          -d 'scope=groups, email' \\n
-          | jq -r '. | .id_token ' ) \n
-          echo ::debug:: JWT content: "$(echo "$IDTOKEN" | jq -c -R 'split(".") | .[1] | @base64d | fromjson')" >&2\n   
-          cat << EOF\n
-          {\n
-            "apiVersion": "client.authentication.k8s.io/v1",\n
-            "kind": "ExecCredential",\n
-            "status": {\n
-              "token": "$IDTOKEN"\n
-            }\n
-          }\n
-          EOF\n"
-        ]
+    "apiVersion": "client.authentication.k8s.io/v1",
+    "interactiveMode": "Never",
+    "command": "bash",
+    "args": [
+        "-c",
+        "set -e -o pipefail\n\nISSUER=$(btp get services/binding --name ias-local-binding | jq  -r '.credentials | { clientid, url: (.url+ \"/oauth2/token\")  }' )\necho ::debug:: ISSUER content: \"$(echo \"$ISSUER\" )\" >&2\n\nIDTOKEN=$(curl -X POST  $(jq -r '. | .url'  <<< $ISSUER  ) \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"$QUOVADIS_USERNAME\" \\\n-d 'password='\"$QUOVADIS_PASSWORD\" \\\n-d 'client_id='$(jq -r '. | .clientid' <<< $ISSUER ) \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
+    ]
 })         
 }
 
