@@ -39,12 +39,13 @@ Business Landscape Automation
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>  
 
 
+
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/1c10ebb7-819f-44df-91c7-731ae3209354" alt="" /></a></h1>
+<h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/6777b2b9-36cf-4cfd-819d-b3b1435ada89" alt="" /></a></h1>
 </div>
 </td>
 </tr>
@@ -91,7 +92,7 @@ For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/lates
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/d8d10240-ea9d-458c-b4a3-892532b6f3eb" alt="" /></a></h1>
+<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/7babdaf3-8255-4496-b7a5-bc2d816c7348" alt="" /></a></h1>
 </div>
 </td>
 </tr>
