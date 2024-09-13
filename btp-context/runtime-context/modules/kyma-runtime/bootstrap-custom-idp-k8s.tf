@@ -85,6 +85,11 @@ locals {
   idp = jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials)
 }
 
+output "idp" {
+  value = local.idp
+}
+
+/*
 resource "local_sensitive_file" "idp" {
   content = jsonencode({
     clientid = local.idp.clientid
@@ -92,6 +97,7 @@ resource "local_sensitive_file" "idp" {
   })
   filename = "idp.json"
 }
+*/
 
 resource "btp_subaccount_service_binding" "ias-local-binding-cert" {
   depends_on          = [btp_subaccount_service_instance.identity_application]
