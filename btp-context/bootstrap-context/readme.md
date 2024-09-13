@@ -61,10 +61,10 @@ This will result in a bootstrap context subaccount having been created as a plac
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/678b73a3-a1d0-4b71-a436-ed3eab50dea8" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/f0bafaa5-134e-4495-9d8e-4836e9fbf2c7" alt="" /></a></h1>
 </div>
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/568b7cbc-edc7-4947-a0fc-1fa972943cfa" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/0b1f0199-f515-4311-a080-de72af59d759" alt="" /></a></h1>
 </div>
 
 </td>
