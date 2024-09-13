@@ -323,6 +323,11 @@ resource "local_sensitive_file" "kubeconfig_exec" {
   filename = "kubeconfig_exec.yaml"
 }
 
+resource "local_sensitive_file" "kubeconfig_exec_json" {
+  content  = data.jq_query.kubeconfig_exec.result
+  filename = "kubeconfig_exec.json"
+}
+
 # https://spacelift.io/blog/terraform-yaml#what-is-the-yamldecode-function-in-terraform
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data#the-terraform_data-managed-resource-type
 #
