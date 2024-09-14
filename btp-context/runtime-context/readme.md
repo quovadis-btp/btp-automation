@@ -1,21 +1,30 @@
 BTP landscapes automation. Applying context semantics.
 ====================
 
-<img width="1109" alt="image" src="https://github.com/user-attachments/assets/bff29409-2b47-466f-9773-59c7ec977127">
+The below screenshots depict the btp real estate orchestrated in the runtime context.  
+As depicted below, the kyma runtime environment evolves in a depleted context where all the required btp services are sources from provider contexts.  
 
-Both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://docs.cloudfoundry.org/concepts/architecture"><img class="aligncenter" src="https://github.com/user-attachments/assets/83226447-29d4-4ae4-89d7-47354154dd9f" alt="" /></a></h1>
+<h1><a href="https://docs.cloudfoundry.org/concepts/architecture"><img class="aligncenter" src="https://github.com/user-attachments/assets/5e41e629-be42-4e65-a9bf-c76d8f58ea60" alt="" /></a></h1>
 </div>
 <div>
-<h1><a href="https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams"><img class="aligncenter" src="https://github.com/user-attachments/assets/649532ff-d679-4ea9-884d-c3fbd6edc528" alt="" /></a></h1>
+<h1><a href="https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams"><img class="aligncenter" src="https://github.com/user-attachments/assets/41f830bf-d34d-49af-be07-5e070a7f7773" alt="" /></a></h1>
 </div>  
 </td>
 </tr>
 </tbody>
 </table>
+
+The bootstrap context has configured a custom SAP Cloud Identity service tenant.  
+
+The runtime context is trusted with this custom SAP IAS tenant which is used as both custom OIDC provider for the kyma cluster and as a bot OIDC provider with the OpenIDConnect extension.  
+
+Eventually, a kyma environment is provisioned with a short lived token based kubeconfig which is used to bootstrap ArgoCD.  
+
+PS. Both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
+
