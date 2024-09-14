@@ -21,7 +21,21 @@ spec:
   secretName: postgresql-binding-secret # secret name that will be created
 */
 
+// https://stackoverflow.com/questions/57454591/how-can-i-load-input-data-from-a-file-in-terraform
+//
+data "local_file" "cluster_ips" {
+  filename = "cluster_ips.txt" // var.input_template_file
+}
+
 locals {
+	depends_on = [terraform_data.egress_ips]
+
+	// https://stackoverflow.com/a/74681482
+	/*
+	cluster_ips = templatefile("cluster_ips.txt", {
+					    ips = var.IPS
+					  })*/
+	
 	postgresql = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceInstance",
@@ -33,7 +47,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": "52.6.160.101"
+	            "allow_access": "${local_file.cluster_ips.content}"  //"52.6.160.101"
 	        }
 	    }	
 	})
