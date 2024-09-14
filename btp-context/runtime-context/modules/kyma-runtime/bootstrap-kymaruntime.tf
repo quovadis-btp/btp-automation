@@ -621,3 +621,7 @@ resource "terraform_data" "provider_context" {
    EOF
  }
 }
+
+output "provider_context" {
+  value = terraform_data.provider_context.output
+}
