@@ -17,3 +17,10 @@ A provider context is a source of BTP services for a given kyma cluster.
 </tr>
 </tbody>
 </table>
+
+## Destinations
+
+The provider script will automatically provision a number of destination definitions to help manage the provider's estate.  
+All these destinations are subaccount level destinations.  
+
+<img width="1431" alt="image" src="https://github.com/user-attachments/assets/a13afeb8-36bf-4455-972c-7d153f229b37">
