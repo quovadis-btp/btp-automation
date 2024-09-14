@@ -558,7 +558,7 @@ resource "terraform_data" "egress_ips" {
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameter |= . + { region: "us-east-1", allow_access: $ips }'
+    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }'
 
     rm /tmp/cluster_ips
      )
