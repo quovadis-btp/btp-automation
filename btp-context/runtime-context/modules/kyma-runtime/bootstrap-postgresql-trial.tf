@@ -22,11 +22,14 @@ spec:
 */
 
 // https://stackoverflow.com/questions/57454591/how-can-i-load-input-data-from-a-file-in-terraform
+// https://stackoverflow.com/questions/77882605/using-resource-local-file-in-terraform-with-atlantis
+// https://containersolutions.github.io/terraform-examples/examples/local/local.html
+// https://stackoverflow.com/questions/67937425/terraform-how-to-make-the-local-file-resource-to-be-recreated-with-every-te
 //
 data "local_file" "cluster_ips" {
   depends_on = [terraform_data.egress_ips]
   
-  filename = "cluster_ips.txt" // var.input_template_file
+  filename = "cluster_ips.txt" 
 }
 
 
@@ -46,7 +49,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": "${data.local_file.cluster_ips.content}"  //"52.6.160.101"
+	            "allow_access": ${data.local_file.cluster_ips.content}  //"52.6.160.101"
 	        }
 	    }	
 	})
