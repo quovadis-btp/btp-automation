@@ -510,7 +510,8 @@ resource "terraform_data" "httpbin" {
  }
 }
 
-
+# https://www.gnu.org/software/gawk/manual/html_node/Print-Examples.html
+#
 resource "terraform_data" "egress_ips" {
   depends_on = [terraform_data.kubectl_getnodes]
 
@@ -553,7 +554,7 @@ resource "terraform_data" "egress_ips" {
     kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
     done
     cat temp_ips.txt
-    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
+    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", ",", $0); print}' temp_ips.txt)
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
