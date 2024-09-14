@@ -554,13 +554,13 @@ resource "terraform_data" "egress_ips" {
     done
     cat /tmp/cluster_ips
     CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips)
+    rm /tmp/cluster_ips
+    
     echo $CLUSTER_IPS > cluster_ips.txt
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips[] }'
-
-    rm /tmp/cluster_ips
+    echo $PostgreSQL | jq -r --arg ips $CLUSTER_IPS '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips[] }'
      )
    EOF
  }
