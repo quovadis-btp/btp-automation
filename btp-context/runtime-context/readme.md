@@ -31,4 +31,7 @@ PS. Both [cf](https://docs.cloudfoundry.org/concepts/architecture) and [k8s](htt
 
 ## Destinations
 
+These destinations are the entry endpoints to help manage the runtime context estate.  
+
+
 <img width="1441" alt="image" src="https://github.com/user-attachments/assets/7d9cc274-6021-40c1-bb41-383ecdf237ae">
