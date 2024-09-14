@@ -77,7 +77,9 @@ Furthermore, this approach allows for _location and data center transparency_ wi
 
 <h2 id="terraform-automation">2. terraform.</h2>  
 
-Terraform allows to plan, apply and maintain the desired state of the contextual infrastructure.  
+Terraform is a popular declarative CaC tool that allows you to describe and orchestrate infrastructure landscapes in the form of code.  
+It allows to plan, apply and maintain the desired state of our defined btp contexts, laying the bricks towards business landscape automation - our ultimate goal.    
+
 This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
 Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.  
 
