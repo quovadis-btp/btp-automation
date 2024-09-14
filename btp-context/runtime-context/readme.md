@@ -20,9 +20,10 @@ As depicted below, the kyma runtime environment evolves in a depleted context wh
 </tbody>
 </table>
 
-The bootstrap context has configured a custom SAP Cloud Identity service tenant.  
+The bootstrap context has configured a custom SAP Cloud Identity service tenant as a global account wide platform IDP.  
+This way there is no more need to rely on the global SAP ID.  
 
-The runtime context is trusted with this custom SAP IAS tenant which is used as both custom OIDC provider for the kyma cluster and as a bot OIDC provider with the OpenIDConnect extension.  
+The runtime context is trusted with this custom SAP IAS tenant which is then used as both custom OIDC provider for the kyma cluster and as a bot OIDC provider with the OpenIDConnect kyma/gardener k8s extension.  
 
 Eventually, a kyma environment is provisioned with a short lived token based kubeconfig which is used to bootstrap ArgoCD.  
 
