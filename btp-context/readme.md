@@ -108,12 +108,13 @@ terraform-visual --plan plan.json
 open terraform-visual-report/index.html
 ```
 
+
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli"><img class="aligncenter" src="https://github.com/user-attachments/assets/5792cec6-0941-4076-8af9-81021c4c1abf" alt="" /></a></h1>
+<h1><a href="https://www.npmjs.com/package/@terraform-visual/cli#terraform-visual-cli"><img class="aligncenter" src="https://github.com/user-attachments/assets/e403fb26-f470-4409-88b2-6188b301f1d3" alt="" /></a></h1>
 </div>
 </td>
 </tr>
@@ -134,6 +135,7 @@ open terraform-visual-report/index.html
 terraform graph --help
 terraform graph -type=plan | dot -Tpng -o graph.png
 ```
+
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
