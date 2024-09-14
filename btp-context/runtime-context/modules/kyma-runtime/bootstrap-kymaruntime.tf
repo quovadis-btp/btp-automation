@@ -309,41 +309,6 @@ EOF
  }
 }
 
-# https://gist.github.com/ptesny/14f49f49e0fbe2a3143700ce707ee76b#72-sap-cloud-identity-services-as-a-custom-oidc-provider
-#
-locals {  
-    kubeconfig_exec = jsonencode({
-        "apiVersion": "client.authentication.k8s.io/v1",
-        "interactiveMode": "Never",
-        "command": "bash",
-        "args": [
-            "-c",
-            "set -e -o pipefail\n\nIDTOKEN=$(curl -X POST  \"${local.idp.url}/oauth2/token\" \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"${local.idp.clientid}\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
-        ]
-    })         
-}
-
-data "jq_query" "kubeconfig_exec" {
-   depends_on = [btp_subaccount_environment_instance.kyma]
-   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
-   query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_exec} } }"
-}
-
-output "kubeconfig_exec" {
-#  value = jsondecode(data.jq_query.kubeconfig_exec.result)
-  value = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result))
-}
- 
-resource "local_sensitive_file" "kubeconfig_exec" {
-  content  = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result) )
-  filename = "kubeconfig_exec.yaml"
-}
-
-resource "local_sensitive_file" "kubeconfig_exec_json" {
-  content  = data.jq_query.kubeconfig_exec.result
-  filename = "kubeconfig_exec.json"
-}
-
 
 # https://stackoverflow.com/questions/72607500/how-to-handle-multiple-lines-within-a-command-block-in-terraform
 # https://stackoverflow.com/questions/57041699/how-to-use-bash-commands-in-terraform-template-file-variables
@@ -569,7 +534,7 @@ resource "terraform_data" "egress_ips" {
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
     kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >>/tmp/cluster_ips 2>/dev/null
     done
-    cat /tmp/cluster_ips
+    cat /tmp/cluster_ips > cluster_ips.txt
     awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips
     rm /tmp/cluster_ips
      )
