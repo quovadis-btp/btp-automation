@@ -66,5 +66,5 @@ locals {
 }
 
 output "postgresql" {
-	value = local.postgresql
+	value = jsondecode(local.postgresql)
 }
