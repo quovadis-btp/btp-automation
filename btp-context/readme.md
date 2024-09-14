@@ -135,16 +135,29 @@ terraform graph --help
 terraform graph -type=plan | dot -Tpng -o graph.png
 ```
 
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform"><img class="aligncenter" src="https://github.com/user-attachments/assets/9ac7fb0a-1b71-4ecb-a160-b52d5b9d4c63" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
 ```
 terraform graph -draw-cycles | dot -Tpng -o graph.png
 ```
+
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform"><img class="aligncenter" src="https://github.com/user-attachments/assets/77bfab00-c255-42fa-9384-d222e9e692ee" alt="" /></a></h1>
+<h1><a href="https://serverfault.com/questions/1005761/what-does-error-cycle-means-in-terraform"><img class="aligncenter" src="https://github.com/user-attachments/assets/417d9047-db74-496f-b19b-5b88c8185f98" alt="" /></a></h1>
 </div>
 </td>
 </tr>
