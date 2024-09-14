@@ -38,7 +38,8 @@ locals {
 
 	// https://stackoverflow.com/a/74681482
 	
-	ips = jsonencode({"${data.local_file.cluster_ips.content}"});
+	ips = jsonencode({"${data.local_file.cluster_ips.content}"})
+	
 	postgresql = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceInstance",
