@@ -534,8 +534,8 @@ resource "terraform_data" "egress_ips" {
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
     kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >>/tmp/cluster_ips 2>/dev/null
     done
-    cat /tmp/cluster_ips > cluster_ips.txt
-    awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips
+    cat /tmp/cluster_ips
+    awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips > cluster_ips.txt
     rm /tmp/cluster_ips
      )
    EOF
