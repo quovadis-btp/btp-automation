@@ -83,10 +83,9 @@ It allows to plan, apply and maintain the desired state of our defined btp conte
 This is made possible by a [rich ecosystem of providers](https://registry.terraform.io/browse/providers).  
 Providers are a logical abstraction of an upstream API. They are responsible for understanding API interactions and exposing resources.  
 
-For instance, the dedicated SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the server side BTP CLI API.  
-Additionally, each provider has its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
+For instance, the SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the server side BTP CLI API.  
+Additionally, each terraform provider may have its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
 For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/latest
-
 
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
