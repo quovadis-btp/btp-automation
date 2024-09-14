@@ -525,6 +525,24 @@ resource "terraform_data" "egress_ips" {
         terraform_data.kubectl_getnodes
   ]
 
+  input = nonsensitive(
+    jsonencode({
+      "apiVersion": "services.cloud.sap.com/v1",
+      "kind": "ServiceInstance",
+      "metadata": {
+          "name": "postgresql"
+      },
+      "spec": {
+          "serviceOfferingName": "postgresql-db",
+          "servicePlanName": "trial",
+          "parameters": {
+              "region": "us-east-1",
+              "allow_access": ""
+          }
+      } 
+    })
+  )  
+
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
@@ -535,7 +553,13 @@ resource "terraform_data" "egress_ips" {
     kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >>/tmp/cluster_ips 2>/dev/null
     done
     cat /tmp/cluster_ips
-    awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips > cluster_ips.txt
+    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips)
+    echo $CLUSTER_IPS > cluster_ips.txt
+
+    PostgreSQL='${self.input}'
+    echo $(jq -r '.' <<< $PostgreSQL)
+    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameter | { region: "us-east-1", allow_access: $ips }'
+
     rm /tmp/cluster_ips
      )
    EOF
