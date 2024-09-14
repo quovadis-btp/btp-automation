@@ -29,3 +29,9 @@ Eventually, a kyma environment is provisioned with a short lived token based kub
 
 PS. Both [cf](https://docs.cloudfoundry.org/concepts/architecture) and [k8s](https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams) runtimes can be used jointly or seperately in their respective runtime contexts
 
+## Destinations
+
+These destinations are the entry endpoints to help manage the runtime context estate.  
+
+
+<img width="1441" alt="image" src="https://github.com/user-attachments/assets/7d9cc274-6021-40c1-bb41-383ecdf237ae">
