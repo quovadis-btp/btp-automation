@@ -38,8 +38,8 @@ locals {
 
 	// https://stackoverflow.com/a/74681482
 	
-	ips = jsonencode({"${data.local_file.cluster_ips.content}"})
-	
+	ips = jsonencode({"ips" : ${data.local_file.cluster_ips.content}" })
+
 	postgresql = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceInstance",
@@ -51,7 +51,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": "${local.ips}"  //"52.6.160.101"
+	            "allow_access": "${local.ips.ips}"  //"52.6.160.101"
 	        }
 	    }	
 	})
