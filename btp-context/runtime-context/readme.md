@@ -10,10 +10,10 @@ As depicted below, the kyma runtime environment evolves in a depleted context wh
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://docs.cloudfoundry.org/concepts/architecture"><img class="aligncenter" src="https://github.com/user-attachments/assets/5e41e629-be42-4e65-a9bf-c76d8f58ea60" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/5e41e629-be42-4e65-a9bf-c76d8f58ea60" alt="" /></a></h1>
 </div>
 <div>
-<h1><a href="https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams"><img class="aligncenter" src="https://github.com/user-attachments/assets/41f830bf-d34d-49af-be07-5e070a7f7773" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/41f830bf-d34d-49af-be07-5e070a7f7773" alt="" /></a></h1>
 </div>  
 </td>
 </tr>
@@ -26,5 +26,5 @@ The runtime context is trusted with this custom SAP IAS tenant which is used as 
 
 Eventually, a kyma environment is provisioned with a short lived token based kubeconfig which is used to bootstrap ArgoCD.  
 
-PS. Both cf and k8s runtimes can be used jointly or seperately in their respective runtime contexts
+PS. Both [cf](https://docs.cloudfoundry.org/concepts/architecture) and [k8s](https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams) runtimes can be used jointly or seperately in their respective runtime contexts
 
