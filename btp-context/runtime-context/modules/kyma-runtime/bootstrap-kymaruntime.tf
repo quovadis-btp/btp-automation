@@ -558,13 +558,18 @@ resource "terraform_data" "egress_ips" {
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameter | { region: "us-east-1", allow_access: $ips }'
+    echo $PostgreSQL | jq --arg ips $CLUSTER_IPS '.spec.parameter |= . + { region: "us-east-1", allow_access: $ips }'
 
     rm /tmp/cluster_ips
      )
    EOF
  }
 }
+
+output "egress_ips" {
+  value = terraform_data.egress_ips.output
+}
+
 
 # https://developer.hashicorp.com/terraform/language/state/remote-state-data#the-terraform_remote_state-data-source
 #
