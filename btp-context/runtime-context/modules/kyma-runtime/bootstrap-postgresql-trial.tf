@@ -29,9 +29,6 @@ data "local_file" "cluster_ips" {
   filename = "cluster_ips.txt" // var.input_template_file
 }
 
-output "cluster_ips" {
-	value = data.local_file.cluster_ips.content
-}
 
 locals {
 	depends_on = [terraform_data.egress_ips]
@@ -66,4 +63,8 @@ locals {
 	    }
 	})
 
+}
+
+output "postgresql" {
+	value = local.postgresql
 }
