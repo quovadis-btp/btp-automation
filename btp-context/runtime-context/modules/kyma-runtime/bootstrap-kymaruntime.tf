@@ -638,7 +638,6 @@ resource "terraform_data" "provider_context" {
 
 
     kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 3m --kubeconfig $KUBECONFIG
-
     while [ "$(kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
     do 
       echo "deployments.apps - sap-btp-operator-controller-manager - not found"
