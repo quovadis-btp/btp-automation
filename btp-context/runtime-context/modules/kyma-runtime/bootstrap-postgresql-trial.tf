@@ -51,7 +51,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": "${local.ips.ips}"  //"52.6.160.101"
+	            "allow_access": "${local.ips}"  //"52.6.160.101"
 	        }
 	    }	
 	})
