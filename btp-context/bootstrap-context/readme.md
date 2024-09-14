@@ -76,19 +76,16 @@ This will result in a bootstrap context subaccount having been created as a plac
 The terraform script will create/re-use a custom SAP Cloud Identity services tenant to be used both as a platform and application custom idp.  
 
 This custom SAP Cloud Identity services tenant is different from SAP ID/Universal ID.  
-In case of creation, the tf script runner will be sent an onboarding email to this custom idp.  
+In case of creation, the tf script runner user will be sent an onboarding email to this custom idp.  
 It is important the tf runner user gets onboarded to the custom idp as its administrator.  
 
-The platform admins will be the addtiional users allowed to manage the global account assets.   
+The platform admins will be the addtiional administrators allowed to manage the global account assets.   
 As the tf script runner becomes the custom idp administrator, she or he may choose these additional users however she or he likes.  
-My recommendation is one of these additional platform users is a technical user.  
+
+My recommendation is one of these additional platform users is a technical user whose email address is not registered with the SAP ID/Universal ID.  
 
 ```
 terraform init -upgrade                             
-terraform init -reconfigure
-    
-Successfully configured the backend "kubernetes"! Terraform will automatically
-use this backend unless the backend configuration changes.
 
 Initializing modules...
 Initializing provider plugins...
