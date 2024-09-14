@@ -24,6 +24,8 @@ spec:
 // https://stackoverflow.com/questions/57454591/how-can-i-load-input-data-from-a-file-in-terraform
 //
 data "local_file" "cluster_ips" {
+  depends_on = [terraform_data.egress_ips]
+  
   filename = "cluster_ips.txt" // var.input_template_file
 }
 
