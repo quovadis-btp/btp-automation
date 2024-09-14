@@ -550,11 +550,11 @@ resource "terraform_data" "egress_ips" {
     set -e -o pipefail ;\
     for zone in $(kubectl get nodes --kubeconfig kubeconfig-headless.yaml -o 'custom-columns=NAME:.metadata.name,REGION:.metadata.labels.topology\.kubernetes\.io/region,ZONE:.metadata.labels.topology\.kubernetes\.io/zone' -o json | jq -r '.items[].metadata.labels["topology.kubernetes.io/zone"]' | sort | uniq); do
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
-    kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >>/tmp/cluster_ips 2>/dev/null
+    kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
     done
-    cat /tmp/cluster_ips
-    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' /tmp/cluster_ips)
-    rm /tmp/cluster_ips
+    cat temp_ips.txt
+    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
+    rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
 
