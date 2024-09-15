@@ -66,13 +66,15 @@ data "jq_query" "postgresql" {
 	    }	
 	})
 
-   query = " .spec.parameters |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" | fromjson }  "
+//   query = " .spec.parameters |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" | fromjson }  "
+   query = " .spec.parameters |= . + { region: .region, allow_access: \"${local.allow_access}\" | tojson}  "
 }
 
 locals {
 	depends_on = [terraform_data.egress_ips]
 
 	postgresql = data.jq_query.postgresql.result
+	allow_access = jsondecode(data.jq_query.allow_access.result)
 
 	postgresql_binding = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
