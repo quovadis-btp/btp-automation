@@ -34,6 +34,7 @@ data "local_file" "cluster_ips" {
 
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
+# https://stackoverflow.com/a/74681482
 #
 data "jq_query" "allow_access" {
    depends_on = [terraform_data.egress_ips]
@@ -65,15 +66,11 @@ data "jq_query" "postgresql" {
 	    }	
 	})
 
-   query = " .spec.parameters |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" }  "
+   query = " .spec.parameters. |= . + { region: .region, allow_access: \"${jsondecode(data.jq_query.allow_access.result)}\" }  "
 }
 
 locals {
 	depends_on = [terraform_data.egress_ips]
-
-	// https://stackoverflow.com/a/74681482
-	
-	ips = jsonencode({"ips" : "${data.local_file.cluster_ips.content}" })
 
 	postgresql = data.jq_query.postgresql.result
 
