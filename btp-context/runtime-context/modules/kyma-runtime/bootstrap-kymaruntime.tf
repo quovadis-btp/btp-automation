@@ -663,6 +663,12 @@ output "provider_context" {
   value = terraform_data.provider_context.output
 }
 
+provider "kubernetes" {
+  cluster_ca_certificate = base64decode(local.kubeconfig.clusters.0.cluster.certificate-authority-data)
+  host                   = local.kubeconfig.clusters.0.cluster.server
+  token                  = local.kubeconfig.users.0.user.token
+}
+
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
     btp_subaccount_environment_instance.kyma,
