@@ -10,5 +10,8 @@ terraform {
     http-full = {
       source = "salrashid123/http-full"
     }        
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+    }  
   }
 }

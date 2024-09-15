@@ -662,3 +662,13 @@ resource "terraform_data" "provider_context" {
 output "provider_context" {
   value = terraform_data.provider_context.output
 }
+
+data "kubernetes_nodes" "k8s_nodes" {
+  depends_on = [
+    output.kubeconfig
+  ]    
+}
+
+output "k8s_nodes" {
+  value = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
+}
