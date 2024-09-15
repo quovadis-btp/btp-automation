@@ -33,6 +33,13 @@ data "local_file" "cluster_ips" {
 }
 
 
+data "jq_query" "allow_access" {
+   depends_on = [terraform_data.egress_ips]
+
+   data = jsonencode({"ips" : "${data.local_file.cluster_ips.content}" })
+   query = "-r -R '.ips.allow_access | gsub("[ ]"; ", ") ')"
+}
+
 locals {
 	depends_on = [terraform_data.egress_ips]
 
@@ -51,7 +58,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": jsondecode("${local.ips}")["ips"]  //"52.6.160.101"
+	            "allow_access": jsondecode(data.jq_query.allow_access.result)  //"52.6.160.101"
 	        }
 	    }	
 	})
