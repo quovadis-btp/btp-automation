@@ -41,7 +41,7 @@ data "jq_query" "allow_access" {
    data = jsonencode({
    		"allow_access" : "${data.local_file.cluster_ips.content}" 
    	})
-   query = " .allow_access | gsub("[ ]"; ", ")  "
+   query = " .allow_access | gsub(\"[ ]\"; \", \")  "
 }
 
 locals {
