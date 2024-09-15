@@ -664,9 +664,9 @@ output "provider_context" {
 }
 
 provider "kubernetes" {
-  cluster_ca_certificate = base64decode(local.kubeconfig.clusters.0.cluster.certificate-authority-data)
-  host                   = local.kubeconfig.clusters.0.cluster.server
-  token                  = local.kubeconfig.users.0.user.token
+  cluster_ca_certificate = base64decode(jsondecode(data.jq_query.kubeconfig.result).clusters[0].cluster.certificate-authority-data)
+  host                   = jsondecode(data.jq_query.kubeconfig.result).clusters[0].cluster.server
+  token                  = jsondecode(data.jq_query.kubeconfig.result).users[0].user.token
 }
 
 data "kubernetes_nodes" "k8s_nodes" {
