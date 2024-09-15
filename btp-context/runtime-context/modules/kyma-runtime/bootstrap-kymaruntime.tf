@@ -554,15 +554,15 @@ resource "terraform_data" "egress_ips" {
     kubectl run --kubeconfig kubeconfig-headless.yaml -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
     done
     cat temp_ips.txt
-    CLUSTER_IPS_0=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
-    CLUSTER_IPS=$(gsub("\r?\n|\r", ",", $CLUSTER_IPS_0))
+    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq -r --arg ips "$CLUSTER_IPS" '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }'
+    echo $PostgreSQL | jq -r --arg ips "$CLUSTER_IPS" '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }' \
+    jq -r '.spec.parameters.allow_access | gsub("[\\n\\t]"; ";") '
      )
    EOF
  }
