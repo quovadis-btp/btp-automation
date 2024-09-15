@@ -665,7 +665,7 @@ output "provider_context" {
 
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
-    module.runtime_context.kubeconfig
+    data.jq_query.kubeconfig
   ]    
 }
 
