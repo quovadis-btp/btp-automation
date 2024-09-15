@@ -36,8 +36,8 @@ data "local_file" "cluster_ips" {
 data "jq_query" "allow_access" {
    depends_on = [terraform_data.egress_ips]
 
-   data = jsonencode({"ips" : "${data.local_file.cluster_ips.content}" })
-   query = ".ips.allow_access | gsub("[ ]"; ", ") "
+   data = jsonencode({"allow_access" : "${data.local_file.cluster_ips.content}" })
+   query = ".allow_access | gsub("[ ]"; ", ") "
 }
 
 locals {
