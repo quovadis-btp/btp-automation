@@ -42,7 +42,7 @@ data "jq_query" "allow_access" {
    data = jsonencode({
    		"allow_access" : "${data.local_file.cluster_ips.content}" 
    	})
-   query = " .allow_access | gsub(\"[ ]\"; \", \")  "
+   query = " -r -R .allow_access | gsub(\"[ ]\"; \", \")  "
 }
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
@@ -67,7 +67,7 @@ data "jq_query" "postgresql" {
 	})
 
 //   query = " .spec.parameters |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" | fromjson }  "
-   query = " .spec.parameters |= . + { region: .region, allow_access: \"${local.allow_access}\" | tojson}  "
+   query = " .spec.parameters |= . + { region: .region, allow_access: \"${local.allow_access}\" }  "
 }
 
 locals {
