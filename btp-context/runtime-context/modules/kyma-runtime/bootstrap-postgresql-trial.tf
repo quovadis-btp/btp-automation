@@ -65,7 +65,7 @@ data "jq_query" "postgresql" {
 	    }	
 	})
 
-   query = " .spec.parameters |= . + { region: .region, allow_access: data.jq_query.allow_access.result }  "
+   query = " .spec.parameters |= . + { region: .region, allow_access: "${data.jq_query.allow_access.result}" }  "
 }
 
 locals {
