@@ -1,3 +1,6 @@
+# https://developer.hashicorp.com/terraform/language/modules/develop/providers#implicit-provider-inheritance
+# https://developer.hashicorp.com/terraform/language/modules/develop/composition
+#
 terraform {
   required_providers {
     btp = {
