@@ -511,6 +511,7 @@ resource "terraform_data" "httpbin" {
 }
 
 # https://www.gnu.org/software/gawk/manual/html_node/Print-Examples.html
+# https://stackoverflow.com/questions/40321035/remove-escape-sequence-characters-like-newline-tab-and-carriage-return-from-jso
 #     jq -r '.spec.parameters.allow_access | gsub("[\\n\\t]"; ";") '
 resource "terraform_data" "egress_ips" {
   depends_on = [terraform_data.kubectl_getnodes]
@@ -558,7 +559,10 @@ resource "terraform_data" "egress_ips" {
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
-    IPS=$(echo $CLUSTER_IPS | jq -r -R '.')
+    
+    # https://stackoverflow.com/questions/40321035/remove-escape-sequence-characters-like-newline-tab-and-carriage-return-from-jso
+    #
+    IPS=$(echo $CLUSTER_IPS | jq -r -R '. | gsub("[ ]"; ", ") ')
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
