@@ -663,18 +663,7 @@ output "provider_context" {
   value = terraform_data.provider_context.output
 }
 
-provider "kubernetes" {
-  cluster_ca_certificate = base64decode(jsondecode(data.jq_query.kubeconfig.result).clusters[0].cluster.certificate-authority-data)
-  host                   = jsondecode(data.jq_query.kubeconfig.result).clusters[0].cluster.server
-  token                  = jsondecode(data.jq_query.kubeconfig.result).users[0].user.token
-}
-
-data "kubernetes_nodes" "k8s_nodes" {
-  depends_on = [
-    btp_subaccount_environment_instance.kyma,
-    data.jq_query.kubeconfig
-  ]    
-}
+data "kubernetes_nodes" "k8s_nodes" {}
 
 output "k8s_nodes" {
   value = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
