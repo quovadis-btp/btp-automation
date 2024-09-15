@@ -665,6 +665,7 @@ output "provider_context" {
 
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
+    btp_subaccount_environment_instance.kyma,
     data.jq_query.kubeconfig
   ]    
 }
