@@ -61,12 +61,12 @@ data "jq_query" "postgresql" {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": "52.6.160.101"
+	            "allow_access": data.jq_query.allow_access.result
 	        }
 	    }	
 	})
 
-   query = " .spec.parameters. |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" | fromjson }  "
+   query = " .spec.parameters |= . + { region: .region, allow_access: \"${data.jq_query.allow_access.result}\" | fromjson }  "
 }
 
 locals {
