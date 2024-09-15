@@ -679,10 +679,9 @@ data "kubernetes_resources" "OpenIDConnect" {
         btp_subaccount_environment_instance.kyma,
         terraform_data.kubectl_getnodes
   ]  
-  
+
   api_version    = "authentication.gardener.cloud/v1alpha1"
   kind           = "OpenIDConnect"
-  field_selector = "metadata.name == \"${local.bot-cert.clientid}\" "
 }
 
 output "OpenIDConnect" {
