@@ -555,7 +555,7 @@ resource "terraform_data" "egress_ips" {
     done
     cat temp_ips.txt
     CLUSTER_IPS_0=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
-    CLUSTER_IPS=$(gsub("[\r\n]", ",", $CLUSTER_IPS_0))
+    CLUSTER_IPS=$(gsub("\r?\n|\r", ",", $CLUSTER_IPS_0))
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
