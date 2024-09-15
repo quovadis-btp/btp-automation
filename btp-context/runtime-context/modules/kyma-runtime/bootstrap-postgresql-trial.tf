@@ -42,7 +42,7 @@ data "jq_query" "allow_access" {
    data = jsonencode({
    		"allow_access" : "${data.local_file.cluster_ips.content}" 
    	})
-   query = " -r -R .allow_access | gsub(\"[ ]\"; \", \")  "
+   query = " .allow_access | gsub(\"[ ]\"; \", \")  "
 }
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
