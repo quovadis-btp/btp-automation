@@ -44,14 +44,12 @@ data "jq_query" "allow_access" {
    query = " .allow_access | gsub(\"[ ]\"; \", \")  "
 }
 
-locals {
-	depends_on = [terraform_data.egress_ips]
+# https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
+#
+data "jq_query" "postgresql" {
+   depends_on = [terraform_data.egress_ips]
 
-	// https://stackoverflow.com/a/74681482
-	
-	ips = jsonencode({"ips" : "${data.local_file.cluster_ips.content}" })
-
-	postgresql = jsonencode({
+   data = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceInstance",
 	    "metadata": {
@@ -66,6 +64,18 @@ locals {
 	        }
 	    }	
 	})
+
+   query = " -r --arg ips data.jq_query.allow_access.result} '.spec.parameters |= . + { region: .region, allow_access: $ips } ' "
+}
+
+locals {
+	depends_on = [terraform_data.egress_ips]
+
+	// https://stackoverflow.com/a/74681482
+	
+	ips = jsonencode({"ips" : "${data.local_file.cluster_ips.content}" })
+
+	postgresql = data.jq_query.postgresql.result
 
 	postgresql_binding = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
