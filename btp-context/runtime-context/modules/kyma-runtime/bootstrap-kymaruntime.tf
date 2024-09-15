@@ -673,3 +673,18 @@ data "kubernetes_nodes" "k8s_nodes" {
 output "k8s_nodes" {
   value = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
 }
+
+data "kubernetes_resources" "OpenIDConnect" {
+  depends_on = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes
+  ]  
+  
+  api_version    = "authentication.gardener.cloud/v1alpha1"
+  kind           = "OpenIDConnect"
+  field_selector = "metadata.name == \"${local.bot-cert.clientid}\" "
+}
+
+output "OpenIDConnect" {
+  value = data.kubernetes_resources.OpenIDConnect.objects
+}
