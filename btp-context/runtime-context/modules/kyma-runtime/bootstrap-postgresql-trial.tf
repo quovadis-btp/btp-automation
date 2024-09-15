@@ -62,7 +62,7 @@ locals {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": jsondecode(data.jq_query.allow_access.result)  //"52.6.160.101"
+	            "allow_access": data.jq_query.allow_access.result //sondecode(data.jq_query.allow_access.result)  //"52.6.160.101"
 	        }
 	    }	
 	})
