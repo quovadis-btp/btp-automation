@@ -511,7 +511,7 @@ resource "terraform_data" "httpbin" {
 }
 
 # https://www.gnu.org/software/gawk/manual/html_node/Print-Examples.html
-#
+#     jq -r '.spec.parameters.allow_access | gsub("[\\n\\t]"; ";") '
 resource "terraform_data" "egress_ips" {
   depends_on = [terraform_data.kubectl_getnodes]
 
@@ -558,11 +558,12 @@ resource "terraform_data" "egress_ips" {
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
+    IPS=$(echo $CLUSTER_IPS | jq -r -R '.')
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq -r --arg ips "$CLUSTER_IPS" '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }' | \
-    jq -r '.spec.parameters.allow_access | gsub("[\\n\\t]"; ";") '
+    echo $PostgreSQL | jq -r --arg ips "$IPS" '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }'
+
      )
    EOF
  }
