@@ -91,5 +91,5 @@ locals {
 }
 
 output "postgresql" {
-	value = jsondecode(local.postgresql)
+	value = yamlencode(jsondecode(local.postgresql))
 }
