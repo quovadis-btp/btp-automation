@@ -41,7 +41,7 @@ data "jq_query" "allow_access" {
    data = jsonencode({
    		"allow_access" : "${data.local_file.cluster_ips.content}" 
    	})
-   query = " .allow_access | gsub(\"[ ]\"; \", \")  "
+   query = " -r -R  '.allow_access | gsub(\"[ ]\"; \", \") '  "
 }
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
@@ -60,7 +60,7 @@ data "jq_query" "postgresql" {
 	        "servicePlanName": "trial",
 	        "parameters": {
 	            "region": "us-east-1",
-	            "allow_access": data.jq_query.allow_access.result //sondecode(data.jq_query.allow_access.result)  //"52.6.160.101"
+	            "allow_access": "52.6.160.101"
 	        }
 	    }	
 	})
