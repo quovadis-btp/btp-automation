@@ -566,7 +566,7 @@ resource "terraform_data" "egress_ips" {
 
     PostgreSQL='${self.input}'
     echo $(jq -r '.' <<< $PostgreSQL)
-    echo $PostgreSQL | jq -r --arg ips "$IPS" '.spec.parameters |= . + { region: "us-east-1", allow_access: $ips }'
+    echo $PostgreSQL | jq -r --arg ips "$IPS" '.spec.parameters |= . + { region: .region, allow_access: $ips }'
 
      )
    EOF
