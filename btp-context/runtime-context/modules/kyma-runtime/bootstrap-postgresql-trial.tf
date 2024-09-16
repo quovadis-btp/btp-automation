@@ -93,3 +93,7 @@ locals {
 output "postgresql" {
 	value = yamlencode(jsondecode(local.postgresql))
 }
+
+output "postgresql-binding" {
+	value = yamlencode(jsondecode(local.postgresql_binding))
+}
