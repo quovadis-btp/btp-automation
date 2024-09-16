@@ -707,6 +707,6 @@ data "kubernetes_resource" "KymaModules" {
 
 output "KymaModules" {
 #  value = { for KymaModules in data.kubernetes_resource.KymaModules.object : KymaModules.metadata.name => KymaModules.status.modules }
-  value =  data.kubernetes_resource.KymaModules.object
+  value =  data.kubernetes_resource.KymaModules.object.status.modules
 }
 
