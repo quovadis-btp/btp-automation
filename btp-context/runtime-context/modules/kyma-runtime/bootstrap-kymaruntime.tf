@@ -688,3 +688,20 @@ output "OpenIDConnect" {
 #  value = { for OpenIDConnect in data.kubernetes_resources.OpenIDConnect.objects : OpenIDConnect.metadata.name => OpenIDConnect }
   value = { for OpenIDConnect in data.kubernetes_resources.OpenIDConnect.objects : OpenIDConnect.metadata.name => OpenIDConnect.spec }
 }
+
+# https://gist.github.com/ptesny/2a6fce8d06a027f9e3b86967aeddf984
+#
+data "kubernetes_resources" "KymaModules" {
+  depends_on = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes
+  ]  
+
+  api_version    = "operator.kyma-project.io/v1beta2"
+  kind           = "Kyma"
+}
+
+output "KymaModules" {
+  value = { for KymaModules in data.kubernetes_resources.KymaModules.objects : KymaModules.metadata.name => KymaModules.spec }
+}
+
