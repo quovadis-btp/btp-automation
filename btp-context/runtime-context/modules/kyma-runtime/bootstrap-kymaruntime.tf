@@ -698,9 +698,10 @@ data "kubernetes_resources" "KymaModules" {
 
   api_version    = "operator.kyma-project.io/v1beta2"
   kind           = "Kyma"
+
   metadata {
     name      = "default"
-    namespace = "yma-system"
+    namespace = "kyma-system"
   }  
 }
 
