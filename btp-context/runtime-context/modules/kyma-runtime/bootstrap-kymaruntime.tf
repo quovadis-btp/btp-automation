@@ -663,6 +663,8 @@ output "provider_context" {
   value = terraform_data.provider_context.output
 }
 
+# https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
+
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
         btp_subaccount_environment_instance.kyma,
@@ -689,6 +691,7 @@ output "OpenIDConnect" {
 }
 
 # https://gist.github.com/ptesny/2a6fce8d06a027f9e3b86967aeddf984
+# https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/resource#object
 #
 data "kubernetes_resource" "KymaModules" {
   depends_on = [
