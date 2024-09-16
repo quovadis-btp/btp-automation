@@ -586,7 +586,7 @@ output "egress_ips" {
 #
 data "terraform_remote_state" "provider_context" {
   backend = "kubernetes" //var.provider_context_backend
-  config = backend == "kubernetes" ? 
+  config  = (backend == "kubernetes"} ? 
                 {
                   secret_suffix    = var.provider_state_suffix
                   config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
