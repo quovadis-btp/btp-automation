@@ -703,9 +703,9 @@ data "kubernetes_resource" "KymaModules" {
     name      = "default"
     namespace = "kyma-system"
   }  
-}
+} 
 
 output "KymaModules" {
-  value = { for KymaModules in data.kubernetes_resources.KymaModules.objects : KymaModules.metadata.name => KymaModules.status.modules }
+  value = { for KymaModules in data.kubernetes_resource.KymaModules.objects : KymaModules.metadata.name => KymaModules.status.modules }
 }
 
