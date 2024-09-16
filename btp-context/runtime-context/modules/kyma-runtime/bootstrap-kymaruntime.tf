@@ -713,3 +713,16 @@ output "KymaModules" {
   value =  data.kubernetes_resource.KymaModules.object.status.modules
 }
 
+data "kubernetes_resources" "ServiceInstance" {
+  depends_on = [
+        btp_subaccount_environment_instance.kyma,
+        terraform_data.kubectl_getnodes
+  ]  
+
+  api_version    = "services.cloud.sap.com/v1"
+  kind           = "ServiceInstance"
+}
+
+output "ServiceInstance" {
+  value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
+}
