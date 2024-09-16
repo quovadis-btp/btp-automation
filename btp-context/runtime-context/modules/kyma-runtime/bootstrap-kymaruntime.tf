@@ -697,7 +697,7 @@ data "kubernetes_resources" "KymaModules" {
         terraform_data.kubectl_getnodes
   ]  
 
-  api_version    = "operator.kyma-project.io/v1beta2"
+  api_version    = "operator.kyma-project.io/v1beta2/kymas"
   kind           = "Kyma"
 }
 
