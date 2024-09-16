@@ -580,16 +580,32 @@ output "egress_ips" {
 
 # https://developer.hashicorp.com/terraform/language/state/remote-state-data#the-terraform_remote_state-data-source
 # https://spacelift.io/blog/terraform-data-sources-how-they-are-utilised
+# https://ourcloudschool.medium.com/read-terraform-provisioned-resources-with-terraform-remote-state-datasource-ab9cf882ab63
+# https://spacelift.io/blog/terraform-remote-state
+# https://fabianlee.org/2023/08/06/terraform-terraform_remote_state-to-pass-values-to-other-configurations/
 #
 data "terraform_remote_state" "provider_context" {
-  backend = "kubernetes"
+  backend = "kubernetes" //var.provider_context_backend
+  config = backend == "kubernetes" ? 
+                {
+                  secret_suffix    = var.provider_state_suffix
+                  config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
+                  namespace        = "tf-provider-context"
+                  load_config_file = true
+                } :
+                {
+                  path = "../terraform.tfstate"
+                }                
+}
+
+/*
+data "terraform_remote_state" "provider_context2" {
+  backend = "local"
   config = {
-    secret_suffix    = var.provider_state_suffix ### "state-89982f73trial"
-    config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
-    namespace        = "tf-provider-context"
-    load_config_file = true
+    path = "../terraform.tfstate"
   }
 }
+*/
 
 /*
 resource "provider_context" "provider_k8s" {
