@@ -690,7 +690,7 @@ output "OpenIDConnect" {
 
 # https://gist.github.com/ptesny/2a6fce8d06a027f9e3b86967aeddf984
 #
-data "kubernetes_resources" "KymaModules" {
+data "kubernetes_resource" "KymaModules" {
   depends_on = [
         btp_subaccount_environment_instance.kyma,
         terraform_data.kubectl_getnodes
