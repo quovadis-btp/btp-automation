@@ -685,5 +685,5 @@ data "kubernetes_resources" "OpenIDConnect" {
 }
 
 output "OpenIDConnect" {
-  value = data.kubernetes_resources.OpenIDConnect.objects
+  value = { OpenIDConnect in data.kubernetes_resources.OpenIDConnect.objects : OpenIDConnect.metadata.0.name => OpenIDConnect }
 }
