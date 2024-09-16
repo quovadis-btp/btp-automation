@@ -685,7 +685,6 @@ data "kubernetes_resources" "OpenIDConnect" {
 }
 
 output "OpenIDConnect" {
-#  value = { for OpenIDConnect in data.kubernetes_resources.OpenIDConnect.objects : OpenIDConnect.metadata.name => OpenIDConnect }
   value = { for OpenIDConnect in data.kubernetes_resources.OpenIDConnect.objects : OpenIDConnect.metadata.name => OpenIDConnect.spec }
 }
 
@@ -697,8 +696,12 @@ data "kubernetes_resources" "KymaModules" {
         terraform_data.kubectl_getnodes
   ]  
 
-  api_version    = "operator.kyma-project.io/v1beta2/kymas"
+  api_version    = "operator.kyma-project.io/v1beta2"
   kind           = "Kyma"
+  metadata {
+    name      = "default"
+    namespace = "yma-system"
+  }  
 }
 
 output "KymaModules" {
