@@ -136,33 +136,24 @@ variable "provider_state_suffix" {
   description = "provider_state_suffix"
 }
 
-/*
 variable "provider_context_backend" {
   type        = string
-  description = "provider_context_backend"
+  description = "provider_context_backend type"
 }
-*/
 
-/*
-variable "provider_state_config" {
-  type        = object(
-      {
-        secret_suffix    = string
-        config_path      = string  
-        namespace        = string
-        load_config_file = bool
-
-      }
-  )
-  description = "provider_state_config"
-  default = {
-      "config" = {
-        secret_suffix    = var.provider_state_suffix
-        config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
-        namespace        = "tf-provider-context"
-        load_config_file = true
-      }  
-  }
+variable "provider_context_kubernetes_backend_config" {
+  type = object({
+    secret_suffix    = string
+    config_path      = string
+    namespace        = string
+    load_config_file = bool
+  })
 }
-*/
+
+variable "provider_context_local_backend_config" {
+  type = object({
+    path = string
+  })
+}
+
 

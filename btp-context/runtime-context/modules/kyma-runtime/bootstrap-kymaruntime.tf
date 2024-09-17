@@ -585,17 +585,13 @@ output "egress_ips" {
 # https://fabianlee.org/2023/08/06/terraform-terraform_remote_state-to-pass-values-to-other-configurations/
 #
 data "terraform_remote_state" "provider_context" {
-  backend = "kubernetes" //var.provider_context_backend
-  config  = (backend == "kubernetes") ? 
-                {
-                  secret_suffix    = var.provider_state_suffix
-                  config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
-                  namespace        = "tf-provider-context"
-                  load_config_file = true
-                } :
-                {
-                  path = "../terraform.tfstate"
-                }                
+  backend = var.provider_context_backend // "kubernetes" 
+  config  =  {
+            secret_suffix    = var.provider_state_suffix
+            config_path      = "~/.kube/kubeconfig--c-4860efd-default.yaml"    
+            namespace        = "tf-provider-context"
+            load_config_file = true
+          }
 }
 
 /*
