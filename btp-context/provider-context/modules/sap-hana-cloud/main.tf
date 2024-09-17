@@ -252,7 +252,8 @@ resource "btp_subaccount_service_instance" "dest_bootstrap" {
 resource "btp_subaccount_service_instance" "dest_provider" {
   depends_on = [
     btp_subaccount_entitlement.destination,
-    btp_subaccount_service_instance.my_sap_hana_cloud_instance[0]
+    btp_subaccount_service_instance.my_sap_hana_cloud_instance[0],
+    btp_subaccount_service_binding.dest_binding
   ]
 
   subaccount_id  = data.btp_subaccount.context.id
