@@ -589,21 +589,7 @@ data "terraform_remote_state" "provider_context" {
   config  = var.provider_context_backend == "kubernetes" ? var.provider_context_kubernetes_backend_config : var.provider_context_local_backend_config 
 }
 
-/*
-data "terraform_remote_state" "provider_context2" {
-  backend = "local"
-  config = {
-    path = "../terraform.tfstate"
-  }
-}
-*/
-
-/*
-resource "provider_context" "provider_k8s" {
-  provider_k8s = "${data.terraform_remote_state.provider_context.outputs.provider_k8s}"
-
-}*/
-
+// this provider context can be null
 locals {
   provider_k8s = jsonencode(data.terraform_remote_state.provider_context.outputs.provider_k8s)
 

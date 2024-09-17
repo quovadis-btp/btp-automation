@@ -131,11 +131,6 @@ variable "argocd_url" {
   description = "ArgoCDaaS backend URL"
 }
 
-variable "provider_state_suffix" {
-  type        = string
-  description = "provider_state_suffix"
-}
-
 variable "provider_context_backend" {
   type        = string
   description = "provider_context_backend type"
