@@ -709,7 +709,7 @@ output "KymaModules" {
 data "kubernetes_resources" "ServiceInstance" {
   depends_on = [
         btp_subaccount_environment_instance.kyma,
-        terraform_data.kubectl_getnodes
+        terraform_data.provider_context
   ]  
 
   api_version    = "services.cloud.sap.com/v1"
