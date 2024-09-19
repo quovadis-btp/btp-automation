@@ -602,8 +602,8 @@ data "tfe_outputs" "provider_context" {
 locals {
 
   provider_k8s = one(data.terraform_remote_state[*].provider_context.outputs.provider_k8s) != null 
-                 ? one(jsonencode(data.terraform_remote_state[*].provider_context.outputs.provider_k8s))
-                 : one(jsonencode(data.tfe_outputs[*].provider_context.outputs.provider_k8s))
+                 ? jsonencode(one(data.terraform_remote_state[*].provider_context.outputs.provider_k8s))
+                 : jsonencode(one(data.tfe_outputs[*].provider_context.outputs.provider_k8s))
 
 
 }
