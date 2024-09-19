@@ -585,13 +585,24 @@ output "egress_ips" {
 # https://fabianlee.org/2023/08/06/terraform-terraform_remote_state-to-pass-values-to-other-configurations/
 #
 data "terraform_remote_state" "provider_context" {
+  count   = var.provider_context_backend != "tfe" ? 1 : 0
+
   backend = var.provider_context_backend // "kubernetes" 
   config  = var.provider_context_backend == "kubernetes" ? var.provider_context_kubernetes_backend_config : var.provider_context_local_backend_config 
 }
 
+data "tfe_outputs" "provider_context" {
+  count        = var.provider_context_backend == "tfe" ? 1 : 0
+
+  organization = "quovadis" //var.provider_context_organization
+  workspace    = "provider-context" //var.provider_context_workspace
+}
+
 // this provider context can be null
 locals {
-  provider_k8s = jsonencode(data.terraform_remote_state.provider_context.outputs.provider_k8s)
+  provider_k8s = one(jsonencode(data.terraform_remote_state[*].provider_context.outputs.provider_k8s)) 
+                 ? null 
+                 : one(jsonencode(data.tfe_outputs[*].provider_context.outputs.provider_k8s))
 
 }
 
