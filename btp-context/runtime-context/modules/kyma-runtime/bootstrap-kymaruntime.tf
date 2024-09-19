@@ -591,17 +591,20 @@ data "terraform_remote_state" "provider_context" {
   config  = var.provider_context_backend == "kubernetes" ? var.provider_context_kubernetes_backend_config : var.provider_context_local_backend_config 
 }
 
+# https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/data-sources/outputs?ajs_aid=3951d9c3-6a9a-4a4d-826b-b5a7fc7daf9f&product_intent=terraform
+#
 data "tfe_outputs" "provider_context" {
   count        = var.provider_context_backend == "tfe" ? 1 : 0
 
-  organization = "quovadis" //var.provider_context_organization
-  workspace    = "provider-context" //var.provider_context_workspace
+  organization = var.provider_context_organization
+  workspace    = var.provider_context_workspace
 }
 
 // this provider context can be null
 locals {
   remote_backend = one(data.terraform_remote_state.provider_context[*].outputs.provider_k8s)
-  tfe_backend    = one(data.tfe_outputs.provider_context[*].values.provider_k8s)
+//  tfe_backend    = one(data.tfe_outputs.provider_context[*].values.provider_k8s)
+  tfe_backend    = one(data.tfe_outputs.provider_context[*].nonsensitive_values.provider_k8s)
 
   provider_k8s = local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend)
 
