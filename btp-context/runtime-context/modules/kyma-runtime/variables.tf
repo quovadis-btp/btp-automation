@@ -131,6 +131,17 @@ variable "argocd_url" {
   description = "ArgoCDaaS backend URL"
 }
 
+variable "provider_context_organization" {
+  type        = string
+  description = "provider_context_organization name (tfe provider)"
+}
+
+variable "provider_context_workspace" {
+  type        = string
+  description = "provider_context_workspace name (tfe provider)"
+}
+
+
 variable "provider_context_backend" {
   type        = string
   description = "provider_context_backend type"
