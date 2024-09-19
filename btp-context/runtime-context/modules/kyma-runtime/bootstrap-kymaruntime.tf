@@ -603,9 +603,7 @@ locals {
   remote_backend = one(data.terraform_remote_state[*].provider_context.outputs.provider_k8s)
   tfe_backend    = one(data.tfe_outputs[*].provider_context.outputs.provider_k8s)
 
-  provider_k8s = local.remote_backend != null 
-                 ? jsonencode(local.remote_backend)
-                 : jsonencode(local.tfe_backend)
+  provider_k8s = local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend)
 
 }
 
