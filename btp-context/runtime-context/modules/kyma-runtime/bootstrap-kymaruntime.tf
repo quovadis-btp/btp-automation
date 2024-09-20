@@ -618,7 +618,7 @@ locals {
   tfe_backend    = one(data.tfe_outputs.provider_context[*].values.provider_k8s)
 //  tfe_backend    = one(data.tfe_outputs.provider_context[*].nonsensitive_values.provider_k8s)
 
-  provider_k8s = local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend)
+  provider_k8s = nonsensitive(local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend))
 
 }
 
