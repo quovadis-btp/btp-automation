@@ -133,7 +133,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
     delete = "60m"
   }
 
-/**/
+/*
   // will need to make sure there is a valid kubeconfig at the time of resource destruction
   //
   provisioner "local-exec" {
@@ -160,7 +160,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
        )
      EOF
   } 
-/**/
+/*/
 
 }
 
