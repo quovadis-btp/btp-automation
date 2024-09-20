@@ -295,21 +295,21 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
     NAMESPACE=quovadis-btp
     set -e -o pipefail ;\
     
-    crd=$(kubectl get crd openidconnects.authentication.gardener.cloud --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
+    crd=$(./kubectl get crd openidconnects.authentication.gardener.cloud --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
     if [ "$crd" = "openidconnects.authentication.gardener.cloud" ]
     then
       OpenIDConnect='${self.input}'
       echo $(jq -r '.' <<< $OpenIDConnect)
       echo $OpenIDConnect
 
-      echo | kubectl get nodes --kubeconfig $KUBECONFIG
-      kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
-      kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+      echo | ./kubectl get nodes --kubeconfig $KUBECONFIG
+      ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+      ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
 
       # a debug line until the OpenIDConnect CRD is installed via the oidc shoot extension
       #
       echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-bot.json
-      echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
     else
       echo $crd
     fi
