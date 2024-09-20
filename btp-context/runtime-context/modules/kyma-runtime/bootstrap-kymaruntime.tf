@@ -133,7 +133,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
     delete = "60m"
   }
 
-/*
+/**/
   // will need to make sure there is a valid kubeconfig at the time of resource destruction
   //
   provisioner "local-exec" {
@@ -147,6 +147,10 @@ resource "btp_subaccount_environment_instance" "kyma" {
       KUBECONFIG=kubeconfig-headless.yaml
       MODULE=connectivity-proxy
       set -e -o pipefail ;\
+      curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
+      chmod +x kubectl
+
+      echo "${local.kubeconfig}" > kubeconfig-headless.yaml
 
       ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
@@ -158,7 +162,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
        )
      EOF
   } 
-*/
+/**/
 
 }
 
