@@ -317,7 +317,7 @@ EOF
 resource "null_resource" "kubectl_getnodes" {
   depends_on = [btp_subaccount_environment_instance.kyma]
 
-  triggers_replace = {
+  triggers {
     always_run = "${timestamp()}"
   }
  provisioner "local-exec" {
