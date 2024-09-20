@@ -192,7 +192,9 @@ resource "null_resource" "next" {
       set -e -o pipefail ;\
       curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
       chmod +x kubectl
-    
+
+      echo "${local.kubeconfig}" > kubeconfig-headless.yaml
+
       ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
       KYMAS_DEFAULT_CONFIG=$(./kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
