@@ -165,7 +165,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
 #
 # https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep#delay-destroy-usage
 #
-# The btp_subaccount_environment_instance.kyma resource will destroy (at least) 180 seconds after null_resource.next
+# The btp_subaccount_environment_instance.kyma resource will destroy (at least) 60 seconds after null_resource.next
 
 resource "time_sleep" "wait_180_seconds" {
   depends_on = [btp_subaccount_environment_instance.kyma]
@@ -190,7 +190,9 @@ resource "null_resource" "next" {
       KUBECONFIG=kubeconfig-headless.yaml
       MODULE=connectivity-proxy
       set -e -o pipefail ;\
-
+      curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
+      chmod +x kubectl
+    
       ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
       KYMAS_DEFAULT_CONFIG=$(./kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
@@ -198,7 +200,7 @@ resource "null_resource" "next" {
       echo $NEW_KYMAS_CONFIG
       echo $NEW_KYMAS_CONFIG | ./kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
       
-      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
+      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=5m
        )
      EOF
   }   
