@@ -332,6 +332,7 @@ resource "null_resource" "kubectl_getnodes" {
     curl -LO https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
     mv argocd-linux-amd64 argocd
     chmod +x argocd
+    echo | ls -l
      )
    EOH
  }
