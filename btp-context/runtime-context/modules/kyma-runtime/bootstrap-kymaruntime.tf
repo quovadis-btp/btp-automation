@@ -141,6 +141,8 @@ resource "btp_subaccount_environment_instance" "kyma" {
     when        = destroy
     on_failure  = continue
 
+    echo "${local.kubeconfig}" > kubeconfig-headless.yaml
+
     interpreter = ["/bin/bash", "-c"]
      command = <<EOF
        (
@@ -149,8 +151,6 @@ resource "btp_subaccount_environment_instance" "kyma" {
       set -e -o pipefail ;\
       curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
       chmod +x kubectl
-
-      echo "${local.kubeconfig}" > kubeconfig-headless.yaml
 
       ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
