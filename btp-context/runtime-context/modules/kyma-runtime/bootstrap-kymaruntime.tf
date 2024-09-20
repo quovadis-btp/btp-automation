@@ -141,8 +141,6 @@ resource "btp_subaccount_environment_instance" "kyma" {
     when        = destroy
     on_failure  = continue
 
-    echo "${local.kubeconfig}" > kubeconfig-headless.yaml
-
     interpreter = ["/bin/bash", "-c"]
      command = <<EOF
        (
@@ -178,8 +176,11 @@ resource "time_sleep" "wait_180_seconds" {
 }
 
 # This resource will create (potentially immediately) after btp_subaccount_environment_instance.kyma
-resource "null_resource" "next" {
+resource "terraform_data" "next" {
+//resource "null_resource" "next" {
   depends_on = [time_sleep.wait_180_seconds]
+
+  input = local.kubeconfig
 
   // will need to make sure there is a valid kubeconfig at the time of resource destruction
   //
@@ -197,7 +198,7 @@ resource "null_resource" "next" {
       curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
       chmod +x kubectl
 
-      echo "${local.kubeconfig}" > kubeconfig-headless.yaml
+      echo '${self.input}'  > kubeconfig-headless.yaml
 
       ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
