@@ -333,6 +333,7 @@ resource "null_resource" "kubectl_getnodes" {
     mv argocd-linux-amd64 argocd
     chmod +x argocd
     echo | ls -l
+    echo | kubectl version
      )
    EOH
  }
@@ -358,7 +359,7 @@ resource "terraform_data" "kubectl_getnodes" {
     ## get-cluster-zones:
     echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless.yaml
     
-    #echo | kubectl resource-capacity --kubeconfig kubeconfig-headless.yaml
+    echo | kubectl resource-capacity --kubeconfig kubeconfig-headless.yaml
 
      )
    EOF
