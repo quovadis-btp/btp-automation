@@ -329,7 +329,8 @@ resource "null_resource" "kubectl_getnodes" {
     chmod 0755 jq
     curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
     chmod +x kubectl
-    curl -sSL https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    curl -LO https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    mv argocd-linux-amd64 argocd
     chmod +x argocd
      )
    EOH
