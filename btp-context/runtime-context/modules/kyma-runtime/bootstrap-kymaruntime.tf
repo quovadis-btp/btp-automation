@@ -315,23 +315,24 @@ EOF
 # https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
 #
 resource "null_resource" "kubectl_getnodes" {
-  triggers = {
+  depends_on = [btp_subaccount_environment_instance.kyma]
+
+  triggers_replace = {
     always_run = "${timestamp()}"
   }
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
-   command = <<EOF
+   command = <<EOH
      (
-     set -e -o pipefail
-     echo "${local.kubeconfig}" > kubeconfig-headless2.yaml
-     echo | kubectl get nodes --kubeconfig kubeconfig-headless2.yaml
-     echo | kubectl resource-capacity --kubeconfig kubeconfig-headless2.yaml
-     
-     ## get-cluster-zones:
-     echo | kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless2.yaml
-
+    set -e -o pipefail
+    curl -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    chmod 0755 jq
+    curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl
+    chmod +x kubectl
+    curl -sSL https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    chmod +x argocd
      )
-   EOF
+   EOH
  }
 }
 
@@ -339,7 +340,7 @@ resource "null_resource" "kubectl_getnodes" {
 # get-cluster-zones
 #
 resource "terraform_data" "kubectl_getnodes" {
-  depends_on = [btp_subaccount_environment_instance.kyma]
+  depends_on = [btp_subaccount_environment_instance.kyma, null_resource.kubectl_getnodes]
 
   triggers_replace = {
     always_run = "${timestamp()}"
