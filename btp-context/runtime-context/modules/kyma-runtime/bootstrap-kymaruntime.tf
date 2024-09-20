@@ -526,7 +526,7 @@ resource "terraform_data" "httpbin" {
 # https://stackoverflow.com/questions/40321035/remove-escape-sequence-characters-like-newline-tab-and-carriage-return-from-jso
 #     jq -r '.spec.parameters.allow_access | gsub("[\\n\\t]"; ";") '
 resource "terraform_data" "egress_ips" {
-  depends_on = [terraform_data.kubectl_getnodes]
+  depends_on = [terraform_data.provider_context]
 
 /*
   triggers_replace = {
