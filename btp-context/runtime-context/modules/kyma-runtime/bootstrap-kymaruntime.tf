@@ -148,13 +148,13 @@ resource "btp_subaccount_environment_instance" "kyma" {
       MODULE=connectivity-proxy
       set -e -o pipefail ;\
 
-      kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
+      ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
-      KYMAS_DEFAULT_CONFIG=$(kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
+      KYMAS_DEFAULT_CONFIG=$(./kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
       NEW_KYMAS_CONFIG=$(echo $KYMAS_DEFAULT_CONFIG | jq --arg m "$MODULE" 'del(.spec.modules[] | select(.name == $m) )' )
       echo $NEW_KYMAS_CONFIG
-      echo $NEW_KYMAS_CONFIG | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
-      kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
+      echo $NEW_KYMAS_CONFIG | ./kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
+      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
        )
      EOF
   } 
@@ -191,14 +191,14 @@ resource "null_resource" "next" {
       MODULE=connectivity-proxy
       set -e -o pipefail ;\
 
-      kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
+      ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status statefulset connectivity-proxy --timeout=5m
 
-      KYMAS_DEFAULT_CONFIG=$(kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
+      KYMAS_DEFAULT_CONFIG=$(./kubectl get -n kyma-system kymas default --kubeconfig $KUBECONFIG -o json)
       NEW_KYMAS_CONFIG=$(echo $KYMAS_DEFAULT_CONFIG | jq --arg m "$MODULE" 'del(.spec.modules[] | select(.name == $m) )' )
       echo $NEW_KYMAS_CONFIG
-      echo $NEW_KYMAS_CONFIG | kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
+      echo $NEW_KYMAS_CONFIG | ./kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
       
-      kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
+      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
        )
      EOF
   }   
@@ -353,12 +353,12 @@ resource "terraform_data" "kubectl_getnodes" {
      (
     set -e -o pipefail ;\
     echo "${local.kubeconfig}" > kubeconfig-headless.yaml
-    #echo | kubectl get nodes --kubeconfig kubeconfig-headless.yaml
+    #echo | ./kubectl get nodes --kubeconfig kubeconfig-headless.yaml
 
     ## get-cluster-zones:
     echo | ./kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig kubeconfig-headless.yaml
     
-    #echo | kubectl resource-capacity --kubeconfig kubeconfig-headless.yaml
+    #echo | ./kubectl resource-capacity --kubeconfig kubeconfig-headless.yaml
 
      )
    EOF
@@ -491,21 +491,21 @@ resource "terraform_data" "httpbin" {
     NAMESPACE=quovadis-btp
 
     set -e -o pipefail
-    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)
+    HTTPBIN=$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)
     if [ "$HTTPBIN" = "" ]
     then
-      kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
-      kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
-      kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+      ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+      ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+      ./kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
 
-      while [ "$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)" = "" ]
+      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)" = "" ]
       do 
         echo "no deployment httpbin"
         sleep 1
       done      
     fi
 
-    HTTPBIN=$(kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 5m)
+    HTTPBIN=$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment httpbin --timeout 5m)
     echo $HTTPBIN 
 
      )
@@ -553,9 +553,9 @@ resource "terraform_data" "egress_ips" {
    command = <<EOF
      (
     set -e -o pipefail ;\
-    for zone in $(kubectl get nodes --kubeconfig kubeconfig-headless.yaml -o 'custom-columns=NAME:.metadata.name,REGION:.metadata.labels.topology\.kubernetes\.io/region,ZONE:.metadata.labels.topology\.kubernetes\.io/zone' -o json | jq -r '.items[].metadata.labels["topology.kubernetes.io/zone"]' | sort | uniq); do
+    for zone in $(./kubectl get nodes --kubeconfig kubeconfig-headless.yaml -o 'custom-columns=NAME:.metadata.name,REGION:.metadata.labels.topology\.kubernetes\.io/region,ZONE:.metadata.labels.topology\.kubernetes\.io/zone' -o json | jq -r '.items[].metadata.labels["topology.kubernetes.io/zone"]' | sort | uniq); do
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
-    kubectl run --kubeconfig kubeconfig-headless.yaml --timeout=5m -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
+    ./kubectl run --kubeconfig kubeconfig-headless.yaml --timeout=5m -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
     done
     cat temp_ips.txt
     CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
@@ -634,36 +634,36 @@ resource "terraform_data" "provider_context" {
     NAMESPACE=quovadis-btp
     set -e -o pipefail ;\
     TOKEN=${local.provider_k8s}
-    echo | kubectl get nodes --kubeconfig $KUBECONFIG ;\
-    kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
-    kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+    echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
+    ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+    ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
 
-    INDEX=$(kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
+    INDEX=$(./kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
     echo $INDEX
 
-    kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
-    while [ "$(kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment api-gateway-controller-manager --ignore-not-found)" = "" ]
+    ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
+    while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment api-gateway-controller-manager --ignore-not-found)" = "" ]
     do 
       echo "deployments.apps - api-gateway-controller-manager - not found"
       sleep 1
     done
-    echo | kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment api-gateway-controller-manager --timeout 5m
+    echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment api-gateway-controller-manager --timeout 5m
 
 
-    kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
-    while [ "$(kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
+    ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
+    while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
     do 
       echo "deployments.apps - sap-btp-operator-controller-manager - not found"
       sleep 1
     done
-    echo | kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 5m
+    echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 5m
 
-    SECRET=$(kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
+    SECRET=$(./kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
     echo $SECRET
     CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
     echo $CONFIG
     echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
-    | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
 
      )
    EOF
