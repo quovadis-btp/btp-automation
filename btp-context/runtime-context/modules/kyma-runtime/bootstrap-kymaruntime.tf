@@ -333,7 +333,6 @@ resource "null_resource" "kubectl_getnodes" {
     mv argocd-linux-amd64 argocd
     chmod +x argocd
     echo | ls -l
-    echo | ./kubectl version
      )
    EOH
  }
