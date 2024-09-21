@@ -667,6 +667,9 @@ resource "terraform_data" "provider_context" {
     done
     echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 5m
 
+    echo | ./kubectl wait --for condition=established crd serviceinstances.services.cloud.sap.com -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for condition=established crd servicebindings.services.cloud.sap.com -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
+
     SECRET=$(./kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
     echo $SECRET
     CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
