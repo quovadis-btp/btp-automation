@@ -295,7 +295,7 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
     NAMESPACE=quovadis-btp
     set -e -o pipefail ;\
     
-    ./kubectl wait --for condition=established crd openidconnects.authentication.gardener.cloud --timeout=180s
+    ./kubectl wait --for condition=established crd openidconnects.authentication.gardener.cloud --timeout=180s --kubeconfig $KUBECONFIG
     crd=$(./kubectl get crd openidconnects.authentication.gardener.cloud --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
     if [ "$crd" = "openidconnects.authentication.gardener.cloud" ]
     then
