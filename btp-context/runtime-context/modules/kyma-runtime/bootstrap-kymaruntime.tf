@@ -647,6 +647,8 @@ resource "terraform_data" "provider_context" {
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
     ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
 
+    echo | ./kubectl wait --for condition=established crd kymas.operator.kyma-project.io -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
+
     INDEX=$(./kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
     echo $INDEX
 
@@ -702,7 +704,7 @@ output "k8s_nodes" {
 #
 data "kubernetes_resources" "OpenIDConnect" {
   depends_on = [
-        terraform_data.kubectl_getnodes
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   api_version    = "authentication.gardener.cloud/v1alpha1"
@@ -718,7 +720,7 @@ output "OpenIDConnect" {
 #
 data "kubernetes_resource" "KymaModules" {
   depends_on = [
-        terraform_data.kubectl_getnodes
+        terraform_data.provider_context
   ]  
 
   api_version    = "operator.kyma-project.io/v1beta2"
