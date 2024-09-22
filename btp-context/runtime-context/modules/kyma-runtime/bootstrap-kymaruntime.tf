@@ -694,6 +694,7 @@ resource "terraform_data" "provider_context" {
      echo "services.cloud.sap.com/v1 - not found"
      sleep 1
     done
+    echo | ./kubectl api-versions --kubeconfig $KUBECONFIG | grep services.cloud.sap.com/v1
      )
    EOF
  }
