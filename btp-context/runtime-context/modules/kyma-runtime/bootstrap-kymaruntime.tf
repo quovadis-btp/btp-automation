@@ -762,6 +762,8 @@ output "KymaModules" {
 # https://discuss.hashicorp.com/t/how-to-put-a-condition-on-a-for-each/55499/2
 # https://stackoverflow.com/questions/77119996/how-to-make-terraform-ignore-a-resource-if-another-one-is-not-deployed
 #
+
+/*
 data "kubernetes_resources" "ServiceInstance" {
   depends_on = [
         terraform_data.provider_context
@@ -776,3 +778,4 @@ output "ServiceInstance" {
  #value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
  #value = "kubectl get serviceinstances -A --kubeconfig kubeconfig_bot_exec.yaml"
 }
+*/
