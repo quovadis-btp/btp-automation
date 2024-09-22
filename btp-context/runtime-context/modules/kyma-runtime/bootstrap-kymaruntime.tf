@@ -454,7 +454,7 @@ resource "local_sensitive_file" "argocd_config" {
 # https://discuss.hashicorp.com/t/is-there-any-way-to-inspect-module-variables-and-outputs/25702
 #
 output "argocd_config" {
-  value = local.argocd_config
+  value = jsondecode(local.argocd_config)
 }
 
 output "argocd_token" {
