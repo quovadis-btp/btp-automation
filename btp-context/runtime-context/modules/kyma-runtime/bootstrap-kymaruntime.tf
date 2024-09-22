@@ -409,10 +409,6 @@ resource "terraform_data" "argocd_bootstrap" {
 
 
 data "http" "argocd_token" {
-  depends_on = [
-         terraform_data.kubectl_getnodes
-     ]
-
   url = "${var.argocd_tokenurl}"
   method = "POST"
   request_headers = {
