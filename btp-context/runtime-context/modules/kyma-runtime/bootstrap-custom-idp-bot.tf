@@ -405,14 +405,14 @@ output "kubeconfig_bot_exec" {
 }
  
 resource "local_sensitive_file" "kubeconfig_bot_exec" {
-  depends_on = [data.http.kubeconfig_bot_exec]
+  depends_on = [data.jq_query.kubeconfig_bot_exec]
 
   content  = yamlencode(jsondecode(data.jq_query.kubeconfig_bot_exec.result) )
   filename = "kubeconfig_bot_exec.yaml"
 }
 
 resource "local_sensitive_file" "kubeconfig_bot_exec_json" {
-  depends_on = [data.http.kubeconfig_bot_exec]
+  depends_on = [data.jq_query.kubeconfig_bot_exec]
   
   content  = data.jq_query.kubeconfig_bot_exec.result
   filename = "kubeconfig_bot_exec.json"
