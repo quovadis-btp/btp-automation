@@ -393,7 +393,7 @@ locals {
 }
 
 data "jq_query" "kubeconfig_bot_exec" {
-   depends_on = [btp_subaccount_environment_instance.kyma]
+   depends_on = [btp_subaccount_environment_instance.kyma, data.http.kubeconfig]
    data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_bot_exec} } }"
 }
