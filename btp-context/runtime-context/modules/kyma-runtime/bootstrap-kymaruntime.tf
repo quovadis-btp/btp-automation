@@ -689,6 +689,11 @@ resource "terraform_data" "provider_context" {
     echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
     | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
 
+    while [ "$(./kubectl api-versions --kubeconfig $KUBECONFIG | grep services.cloud.sap.com/v1 )" = "" ]
+    do
+     echo "services.cloud.sap.com/v1 - not found"
+     sleep 1
+    done
      )
    EOF
  }
@@ -747,6 +752,11 @@ output "KymaModules" {
   value =  data.kubernetes_resource.KymaModules.object.status.modules
 }
 
+# https://github.com/hashicorp/terraform-provider-kubernetes/issues/1583
+# https://medium.com/@danieljimgarcia/dont-use-the-terraform-kubernetes-manifest-resource-6c7ff4fe629a
+# https://discuss.hashicorp.com/t/how-to-put-a-condition-on-a-for-each/55499/2
+# https://stackoverflow.com/questions/77119996/how-to-make-terraform-ignore-a-resource-if-another-one-is-not-deployed
+#
 data "kubernetes_resources" "ServiceInstance" {
   depends_on = [
         terraform_data.provider_context
@@ -757,6 +767,6 @@ data "kubernetes_resources" "ServiceInstance" {
 }
 
 output "ServiceInstance" {
-#  value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
- value = "kubectl get serviceinstances -A --kubeconfig kubeconfig_bot_exec.yaml"
+ value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
+ #value = "kubectl get serviceinstances -A --kubeconfig kubeconfig_bot_exec.yaml"
 }

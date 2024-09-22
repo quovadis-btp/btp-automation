@@ -240,7 +240,8 @@ locals {
 }
 
 data "jq_query" "kubeconfig_exec" {
-   depends_on = [btp_subaccount_environment_instance.kyma]
+   depends_on = [data.http.kubeconfig]
+
    data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_exec} } }"
 }
@@ -251,11 +252,15 @@ output "kubeconfig_exec" {
 }
  
 resource "local_sensitive_file" "kubeconfig_exec" {
+   depends_on = [data.http.kubeconfig_exec]
+
   content  = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result) )
   filename = "kubeconfig_exec.yaml"
 }
 
 resource "local_sensitive_file" "kubeconfig_exec_json" {
+   depends_on = [data.http.kubeconfig_exec]
+
   content  = data.jq_query.kubeconfig_exec.result
   filename = "kubeconfig_exec.json"
 }
