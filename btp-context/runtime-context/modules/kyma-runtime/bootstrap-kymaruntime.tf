@@ -230,9 +230,19 @@ locals {
   labels = one(btp_subaccount_environment_instance.kyma[*].labels)
 }
 
+# https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
+# https://developer.hashicorp.com/terraform/language/expressions/custom-conditions#preconditions-and-postconditions
+#
 data "http" "kubeconfig" {
   depends_on = [btp_subaccount_environment_instance.kyma]
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
+
+  lifecycle {
+    postcondition {
+      condition     = contains([200, 201, 204], self.status_code)
+      error_message = "Status code invalid"
+    }
+  }  
 }
 
 resource "local_sensitive_file" "kubeconfig-oidc" {
