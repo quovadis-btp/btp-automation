@@ -767,6 +767,7 @@ data "kubernetes_resources" "ServiceInstance" {
 }
 
 output "ServiceInstance" {
- value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
+ value = data.kubernetes_resources.ServiceInstance.objects
+ #value = { for ServiceInstance in data.kubernetes_resources.ServiceInstance.objects : ServiceInstance.metadata.name => ServiceInstance.spec }
  #value = "kubectl get serviceinstances -A --kubeconfig kubeconfig_bot_exec.yaml"
 }
