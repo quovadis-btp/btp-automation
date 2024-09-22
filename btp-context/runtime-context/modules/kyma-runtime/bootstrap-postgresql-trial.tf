@@ -54,7 +54,8 @@ data "jq_query" "postgresql" {
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceInstance",
 	    "metadata": {
-	        "name": "postgresql"
+	        "name": "postgresql",
+	        "namespace" : "quovadis-btp"
 	    },
 	    "spec": {
 	        "serviceOfferingName": "postgresql-db",
@@ -80,7 +81,8 @@ locals {
 	    "apiVersion": "services.cloud.sap.com/v1",
 	    "kind": "ServiceBinding",
 	    "metadata": {
-	        "name": "postgresql-binding"
+	        "name": "postgresql-binding",
+	        "namespace" : "quovadis-btp"
 	    },
 	    "spec": {
 	        "serviceInstanceName": "postgresql",
