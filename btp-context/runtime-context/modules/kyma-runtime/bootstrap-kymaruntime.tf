@@ -457,6 +457,10 @@ output "argocd_config" {
   value = local.argocd_config
 }
 
+output "argocd_token" {
+  value = jsondecode(data.http.argocd_token.response_body)
+}
+
 /*
 // the argo_cd information could be fetched from the argocd service bindings - TO DO
 // 
