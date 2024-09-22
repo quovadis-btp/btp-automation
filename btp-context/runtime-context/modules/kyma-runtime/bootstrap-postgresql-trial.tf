@@ -97,3 +97,7 @@ output "postgresql" {
 output "postgresql-binding" {
 	value = yamlencode(jsondecode(local.postgresql_binding))
 }
+
+resource "kubectl_manifest" "postgresql" {
+    yaml_body = yamlencode(jsondecode(local.postgresql))
+}
