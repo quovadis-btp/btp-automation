@@ -94,7 +94,7 @@ The change of the machine type will be applied automatically without causing dis
 
 ### Communication breakdown with the BTP CLI server
 
-This may happen due to the loss of the internet connectivity 
+This may happen due to the loss of the internet connectivity, for instance:  
 
 ```
 ╷
@@ -108,6 +108,8 @@ This may happen due to the loss of the internet connectivity
 │ reset by peer
 ╵
 ```
+<img width="967" alt="image" src="https://github.com/user-attachments/assets/9b4f5c09-b0c6-4f70-a04d-832986eb3e83">
+
 In the afermath of this we may need re-synchronize the terraform state with the actual infrastructure configuration.  
 
 One can check the terraform state if there is already an entry via terraform state list.  
