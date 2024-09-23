@@ -413,6 +413,10 @@ data "jq_query" "kubeconfig_bot_exec" {
 output "kubeconfig_bot_exec" {
 #  value = jsondecode(data.jq_query.kubeconfig_bot_exec.result)
   value = yamlencode(jsondecode(data.jq_query.kubeconfig_bot_exec.result))
+
+  # https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+  #
+  depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
 
 data "jq_query" "kubeconfig_prod_exec" {
@@ -425,6 +429,10 @@ data "jq_query" "kubeconfig_prod_exec" {
 output "kubeconfig_prod_exec" {
 #  value = jsondecode(data.jq_query.kubeconfig_prod_exec.result)
   value = yamlencode(jsondecode(data.jq_query.kubeconfig_prod_exec.result))
+
+  # https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+  #
+  depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
 
 /* 
