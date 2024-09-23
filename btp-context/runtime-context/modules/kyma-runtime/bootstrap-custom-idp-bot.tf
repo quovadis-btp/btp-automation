@@ -325,8 +325,8 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
 locals {
 
   # The email adresses must be recognised by https://kyma.accounts.ondemand.com. (be part of SAP ID at accounts.sap.com)
-  OpenIDConnect_PROD = 
-    nonsensitive(jsonencode({
+
+  OpenIDConnect_PROD = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
@@ -342,11 +342,10 @@ locals {
             "groupsPrefix": ""
         }
     })
-    )
 
   # The email adresses must be recognised by https://kyma.accounts400.ondemand.com. (be part of SAP ID at accounts400.sap.com)
 
-  OpenIDConnect_STAGE = nonsensitive(jsonencode({
+  OpenIDConnect_STAGE = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
@@ -361,7 +360,7 @@ locals {
             "groupsClaim": "groups",
             "groupsPrefix": ""
         }
-  }))
+  })
 
 }
 
