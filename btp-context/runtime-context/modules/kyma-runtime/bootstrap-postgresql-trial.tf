@@ -100,6 +100,7 @@ output "postgresql-binding" {
 	value = yamlencode(jsondecode(local.postgresql_binding))
 }
 
-resource "kubectl_manifest" "postgresql" {
+resource "kubectl_manifest" "postgresql-trial" {
+    count     = var.BTP_POSTGRESQL_DRY_RUN ? 0 : 1
     yaml_body = yamlencode(jsondecode(local.postgresql))
 }

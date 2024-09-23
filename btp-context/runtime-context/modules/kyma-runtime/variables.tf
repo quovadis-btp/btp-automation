@@ -50,6 +50,12 @@ variable "BTP_KYMA_DRY_RUN" {
   default     = true
 }
 
+variable "BTP_POSTGRESQL_DRY_RUN" {
+  type        = bool
+  description = "do not create postgresql-db service instance on trial"
+  default     = true
+}
+
 variable "BTP_KYMA_PLAN" {
   type        = string
   description = "Plan name"
