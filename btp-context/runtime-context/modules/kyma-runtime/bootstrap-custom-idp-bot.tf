@@ -370,6 +370,7 @@ locals {
 # https://stackoverflow.com/questions/73321432/terraform-kubectl-provider-error-failed-to-create-kubernetes-rest-client-for-re
 # https://support.hashicorp.com/hc/en-us/articles/4408936406803-Kubernetes-Provider-block-fails-with-connect-connection-refused
 #
+/*
 resource "kubectl_manifest" "OpenIDConnect_PROD" {
 //    depends_on = [ module.runtime_context.kubeconfig_prod_exec ]
     depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
@@ -386,6 +387,21 @@ resource "kubectl_manifest" "OpenIDConnect_STAGE" {
     yaml_body  = yamlencode(jsondecode(local.OpenIDConnect_STAGE))
     server_side_apply = true
     apply_only = true    
+}
+*/
+
+resource "kubernetes_manifest" "OpenIDConnect_PROD" {
+//    depends_on = [ module.runtime_context.kubeconfig_prod_exec ]
+    depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
+
+    manifest  = yamldecode(yamlencode(jsondecode(local.OpenIDConnect_PROD)))
+}
+
+resource "kubernetes_manifest" "OpenIDConnect_STAGE" {
+//    depends_on = [ module.runtime_context.kubeconfig_prod_exec ]
+    depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
+
+    manifest  = yamldecode(yamlencode(jsondecode(local.OpenIDConnect_STAGE)))
 }
 
 data "http" "token-bot" {
