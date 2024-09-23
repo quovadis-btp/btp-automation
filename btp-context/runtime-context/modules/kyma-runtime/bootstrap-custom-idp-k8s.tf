@@ -250,7 +250,8 @@ output "kubeconfig_exec" {
 #  value = jsondecode(data.jq_query.kubeconfig_exec.result)
   value = yamlencode(jsondecode(data.jq_query.kubeconfig_exec.result))
 }
- 
+
+/* 
 resource "local_sensitive_file" "kubeconfig_exec" {
    depends_on = [data.jq_query.kubeconfig_exec]
 
@@ -264,4 +265,5 @@ resource "local_sensitive_file" "kubeconfig_exec_json" {
   content  = data.jq_query.kubeconfig_exec.result
   filename = "kubeconfig_exec.json"
 }
+*/
 
