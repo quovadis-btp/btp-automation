@@ -381,7 +381,7 @@ resource "kubectl_manifest" "OpenIDConnect_PROD" {
 
 resource "kubectl_manifest" "OpenIDConnect_STAGE" {
 //    depends_on = [ module.runtime_context.kubeconfig_prod_exec ]
-    depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
+    depends_on = [ terraform_data.bootstrap-kymaruntime-bot, output.kubeconfig_prod_exec ]
 
     yaml_body  = yamlencode(jsondecode(local.OpenIDConnect_STAGE))
     server_side_apply = true
