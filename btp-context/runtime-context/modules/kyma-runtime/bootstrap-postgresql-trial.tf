@@ -103,4 +103,6 @@ output "postgresql-binding" {
 resource "kubectl_manifest" "postgresql-trial" {
     count     = var.BTP_POSTGRESQL_DRY_RUN ? 0 : 1
     yaml_body = yamlencode(jsondecode(local.postgresql))
+
+    depends_on = [terraform_data.kubectl_getnodes]
 }
