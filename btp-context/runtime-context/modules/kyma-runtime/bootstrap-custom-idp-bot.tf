@@ -447,6 +447,18 @@ locals {
             "set -e -o pipefail\n\nIDTOKEN=$(curl -X POST  \"${local.bot.url}/oauth2/token\" \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"${local.bot.clientid}\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
         ]
     })         
+
+    kubeconfig_prod_exec = jsonencode({
+        "apiVersion": "client.authentication.k8s.io/v1",
+        "interactiveMode": "Never",
+        "command": "bash",
+        "args": [
+            "-c",
+            "set -e -o pipefail\n\nIDTOKEN=$(curl -X POST  \"https://kyma.accounts.ondemand.com/oauth2/token\" \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"12b13a26-d993-4d0c-aa08-5f5852bbdff6\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
+        ]
+    })         
+
+
 }
 
 data "jq_query" "kubeconfig_bot_exec" {
@@ -460,7 +472,20 @@ output "kubeconfig_bot_exec" {
 #  value = jsondecode(data.jq_query.kubeconfig_bot_exec.result)
   value = yamlencode(jsondecode(data.jq_query.kubeconfig_bot_exec.result))
 }
- 
+
+data "jq_query" "kubeconfig_prod_exec" {
+   depends_on = [data.http.kubeconfig]
+
+   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_prod_exec} } }"
+}
+
+output "kubeconfig_prod_exec" {
+#  value = jsondecode(data.jq_query.kubeconfig_prod_exec.result)
+  value = yamlencode(jsondecode(data.jq_query.kubeconfig_prod_exec.result))
+}
+
+/* 
 resource "local_sensitive_file" "kubeconfig_bot_exec" {
   depends_on = [data.jq_query.kubeconfig_bot_exec]
 
@@ -474,4 +499,5 @@ resource "local_sensitive_file" "kubeconfig_bot_exec_json" {
   content  = data.jq_query.kubeconfig_bot_exec.result
   filename = "kubeconfig_bot_exec.json"
 }
+*/
  
