@@ -320,64 +320,6 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
  }
 }
 
-# https://help.sap.com/docs/btp/sap-business-technology-platform/configure-custom-identity-provider-for-kyma
-# 
-locals {
-
-  # The email adresses must be recognised by https://kyma.accounts.ondemand.com. (be part of SAP ID at accounts.sap.com)
-
-  OpenIDConnect_PROD = jsonencode({
-
-        "apiVersion": "authentication.gardener.cloud/v1alpha1",
-        "kind": "OpenIDConnect",
-        "metadata": {
-            "name": "12b13a26-d993-4d0c-aa08-5f5852bbdff6"
-        },
-        "spec": {
-            "issuerURL": "https://kyma.accounts.ondemand.com",
-            "clientID": "12b13a26-d993-4d0c-aa08-5f5852bbdff6",
-            "usernameClaim": "sub",
-            "usernamePrefix": "-",
-            "groupsClaim": "groups",
-            "groupsPrefix": ""
-        }
-    })
-
-  # The email adresses must be recognised by https://kyma.accounts400.ondemand.com. (be part of SAP ID at accounts400.sap.com)
-
-  OpenIDConnect_STAGE = jsonencode({
-
-        "apiVersion": "authentication.gardener.cloud/v1alpha1",
-        "kind": "OpenIDConnect",
-        "metadata": {
-            "name": "e69c0ad6-c283-4baf-9ad7-3714decef49d"
-        },
-        "spec": {
-            "issuerURL": "https://kyma.accounts400.ondemand.com",
-            "clientID": "e69c0ad6-c283-4baf-9ad7-3714decef49d",
-            "usernameClaim": "sub",
-            "usernamePrefix": "-",
-            "groupsClaim": "groups",
-            "groupsPrefix": ""
-        }
-  })
-
-}
-
-
-resource "kubectl_manifest" "OpenIDConnect_PROD" {
-    depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
-
-    yaml_body  = yamlencode(jsondecode(local.OpenIDConnect_PROD))
-}
-
-resource "kubectl_manifest" "OpenIDConnect_STAGE" {
-    depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
-
-    yaml_body  = yamlencode(jsondecode(local.OpenIDConnect_STAGE))
-}
-
-
 data "http" "token-bot" {
   url = "${local.idp.url}/oauth2/token"
   method = "POST"
