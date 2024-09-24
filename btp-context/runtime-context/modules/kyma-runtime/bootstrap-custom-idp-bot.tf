@@ -307,14 +307,6 @@ locals {
 
 }
 
-resource "terraform_data" "test" {
-  depends_on = [terraform_data.kubectl_getnodes]
-  input = [ local.OpenIDConnect, local.OpenIDConnect_PROD, local.OpenIDConnect_STAGE ]
-}
-
-output "test" {
-  value = terraform_data.test.output
-}
 
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data
@@ -389,6 +381,16 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       # a debug line until the OpenIDConnect CRD is installed via the oidc shoot extension
       #
       echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-bot.json
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+      OpenIDConnect='${self.input[1]}'
+      echo $OpenIDConnect
+      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-prod.json
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+      OpenIDConnect='${self.input[2]}'
+      echo $OpenIDConnect
+      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
     else
       echo $crd
