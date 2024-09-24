@@ -245,6 +245,73 @@ output "OpenIDConnect" {
 }
 */
 
+
+# https://help.sap.com/docs/btp/sap-business-technology-platform/configure-custom-identity-provider-for-kyma
+# 
+locals {
+
+  # The email adresses must be recognised by https://kyma.accounts.ondemand.com. (be part of SAP ID at accounts.sap.com)
+
+  OpenIDConnect_PROD = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "12b13a26-d993-4d0c-aa08-5f5852bbdff6"
+        },
+        "spec": {
+            "issuerURL": "https://kyma.accounts.ondemand.com",
+            "clientID": "12b13a26-d993-4d0c-aa08-5f5852bbdff6",
+            "usernameClaim": "sub",
+            "usernamePrefix": "-",
+            "groupsClaim": "groups",
+            "groupsPrefix": ""
+        }
+    })
+
+  # The email adresses must be recognised by https://kyma.accounts400.ondemand.com. (be part of SAP ID at accounts400.sap.com)
+
+  OpenIDConnect_STAGE = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "e69c0ad6-c283-4baf-9ad7-3714decef49d"
+        },
+        "spec": {
+            "issuerURL": "https://kyma.accounts400.ondemand.com",
+            "clientID": "e69c0ad6-c283-4baf-9ad7-3714decef49d",
+            "usernameClaim": "sub",
+            "usernamePrefix": "-",
+            "groupsClaim": "groups",
+            "groupsPrefix": ""
+        }
+  })
+
+  OpenIDConnect = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "${local.bot-cert.clientid}"
+        },
+        "spec": {
+            "issuerURL": "${local.bot-cert.url}",
+            "clientID": "${local.bot-cert.clientid}",
+            "usernameClaim": "sub",
+            "usernamePrefix": "bot-identity:",
+            "groupsClaim": "",
+            "groupsPrefix": ""
+        }
+  })
+
+}
+
+resource "terraform_data" "bootstrap-kymaruntime-bot" {
+  depends_on = [terraform_data.kubectl_getnodes]
+  input = [ local.OpenIDConnect, local.OpenIDConnect_PROD, local.OpenIDConnect_STAGE ]
+}
+
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data
 # https://developer.hashicorp.com/terraform/language/functions/nonsensitive
