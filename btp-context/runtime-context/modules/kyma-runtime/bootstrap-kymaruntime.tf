@@ -511,7 +511,8 @@ resource "terraform_data" "httpbin" {
    command = <<EOF
      (
     KUBECONFIG=kubeconfig-headless.yaml
-    NAMESPACE=quovadis-btp
+    NAMESPACE=montypython
+    NAMESPACE2=quovadis-btp
 
     set -e -o pipefail
     HTTPBIN=$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)
