@@ -123,6 +123,7 @@ locals {
   idp-cert = jsondecode(btp_subaccount_service_binding.ias-local-binding-cert.credentials)
 }
 
+/*
 resource "local_sensitive_file" "idp-cert" {
   content = jsonencode({
     clientid    = local.idp-cert.clientid
@@ -131,7 +132,7 @@ resource "local_sensitive_file" "idp-cert" {
     url         = local.idp-cert.url
   })
   filename = "idp-cert.json"
-}
+}*/
 
 resource "btp_subaccount_service_binding" "ias-local-binding-secret" {
   depends_on          = [btp_subaccount_service_instance.identity_application]
@@ -148,6 +149,7 @@ locals {
   idp-secret = jsondecode(btp_subaccount_service_binding.ias-local-binding-secret.credentials)
 }
 
+/*
 resource "local_sensitive_file" "idp-secret" {
   content = jsonencode({
     clientid = local.idp-secret.clientid
@@ -155,7 +157,7 @@ resource "local_sensitive_file" "idp-secret" {
     url      = local.idp-secret.url
   })
   filename = "idp-secret.json"
-}
+}*/
 
 output "id_token" {
   value = jsondecode(data.http.token.response_body).id_token
@@ -178,12 +180,16 @@ data "http" "token" {
   request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.idp.clientid}&scope=groups,email"
 }
 
+/*
 resource "local_sensitive_file" "headless-token" {
   content  = data.http.token.response_body
-  #filename = ".${data.btp_subaccount.context.id}-${var.BTP_KYMA_NAME}.token"
   filename = "headless-token.json"
 }
+*/
 
+output "headless-token" {
+  value = data.http.token.response_body
+}
 
 data "http" "token-secret" {
   url = "${local.idp-secret.url}/oauth2/token"
@@ -194,9 +200,15 @@ data "http" "token-secret" {
   request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.idp-secret.clientid}&client_secret=${local.idp-secret.clientsecret}&scope=groups,email"
 }
 
+/*
 resource "local_sensitive_file" "headless-token-secret" {
   content  = data.http.token-secret.response_body
   filename = "headless-token-secret.json"
+}
+*/
+
+output "headless-token-secret" {
+  value = data.http.token-secret.response_body
 }
 
 # https://github.com/hashicorp/terraform-provider-http/blob/main/docs/data-sources/http.md
@@ -220,9 +232,15 @@ data "http" "token-cert" {
 
 }
 
+/*
 resource "local_sensitive_file" "headless-token-cert" {
   content  = data.http.token-cert.response_body
   filename = "headless-token-cert.json"
+}
+*/
+
+output "headless-token-cert" {
+  value = data.http.token-cert.response_body
 }
 
 # https://gist.github.com/ptesny/14f49f49e0fbe2a3143700ce707ee76b#72-sap-cloud-identity-services-as-a-custom-oidc-provider

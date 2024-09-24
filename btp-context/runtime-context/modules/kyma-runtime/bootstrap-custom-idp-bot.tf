@@ -412,11 +412,15 @@ data "http" "token-bot" {
   request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.bot.clientid}&scope=groups,email"
 }
 
+/*
 resource "local_sensitive_file" "headless-token-bot" {
   content  = data.http.token-bot.response_body
   filename = "headless-token-bot.json"
-}
+}*/
 
+output "headless-token-bot" {
+  value = data.http.token-bot.response_body
+}
 
 data "http" "token-secret-bot" {
   url = "${local.idp-secret.url}/oauth2/token"
@@ -427,10 +431,16 @@ data "http" "token-secret-bot" {
   request_body = "grant_type=password&username=${var.BTP_BOT_USER}&password=${var.BTP_BOT_PASSWORD}&client_id=${local.bot-secret.clientid}&client_secret=${local.bot-secret.clientsecret}&scope=groups,email"
 }
 
+/*
 resource "local_sensitive_file" "headless-token-bot-secret" {
   content  = data.http.token-secret-bot.response_body
   filename = "headless-token-bot-secret.json"
+}*/
+
+output "headless-token-bot-secret" {
+  value = data.http.token-secret-bot.response_body
 }
+
 
 # https://github.com/hashicorp/terraform-provider-http/blob/main/docs/data-sources/http.md
 # https://medium.com/@haroldfinch01/how-to-create-an-ssh-key-in-terraform-0c5cfd3d46dd
@@ -453,11 +463,16 @@ data "http" "token-cert-bot" {
 
 }
 
+/*
 resource "local_sensitive_file" "headless-token-bot-cert" {
   content  = data.http.token-cert-bot.response_body
   filename = "headless-token-bot-cert.json"
 }
+*/
 
+output "headless-token-bot-cert" {
+  value = data.http.token-cert-bot.response_body
+}
 
 
 # https://gist.github.com/ptesny/14f49f49e0fbe2a3143700ce707ee76b#72-sap-cloud-identity-services-as-a-custom-oidc-provider
