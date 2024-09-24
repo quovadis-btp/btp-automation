@@ -307,9 +307,13 @@ locals {
 
 }
 
-resource "terraform_data" "bootstrap-kymaruntime-bot" {
+resource "terraform_data" "test" {
   depends_on = [terraform_data.kubectl_getnodes]
   input = [ local.OpenIDConnect, local.OpenIDConnect_PROD, local.OpenIDConnect_STAGE ]
+}
+
+output "test" {
+  value = terraform_data.test.output
 }
 
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
