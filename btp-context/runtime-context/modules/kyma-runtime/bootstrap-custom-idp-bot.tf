@@ -337,6 +337,13 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
 
   # the input becomes a definition of an OpenIDConnect provider as a non-sensitive json encoded string 
   #
+  input = [ 
+      nonsensitive(local.OpenIDConnect), 
+      nonsensitive(local.OpenIDConnect_PROD), 
+      nonsensitive(local.OpenIDConnect_STAGE) 
+      ]
+
+  /*    
   input = nonsensitive(
     jsonencode({
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
@@ -353,6 +360,7 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
             "groupsPrefix": ""
         }
     })
+    */
   )
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
@@ -370,7 +378,7 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
     crd=$(./kubectl get crd openidconnects.authentication.gardener.cloud --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
     if [ "$crd" = "openidconnects.authentication.gardener.cloud" ]
     then
-      OpenIDConnect='${self.input}'
+      OpenIDConnect='${self.input[0]}'
       echo $(jq -r '.' <<< $OpenIDConnect)
       echo $OpenIDConnect
 
