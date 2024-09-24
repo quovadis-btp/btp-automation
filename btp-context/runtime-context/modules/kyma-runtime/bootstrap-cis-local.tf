@@ -38,6 +38,7 @@ locals {
   cis-secret = jsondecode(btp_subaccount_service_binding.cis-local-binding.credentials)
 }
 
+/*
 resource "local_sensitive_file" "cis-secret" {
   content = jsonencode({
     clientid     = local.cis-secret.uaa.clientid
@@ -46,7 +47,7 @@ resource "local_sensitive_file" "cis-secret" {
   })
   filename = "cis-secret.json"
 }
-
+*/
 
 resource "btp_subaccount_entitlement" "destination" {
   subaccount_id = data.btp_subaccount.context.id

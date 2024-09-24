@@ -162,6 +162,7 @@ output "bot_certificate" {
   value = local.bot_certificate
 }
 
+/*
 resource "local_sensitive_file" "bot-cert" {
   content = jsonencode({
     clientid    = local.bot-cert.clientid
@@ -171,6 +172,7 @@ resource "local_sensitive_file" "bot-cert" {
   })
   filename = "bot-cert.json"
 }
+*/
 
 resource "btp_subaccount_service_binding" "ias-bot-binding-secret" {
   depends_on          = [btp_subaccount_service_instance.quovadis-ias-bot]
@@ -187,6 +189,7 @@ locals {
   bot-secret = jsondecode(btp_subaccount_service_binding.ias-bot-binding-secret.credentials)
 }
 
+/*
 resource "local_sensitive_file" "bot-secret" {
   content = jsonencode({
     clientid = local.bot-secret.clientid
@@ -194,6 +197,7 @@ resource "local_sensitive_file" "bot-secret" {
   })
   filename = "bot-secret.json"
 }
+*/
 
 
 /*
