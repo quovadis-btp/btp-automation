@@ -655,11 +655,20 @@ resource "terraform_data" "provider_context" {
      (
     KUBECONFIG=kubeconfig-headless.yaml
     NAMESPACE=quovadis-btp
+    NAMESPACE2=montypython
+    NAMESPACE3=montypython-xsuaa-mt
+
     set -e -o pipefail ;\
     TOKEN=${local.provider_k8s}
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
     ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+
+    ./kubectl create ns $NAMESPACE2 --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+    ./kubectl label namespace $NAMESPACE2 istio-injection=enabled --kubeconfig $KUBECONFIG
+
+    ./kubectl create ns $NAMESPACE3 --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+    ./kubectl label namespace $NAMESPACE3 istio-injection=enabled --kubeconfig $KUBECONFIG
 
     echo | ./kubectl wait --for condition=established crd kymas.operator.kyma-project.io -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
 
