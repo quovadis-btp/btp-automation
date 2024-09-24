@@ -519,7 +519,7 @@ resource "terraform_data" "httpbin" {
     then
       ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
       ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
-      ./kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
+      ./kubectl -n $NAMESPACE create -f https://raw.githubusercontent.com/quovadis-btp/istio/refs/heads/master/samples/httpbin/httpbin.yaml --kubeconfig $KUBECONFIG
 
       while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment httpbin --ignore-not-found)" = "" ]
       do 
