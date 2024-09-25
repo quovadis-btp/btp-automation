@@ -168,4 +168,18 @@ variable "provider_context_local_backend_config" {
   })
 }
 
+variable "apiToken" {
+  type        = string
+  description = "dynatrace apiToken"
+}
+
+variable "dataIngestToken" {
+  type        = string
+  description = "dynatrace dataIngestToken"
+}
+
+variable "apiUrl" {
+  type        = string
+  description = "dynatrace apiUrl"
+}
 
