@@ -38,15 +38,15 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".metadata |= . + {name: ${local.name} } "
+   query = " .metadata |= . + {name: ${local.name} } "
    //query = ".metadata |= . + {name: ${local.name} } | .spec |= . + { apiUrl: ${local.apiUrl} }"
    //query = ".metadata |= . + {name: ${local.name} } | .spec |= . + { apiUrl: ${local.apiUrl}, tokens: ${local.tokens} }"
    //query = "."
 }
 
 output "dynakube" {
-  value = jsondecode(data.jq_query.dynakube.result)
-  //value = jsonencode(yamldecode(data.http.dynakube.response_body))
+  //value = jsondecode(data.jq_query.dynakube.result)
+  value = jsonencode(yamldecode(data.http.dynakube.response_body))
 }
 
 resource "terraform_data" "bootstrap-dynatrace" {
