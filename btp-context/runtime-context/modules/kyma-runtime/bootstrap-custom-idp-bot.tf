@@ -339,26 +339,6 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       nonsensitive(local.OpenIDConnect_STAGE) 
       ]
 
-  /*    
-  input = nonsensitive(
-    jsonencode({
-        "apiVersion": "authentication.gardener.cloud/v1alpha1",
-        "kind": "OpenIDConnect",
-        "metadata": {
-            "name": "${local.bot-cert.clientid}"
-        },
-        "spec": {
-            "issuerURL": "${local.bot-cert.url}",
-            "clientID": "${local.bot-cert.clientid}",
-            "usernameClaim": "sub",
-            "usernamePrefix": "bot-identity:",
-            "groupsClaim": "",
-            "groupsPrefix": ""
-        }
-    })
-  )
-  */
-
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
  # https://stackoverflow.com/questions/75255995/how-to-echo-a-jq-json-with-double-quotes-escaped-with-backslash
  #
