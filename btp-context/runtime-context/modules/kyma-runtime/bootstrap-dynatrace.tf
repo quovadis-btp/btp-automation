@@ -38,14 +38,16 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".metadata |= . + {name: \"${local.name}\" } | .spec |= . + { apiUrl: \"${local.apiUrl}\" }"
-   //query = ".metadata |= . + {name: ${local.name} } | .spec |= . + { apiUrl: ${local.apiUrl}, tokens: ${local.tokens} }"
-   //query = ".metadata"
+   //query = ".metadata |= . + {name: \"${local.name}\" } | .spec |= . + { apiUrl: \"${local.apiUrl}\" }"
+   query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" }"
+}
+
+locals {
+  dynakube = jsondecode(data.jq_query.dynakube.result)
 }
 
 output "dynakube" {
-  value = jsondecode(data.jq_query.dynakube.result)
-  //value = jsonencode(yamldecode(data.http.dynakube.response_body))
+  value = local.dynakube
 }
 
 resource "terraform_data" "bootstrap-dynatrace" {
@@ -57,7 +59,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
 
   # the input becomes a definition of an OpenIDConnect provider as a non-sensitive json encoded string 
   #
-  input = [ nonsensitive(local.apiToken), nonsensitive(local.dataIngestToken), nonsensitive(local.apiUrl) ]
+  input = [ nonsensitive(local.apiToken), nonsensitive(local.dataIngestToken), nonsensitive(local.apiUrl), nonsensitive(local.dynakube) ]
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
  # https://stackoverflow.com/questions/75255995/how-to-echo-a-jq-json-with-double-quotes-escaped-with-backslash
@@ -72,12 +74,15 @@ resource "terraform_data" "bootstrap-dynatrace" {
     
     API_TOKEN='${self.input[0]}'
     echo $API_TOKEN
+    
     DATA_INGEST_TOKEN='${self.input[1]}'
     echo $DATA_INGEST_TOKEN
+    
     DT_ENVIRONMENT_API_URL='${self.input[2]}'
     echo $DT_ENVIRONMENT_API_URL
 
-    DYNAKUBE=$(curl -o dynakube.yaml https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml)
+    DYNAKUBE='${self.input[3]}'
+    echo $DYNAKUBE    
 
     ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
     crd=$(./kubectl get crd -n $NAMESPACE dynakubes.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
