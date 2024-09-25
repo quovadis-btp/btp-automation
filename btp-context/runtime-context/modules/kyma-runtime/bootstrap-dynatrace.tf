@@ -35,7 +35,7 @@ resource "local_sensitive_file" "dynakube" {
 }
 
 data "jq_query" "dynakube" {
-   //depends_on = [ data.http.dynakube ]
+   depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
    query = ".metadata |= . + {name: ${local.name} } "
