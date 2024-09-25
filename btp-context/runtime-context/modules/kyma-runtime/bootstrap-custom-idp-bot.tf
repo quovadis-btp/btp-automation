@@ -261,7 +261,7 @@ locals {
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
         "metadata": {
-            "name": "12b13a26-d993-4d0c-aa08-5f5852bbdff6"
+            "name": "kyma (federated with accounts.sap.com)"
         },
         "spec": {
             "issuerURL": "https://kyma.accounts.ondemand.com",
@@ -273,17 +273,17 @@ locals {
         }
     })
 
-  # The email adresses must be recognised by https://kyma.accounts400.ondemand.com. (be part of SAP ID at accounts400.sap.com)
+  # The email adresses must be recognised by https://kymatest.accounts400.ondemand.com. (be part of SAP ID at accounts400.sap.com)
 
   OpenIDConnect_STAGE = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
         "metadata": {
-            "name": "e69c0ad6-c283-4baf-9ad7-3714decef49d"
+            "name": "kymatest (federated with accounts400.sap.com)"
         },
         "spec": {
-            "issuerURL": "https://kyma.accounts400.ondemand.com",
+            "issuerURL": "https://kymatest.accounts400.ondemand.com",
             "clientID": "e69c0ad6-c283-4baf-9ad7-3714decef49d",
             "usernameClaim": "sub",
             "usernamePrefix": "-",
