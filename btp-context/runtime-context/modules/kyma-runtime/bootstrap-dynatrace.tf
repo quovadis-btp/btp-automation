@@ -32,7 +32,7 @@ resource "local_sensitive_file" "dynakube" {
 data "jq_query" "dynakube" {
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".spec |= . + { apiUrl: ${local.apiUrl}, tokens: "dynakube" }"
+   query = ".spec |= . + { apiUrl: ${local.apiUrl}, tokens: 'dynakube' }"
 }
 
 output "dynakube" {
