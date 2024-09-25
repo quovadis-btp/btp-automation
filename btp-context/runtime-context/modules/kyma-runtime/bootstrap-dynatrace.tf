@@ -14,6 +14,7 @@ locals {
 }
 
 data "http" "dynakube" {
+  depends_on = [ terraform_data.bootstrap-dynatrace ]
 
   url = "https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml"
 
