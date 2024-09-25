@@ -43,11 +43,11 @@ data "jq_query" "dynakube" {
 }
 
 locals {
-  dynakube = jsondecode(data.jq_query.dynakube.result)
+  dynakube = data.jq_query.dynakube.result
 }
 
 output "dynakube" {
-  value = local.dynakube
+  value = jsondecode(local.dynakube)
 }
 
 resource "terraform_data" "bootstrap-dynatrace" {
@@ -59,7 +59,12 @@ resource "terraform_data" "bootstrap-dynatrace" {
 
   # the input becomes a definition of an OpenIDConnect provider as a non-sensitive json encoded string 
   #
-  input = [ nonsensitive(local.apiToken), nonsensitive(local.dataIngestToken), nonsensitive(local.apiUrl), nonsensitive(local.dynakube) ]
+  input = [ 
+      nonsensitive(local.apiToken), 
+      nonsensitive(local.dataIngestToken), 
+      nonsensitive(local.apiUrl), 
+      nonsensitive(local.dynakube) 
+  ]
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
  # https://stackoverflow.com/questions/75255995/how-to-echo-a-jq-json-with-double-quotes-escaped-with-backslash
