@@ -36,12 +36,12 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".spec |= . + { apiUrl: ${local.apiUrl}, tokens: ${local.tokens} }"
+   query = ".spec |= . + { "apiUrl": ${local.apiUrl}, "tokens": ${local.tokens} }"
 }
 
 output "dynakube" {
   depends_on = [ data.jq_query.dynakube ]
-  
+
   value = jsondecode(data.jq_query.dynakube.result)
 }
 
