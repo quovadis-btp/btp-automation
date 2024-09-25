@@ -9,6 +9,7 @@ locals {
   apiUrl = var.apiUrl
 
   tokens = "dynakube"
+  name = "quovadis-dynakube"
   
 }
 
@@ -36,7 +37,7 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".spec |= . + { "apiUrl": ${local.apiUrl}, "tokens": ${local.tokens} }"
+   query = ".metadata |= . + {name: ${local.name} | .spec |= . + { apiUrl: ${local.apiUrl}, tokens: ${local.tokens} }"
 }
 
 output "dynakube" {
