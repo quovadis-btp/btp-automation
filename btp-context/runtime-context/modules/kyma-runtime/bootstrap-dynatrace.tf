@@ -26,9 +26,10 @@ data "http" "dynakube" {
 
 
 resource "local_sensitive_file" "dynakube" {
+   depends_on = [ data.http.dynakube ]
 
-  filename = "dynakube.json"
-  content  = jsonencode(yamldecode(data.http.dynakube.response_body))
+   filename = "dynakube.json"
+   content  = jsonencode(yamldecode(data.http.dynakube.response_body))
 }
 
 data "jq_query" "dynakube" {
@@ -39,6 +40,8 @@ data "jq_query" "dynakube" {
 }
 
 output "dynakube" {
+  depends_on = [ data.jq_query.dynakube ]
+  
   value = jsondecode(data.jq_query.dynakube.result)
 }
 
