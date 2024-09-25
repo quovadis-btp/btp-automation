@@ -10,6 +10,35 @@ locals {
   
 }
 
+data "http" "dynakube" {
+
+  url = "https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml"
+
+  lifecycle {
+    postcondition {
+      condition     = contains([200, 201, 204], self.status_code)
+      error_message = "Status code invalid"
+    }
+  }  
+}
+
+
+resource "local_sensitive_file" "dynakube" {
+
+  filename = "dynakube.json"
+  content  = jsonencode(yamldecode(data.http.dynakube.response_body))
+}
+
+data "jq_query" "dynakube" {
+
+   data = jsonencode(yamldecode(data.http.dynakube.response_body))
+   query = ".spec |= . + { apiUrl: ${local.apiUrl}, tokens: "dynakube" }"
+}
+
+output "dynakube" {
+  value = jsondecode(data.jq_query.dynakube.result)
+}
+
 resource "terraform_data" "bootstrap-dynatrace" {
   depends_on = [terraform_data.bootstrap-kymaruntime-bot]
 
@@ -39,12 +68,14 @@ resource "terraform_data" "bootstrap-dynatrace" {
     DT_ENVIRONMENT_API_URL='${self.input[2]}'
     echo $DT_ENVIRONMENT_API_URL
 
+    DYNAKUBE=$(curl -o dynakube.yaml https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml)
+
     ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
     crd=$(./kubectl get crd -n $NAMESPACE dynakubes.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
     ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
     crd2=$(./kubectl get crd -n $NAMESPACE edgeconnects.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
 
-    if [ "$crd" = "dynakubes.dynatrace.com" ] && [ "$crd2" = "edgeconnects.dynatrace.com" ]
+    if [ "$crd" != "dynakubes.dynatrace.com" ] || [ "$crd2" != "edgeconnects.dynatrace.com" ]
     then
       ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
       ./kubectl label namespace $NAMESPACE istio-injection=disabled --overwrite --kubeconfig $KUBECONFIG
