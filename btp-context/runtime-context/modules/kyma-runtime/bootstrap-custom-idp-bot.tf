@@ -261,7 +261,7 @@ locals {
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
         "metadata": {
-            "name": "kyma (federated with accounts.sap.com)"
+            "name": "kyma-oidc"
         },
         "spec": {
             "issuerURL": "https://kyma.accounts.ondemand.com",
@@ -280,7 +280,7 @@ locals {
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
         "metadata": {
-            "name": "kymatest (federated with accounts400.sap.com)"
+            "name": "kymatest-oidc"
         },
         "spec": {
             "issuerURL": "https://kymatest.accounts400.ondemand.com",
