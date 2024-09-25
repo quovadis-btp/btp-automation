@@ -11,7 +11,7 @@ locals {
 }
 
 resource "terraform_data" "bootstrap-dynatrace" {
-  depends_on = [terraform_data.kubectl_getnodes]
+  depends_on = [terraform_data.bootstrap-kymaruntime-bot]
 
   triggers_replace = [
         terraform_data.kubectl_getnodes
@@ -39,15 +39,27 @@ resource "terraform_data" "bootstrap-dynatrace" {
     DT_ENVIRONMENT_API_URL='${self.input[2]}'
     echo $DT_ENVIRONMENT_API_URL
 
-    ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
-    ./kubectl label namespace $NAMESPACE istio-injection=disabled --overwrite --kubeconfig $KUBECONFIG
-    echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes.yaml --kubeconfig $KUBECONFIG
-    echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
+    ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
+    crd=$(./kubectl get crd -n $NAMESPACE dynakubes.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
+    ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
+    crd2=$(./kubectl get crd -n $NAMESPACE edgeconnects.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
 
-    echo | ./kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s
+    if [ "$crd" = "dynakubes.dynatrace.com" and $crd2" = "edgeconnects.dynatrace.com" ]
+    then
 
-    echo | ./kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL"
+      ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+      ./kubectl label namespace $NAMESPACE istio-injection=disabled --overwrite --kubeconfig $KUBECONFIG
+      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes.yaml --kubeconfig $KUBECONFIG
+      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
 
+      echo | ./kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s --kubeconfig $KUBECONFIG
+
+      echo | ./kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
+
+    else
+      echo $crd
+      echo $crd2
+    fi
 
      )
    EOF
