@@ -14,6 +14,21 @@ ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
+data "kubernetes_config_map_v1" "sap-btp-operator-config" {
+  depends_on = [
+        terraform_data.kubectl_getnodes
+  ]  
+
+  metadata {
+    name = "sap-btp-operator-config"
+    namespace = "kyma-system"
+  }
+}
+
+output "sap-btp-operator-config" {
+  value =  data.kubernetes_config_map_v1.sap-btp-operator-config.data
+}
+
 
 data "kubernetes_config_map_v1" "shoot_info" {
   depends_on = [
@@ -30,14 +45,32 @@ output "shoot_info" {
   value =  data.kubernetes_config_map_v1.shoot_info.data
 }
 
+
+
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
         terraform_data.kubectl_getnodes
   ]  
 }
 
+locals "k8s_nodes" {
+  k8s_nodes = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
+}
+
+data "jq_query" "jq_query" {
+  depends_on = [
+        data.kubernetes_nodes.k8s_nodes
+  ] 
+  data =  local.k8s_nodes
+  query = ".[].metadata[] | { NAME: .name, ZONE: .labels.\"topology.kubernetes.io/zone\", REGION: .labels.\"topology.kubernetes.io/region\" }"
+}
+
+output "cluster_zones" {
+  value = data.jq_query.jq_query.result
+}
+
 output "k8s_nodes" {
-  value = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
+  value = local.k8s_nodes
 }
 
 # https://www.hashicorp.com/blog/wait-conditions-in-the-kubernetes-provider-for-hashicorp-terraform
