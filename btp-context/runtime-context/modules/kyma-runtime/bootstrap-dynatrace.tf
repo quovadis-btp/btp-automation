@@ -111,18 +111,13 @@ resource "terraform_data" "bootstrap-dynatrace" {
       do
         echo "dynakube - not found yet"
         sleep 1
-      done      
+      done
+      echo | ./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --ignore-not-found      
  
     else
       echo $crd
       echo $crd2
-
-      echo $DYNAKUBE | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
-      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --ignore-not-found)" = "" ]
-      do
-        echo "dynakube - not found yet"
-        sleep 1
-      done      
+      echo | ./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --ignore-not-found
     fi
 
      )
