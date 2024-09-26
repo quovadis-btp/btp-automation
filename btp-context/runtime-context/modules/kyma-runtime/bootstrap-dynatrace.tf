@@ -101,17 +101,25 @@ resource "terraform_data" "bootstrap-dynatrace" {
       echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes.yaml --kubeconfig $KUBECONFIG
       echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
 
-      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get pod --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook  --ignore-not-found)" = "" ]
-      do
-        echo "pod - not found yet"
-        sleep 1
-      done
-      echo | ./kubectl -n $NAMESPACE wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s --kubeconfig $KUBECONFIG
-
-      echo | ./kubectl -n $NAMESPACE create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
-
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
+
+      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment dynatrace-operator --ignore-not-found)" = "" ]
+      do 
+        echo "deployments.apps - dynatrace-operator - not found"
+        sleep 1
+      done
+      echo | ./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment dynatrace-operator --timeout 5m
+
+      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get deployment dynatrace-webhook --ignore-not-found)" = "" ]
+      do 
+        echo "deployments.apps - dynatrace-webhook - not found"
+        sleep 1
+      done
+      echo | ./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE rollout status deployment dynatrace-webhook --timeout 5m
+
+
+      echo | ./kubectl -n $NAMESPACE create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
 
       echo $DYNAKUBE | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
       while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --ignore-not-found)" = "" ]
