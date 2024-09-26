@@ -131,9 +131,30 @@ data "kubernetes_resource" "KymaModules" {
   }  
 } 
 
-output "KymaModules" {
+locals {
 #  value = { for KymaModules in data.kubernetes_resource.KymaModules.object : KymaModules.metadata.name => KymaModules.status.modules }
-  value =  data.kubernetes_resource.KymaModules.object.status.modules
+  KymaModules = data.kubernetes_resource.KymaModules.object.status.modules
+}
+
+data "jq_query" "KymaModules" {
+  depends_on = [
+        data.kubernetes_resource.KymaModules
+  ] 
+  data =  jsonencode(local.KymaModules)
+  query = "[ .[] | { channel, name, version } ]"
+}
+
+
+output "KymaModules" {
+  value =  jsondecode(data.jq_query.KymaModules.result)
+}
+
+output "KymaModules_json" {
+  value =  jsonencode(local.KymaModules)
+}
+
+output "KymaModules_raw" {
+  value =  local.KymaModules
 }
 
 # https://github.com/hashicorp/terraform-provider-kubernetes/issues/1583
