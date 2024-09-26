@@ -49,6 +49,8 @@ output "dynakube" {
   value = jsondecode(local.dynakube)
 }
 
+# TODO: wait for the dynakube secret created and make dynatrace bootstrap optional
+#
 resource "terraform_data" "bootstrap-dynatrace" {
   depends_on = [terraform_data.bootstrap-kymaruntime-bot]
 
@@ -99,9 +101,14 @@ resource "terraform_data" "bootstrap-dynatrace" {
       echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes.yaml --kubeconfig $KUBECONFIG
       echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
 
-      echo | ./kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s --kubeconfig $KUBECONFIG
+      while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get pod --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook  --ignore-not-found)" = "" ]
+      do
+        echo "pod - not found yet"
+        sleep 1
+      done
+      echo | ./kubectl -n $NAMESPACE wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s --kubeconfig $KUBECONFIG
 
-      echo | ./kubectl -n dynatrace create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
+      echo | ./kubectl -n $NAMESPACE create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
 
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
