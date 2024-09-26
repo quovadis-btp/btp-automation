@@ -14,7 +14,7 @@ locals {
 }
 
 data "http" "dynakube" {
-  //depends_on = [ terraform_data.bootstrap-dynatrace ]
+  depends_on = [btp_subaccount_environment_instance.kyma]
 
   url = "https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml"
 
@@ -28,7 +28,7 @@ data "http" "dynakube" {
 
 
 resource "local_sensitive_file" "dynakube" {
-   //depends_on = [ data.http.dynakube ]
+   depends_on = [ data.http.dynakube ]
 
    filename = "dynakube.json"
    content  = jsonencode(yamldecode(data.http.dynakube.response_body))
@@ -38,7 +38,6 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   //query = ".metadata |= . + {name: \"${local.name}\" } | .spec |= . + { apiUrl: \"${local.apiUrl}\" }"
    query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" }"
 }
 
