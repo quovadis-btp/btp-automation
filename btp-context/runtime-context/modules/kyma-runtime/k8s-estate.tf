@@ -64,7 +64,7 @@ data "jq_query" "k8s_nodes" {
         data.kubernetes_nodes.k8s_nodes
   ] 
   data =  jsonencode(local.k8s_nodes)
-  query = ".[].metadata[] | { NAME: .name, ZONE: .labels.\"topology.kubernetes.io/zone\", REGION: .labels.\"topology.kubernetes.io/region\" }"
+  query = "[ .[].metadata[] | { NAME: .name, ZONE: .labels.\"topology.kubernetes.io/zone\", REGION: .labels.\"topology.kubernetes.io/region\" } ]"
 }
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query#multiple-results
