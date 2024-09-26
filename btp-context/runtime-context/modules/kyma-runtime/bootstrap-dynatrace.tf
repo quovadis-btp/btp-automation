@@ -89,9 +89,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
     DYNAKUBE='${self.input[3]}'
     echo $DYNAKUBE    
 
-    ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
     crd=$(./kubectl get crd -n $NAMESPACE dynakubes.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
-    ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
     crd2=$(./kubectl get crd -n $NAMESPACE edgeconnects.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
 
     if [ "$crd" != "dynakubes.dynatrace.com" ] || [ "$crd2" != "edgeconnects.dynatrace.com" ]
@@ -105,6 +103,9 @@ resource "terraform_data" "bootstrap-dynatrace" {
 
       echo | ./kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
 
+      echo | ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
+      echo | ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
+ 
     else
       echo $crd
       echo $crd2
