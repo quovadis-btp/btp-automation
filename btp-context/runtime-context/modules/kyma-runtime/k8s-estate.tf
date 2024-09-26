@@ -141,7 +141,7 @@ data "jq_query" "KymaModules" {
         data.kubernetes_resource.KymaModules
   ] 
   data =  jsonencode(local.KymaModules)
-  query = "[ .[] | { channel, name, version } ]"
+  query = "[ .[] | { channel, name, version, state, api: .resource.apiVersion, fqdn } ]"
 }
 
 
