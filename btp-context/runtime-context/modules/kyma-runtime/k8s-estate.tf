@@ -78,7 +78,7 @@ output "k8s_zones" {
 {"NAME":"shoot--kyma-stage--c-667f002-cpu-worker-0-z3-84958-***","REGION":"eu-de-1","ZONE":"eu-de-1a"}
 EOT
 */
-  value = data.jq_query.k8s_nodes.result
+  value = jsondecode(data.jq_query.k8s_nodes.result)
 }
 
 output "k8s_zones_json" {
