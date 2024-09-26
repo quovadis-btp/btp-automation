@@ -128,8 +128,6 @@ resource "terraform_data" "bootstrap-dynatrace" {
         sleep 1
       done
 
-      echo | ./kubectl wait --for=ready --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --timeout 5m  
- 
     else
       echo $crd
       echo $crd2
