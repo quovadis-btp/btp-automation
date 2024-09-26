@@ -53,7 +53,7 @@ data "kubernetes_nodes" "k8s_nodes" {
   ]  
 }
 
-locals "k8s_nodes" {
+locals {
   k8s_nodes = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
 }
 
