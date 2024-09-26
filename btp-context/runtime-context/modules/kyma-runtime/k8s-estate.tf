@@ -57,6 +57,8 @@ locals {
   k8s_nodes = { for node in data.kubernetes_nodes.k8s_nodes.nodes : node.metadata.0.name => node }
 }
 
+# https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
+#
 data "jq_query" "k8s_nodes" {
   depends_on = [
         data.kubernetes_nodes.k8s_nodes
@@ -65,20 +67,36 @@ data "jq_query" "k8s_nodes" {
   query = ".[].metadata[] | { NAME: .name, ZONE: .labels.\"topology.kubernetes.io/zone\", REGION: .labels.\"topology.kubernetes.io/region\" }"
 }
 
-output "k8s_zones" {
-  value = jsondecode(data.jq_query.k8s_nodes.result)
+# https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query#multiple-results
+#
+output "k8s_zones" { 
+// multi-line strings cannot be converted to HCL with jsondecode
+/*
+<<EOT
+{"NAME":"shoot--kyma-stage--c-667f002-cpu-worker-0-z1-7598b-***","REGION":"eu-de-1","ZONE":"eu-de-1d"}
+{"NAME":"shoot--kyma-stage--c-667f002-cpu-worker-0-z2-84f4f-***","REGION":"eu-de-1","ZONE":"eu-de-1b"}
+{"NAME":"shoot--kyma-stage--c-667f002-cpu-worker-0-z3-84958-***","REGION":"eu-de-1","ZONE":"eu-de-1a"}
+EOT
+*/
+  value = data.jq_query.k8s_nodes.result
 }
 
 output "k8s_zones_json" {
   value = data.jq_query.k8s_nodes.result
 }
 
-output "k8s_nodes" {
+# https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query#hcl-compatibility
+#
+output "k8s_nodes" { 
   value = jsondecode(jsonencode(local.k8s_nodes))
 }
 
 output "k8s_nodes_json" {
   value = jsonencode(local.k8s_nodes)
+}
+
+output "k8s_nodes_raw" {
+  value = local.k8s_nodes
 }
 
 # https://www.hashicorp.com/blog/wait-conditions-in-the-kubernetes-provider-for-hashicorp-terraform
