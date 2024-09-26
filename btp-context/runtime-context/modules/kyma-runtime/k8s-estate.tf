@@ -65,8 +65,8 @@ data "jq_query" "k8s_nodes" {
   query = ".[].metadata[] | { NAME: .name, ZONE: .labels.\"topology.kubernetes.io/zone\", REGION: .labels.\"topology.kubernetes.io/region\" }"
 }
 
-output "cluster_zones" {
-  value = data.jq_query.k8s_nodes.result
+output "k8s_zones" {
+  value = jsondecode(data.jq_query.k8s_nodes.result)
 }
 
 output "k8s_nodes" {
