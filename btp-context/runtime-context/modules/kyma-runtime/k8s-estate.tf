@@ -27,7 +27,7 @@ data "kubernetes_config_map_v1" "shoot_info" {
 }
 
 output "shoot_info" {
-  value =  { for shoot in data.kubernetes_config_map_v1.shoot_info : shoot => shoot.data }
+  value =  { for shoot in data.kubernetes_config_map_v1.shoot_info : shoot }
 //  value =  data.kubernetes_config_map_v1.shoot_info.data
 }
 
