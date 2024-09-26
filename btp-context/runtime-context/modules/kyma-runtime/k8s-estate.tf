@@ -69,8 +69,16 @@ output "k8s_zones" {
   value = jsondecode(data.jq_query.k8s_nodes.result)
 }
 
+output "k8s_zones_raw" {
+  value = data.jq_query.k8s_nodes.result
+}
+
 output "k8s_nodes" {
   value = jsondecode(jsonencode(local.k8s_nodes))
+}
+
+output "k8s_nodes_raw" {
+  value = jsonencode(local.k8s_nodes)
 }
 
 # https://www.hashicorp.com/blog/wait-conditions-in-the-kubernetes-provider-for-hashicorp-terraform
