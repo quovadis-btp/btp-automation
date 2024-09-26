@@ -8,7 +8,7 @@ locals {
   dataIngestToken = var.dataIngestToken
   apiUrl = var.apiUrl
 
-  tokens = "dynakube"
+  tokens = "dynakube" // the tokens name in dynakube.yaml must match the secret name
   name = "dynakube"
   
 }
@@ -74,6 +74,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
      (
     KUBECONFIG=kubeconfig-headless.yaml
     NAMESPACE=dynatrace
+    SECRET_NAME=dynakube
     set -e -o pipefail ;\
     
     API_TOKEN='${self.input[0]}'
@@ -100,7 +101,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
 
       echo | ./kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s --kubeconfig $KUBECONFIG
 
-      echo | ./kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
+      echo | ./kubectl -n dynatrace create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG
 
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
