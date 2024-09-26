@@ -15,7 +15,11 @@ ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
 
-data "kubernetes_config_map" "shoot_info" {
+data "kubernetes_config_map_v1" "shoot_info" {
+  depends_on = [
+        terraform_data.kubectl_getnodes
+  ]  
+  
   metadata {
     name = "shoot-info"
     namespace = "kube-system"
@@ -23,7 +27,7 @@ data "kubernetes_config_map" "shoot_info" {
 }
 
 output "shoot_info" {
-  value =  { for shoot in data.kubernetes_config_map.shoot_info.data : shoot.id => shoot }
+  value =  { for shoot in data.kubernetes_config_map_v1.shoot_info.data : shoot.id => shoot }
 }
 
 data "kubernetes_nodes" "k8s_nodes" {
