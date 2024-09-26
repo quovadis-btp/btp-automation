@@ -493,7 +493,7 @@ resource "btp_subaccount_entitlement" "postgresql" {
 
 
 resource "terraform_data" "httpbin" {
-  depends_on = [terraform_data.kubectl_getnodes,terraform_data.provider_context]
+  depends_on = [terraform_data.egress_ips]
 
 /*
   triggers_replace = {
