@@ -19,7 +19,7 @@ data "kubernetes_config_map_v1" "shoot_info" {
   depends_on = [
         terraform_data.kubectl_getnodes
   ]  
-  
+
   metadata {
     name = "shoot-info"
     namespace = "kube-system"
@@ -27,7 +27,7 @@ data "kubernetes_config_map_v1" "shoot_info" {
 }
 
 output "shoot_info" {
-  value =  { for shoot in data.kubernetes_config_map_v1.shoot_info.data : shoot.id => shoot }
+  value =  { for shoot in data.kubernetes_config_map_v1.shoot_info.data : shoot.metadata.0.name => shoot }
 }
 
 data "kubernetes_nodes" "k8s_nodes" {
