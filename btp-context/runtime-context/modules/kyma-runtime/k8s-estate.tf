@@ -26,7 +26,7 @@ data "kubernetes_config_map_v1" "sap-btp-operator-config" {
 }
 
 output "sap-btp-operator-config" {
-  value =  data.kubernetes_config_map_v1.sap-btp-operator-config.data
+  value =  jsondecode(jsonencode(data.kubernetes_config_map_v1.sap-btp-operator-config.data))
 }
 
 
@@ -70,7 +70,7 @@ output "k8s_zones" {
 }
 
 output "k8s_nodes" {
-  value = local.k8s_nodes
+  value = jsondecode(jsonencode(local.k8s_nodes))
 }
 
 # https://www.hashicorp.com/blog/wait-conditions-in-the-kubernetes-provider-for-hashicorp-terraform
