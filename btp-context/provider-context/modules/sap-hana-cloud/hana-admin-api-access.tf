@@ -302,6 +302,9 @@ locals {
 
 }
 
+output "cluster_id" {
+  value = local.cluster_id
+}
 
 data "http" "add_instanceMappings" {
 
@@ -319,7 +322,7 @@ data "http" "add_instanceMappings" {
   }
   request_body = jsonencode({
         "platform": "kubernetes",
-        "primaryID": local.cluster_id
+        "primaryID": "e047e702-c621-42a0-bba6-4fc0662c200a"  //local.cluster_id
       })
 
   lifecycle {
