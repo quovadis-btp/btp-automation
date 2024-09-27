@@ -99,6 +99,7 @@ variable "BTP_FREE_LAUNCHPAD_QUOTA" {
 variable "HC_ADMIN_API_ACCESS" {
   description = "SAP HANA Cloud administration API service plan"
   type        = bool 
+  default    = local.admin_api_access == {} ? false : true
 }
 
 
