@@ -551,9 +551,6 @@ resource "terraform_data" "provider_context" {
 
     echo | ./kubectl wait --for condition=established crd kymas.operator.kyma-project.io -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
 
-    INDEX=$(./kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
-    echo $INDEX
-
     echo | ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
     while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment api-gateway-controller-manager --ignore-not-found)" = "" ]
     do 
@@ -572,6 +569,9 @@ resource "terraform_data" "provider_context" {
     done
 
 
+    INDEX=$(./kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
+    echo $INDEX
+
     echo | ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
     while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
     do 
@@ -589,6 +589,10 @@ resource "terraform_data" "provider_context" {
     echo $CONFIG
     echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
     | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE2 -f - 
+    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE3 -f - 
 
     while [ "$(./kubectl api-versions --kubeconfig $KUBECONFIG | grep services.cloud.sap.com/v1 )" = "" ]
     do
