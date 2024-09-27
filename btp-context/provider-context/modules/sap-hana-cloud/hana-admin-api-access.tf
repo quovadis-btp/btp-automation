@@ -338,6 +338,7 @@ output "add_instanceMappings" {
   value = nonsensitive(one(data.http.add_instanceMappings[*].response_body))
 }
 
+/*
 data "http" "delete_instanceMappings" {
 
   count          = local.admin_api_access == {} ? 0 : 1
@@ -364,3 +365,5 @@ data "http" "delete_instanceMappings" {
 output "delete_instanceMappings" {
   value = nonsensitive(one(data.http.delete_instanceMappings[*].response_body))
 }
+*/
+
