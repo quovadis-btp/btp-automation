@@ -213,3 +213,31 @@ output "hc-inventory" {
   description = "SAP HANA Cloud Management APIs"
 }
 
+
+data "http" "token-cert-admin_api_access" {
+  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  depends_on     = [btp_subaccount_service_instance.admin_api_access]
+
+  provider = http-full
+
+  url = "${local.admin_api_access-x509.certurl}/oauth/token" 
+
+  method = "POST"
+  request_headers = {
+    Content-Type  = "application/x-www-form-urlencoded"
+  }
+  client_crt = local.admin_api_access-x509.certificate
+  client_key = local.admin_api_access-x509.key
+
+  request_body = "grant_type=client_credentials&client_id=${local.admin_api_access-x509.clientid}"
+
+}
+
+locals {
+  token-cert-admin_api_access = one(ddata.http.token-cert-admin_api_access[*].response_body)
+}
+
+
+output "token-cert-admin_api_access" {
+  value = nonsensitive(local.token-cert-admin_api_access)
+}
