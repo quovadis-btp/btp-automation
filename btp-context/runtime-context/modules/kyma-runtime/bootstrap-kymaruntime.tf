@@ -554,7 +554,7 @@ resource "terraform_data" "provider_context" {
     INDEX=$(./kubectl get -n kyma-system kyma default --kubeconfig $KUBECONFIG -o json | jq '.spec.modules | map(.name == "btp-operator") | index(true)' )
     echo $INDEX
 
-    ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
     while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment api-gateway-controller-manager --ignore-not-found)" = "" ]
     do 
       echo "deployments.apps - api-gateway-controller-manager - not found"
@@ -563,8 +563,16 @@ resource "terraform_data" "provider_context" {
     echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment api-gateway-controller-manager --timeout 5m
     echo | ./kubectl wait --for condition=established crd apigateways.operator.kyma-project.io --timeout=180s --kubeconfig $KUBECONFIG
 
+    echo | ./kubectl get apigateways/default --kubeconfig $KUBECONFIG --ignore-not-found
 
-    ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
+    while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get gateway kyma-gateway --ignore-not-found)" = "" ]
+    do 
+      echo "kyma-gateway - not found"
+      sleep 1
+    done
+
+
+    echo | ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
     while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment sap-btp-operator-controller-manager --ignore-not-found)" = "" ]
     do 
       echo "deployments.apps - sap-btp-operator-controller-manager - not found"
