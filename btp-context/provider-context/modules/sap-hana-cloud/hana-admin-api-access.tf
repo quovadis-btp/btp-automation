@@ -235,9 +235,29 @@ data "http" "token-cert-admin_api_access" {
 
 locals {
   token-cert-admin_api_access = one(data.http.token-cert-admin_api_access[*].response_body)
+  access_token = local.token-cert-admin_api_access != null ? jsondecode(local.token-cert-admin_api_access).access_token : ""
 }
 
 
 output "token-cert-admin_api_access" {
   value = nonsensitive(local.token-cert-admin_api_access)
+}
+
+data "http" "get_instanceMappings" {
+
+  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
+
+  provider = http-full
+
+  url = "${local.admin_api_access-api}/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
+
+  method = "GET"
+  request_headers = {
+    Authorization = "Bearer ${local.access_token}"
+  }
+}
+
+output "get_instanceMappings" {
+  value = nonsensitive(data.http.get_instanceMappings.response_body)
 }
