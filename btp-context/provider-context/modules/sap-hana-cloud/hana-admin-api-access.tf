@@ -250,7 +250,7 @@ data "http" "get_instanceMappings" {
 
   provider = http-full
 
-  url = "${local.admin_api_access-api}/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
+  url = "https://${local.admin_api_access-api}/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
 
   method = "GET"
   request_headers = {
