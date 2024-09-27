@@ -234,7 +234,7 @@ data "http" "token-cert-admin_api_access" {
 }
 
 locals {
-  token-cert-admin_api_access = one(ddata.http.token-cert-admin_api_access[*].response_body)
+  token-cert-admin_api_access = one(data.http.token-cert-admin_api_access[*].response_body)
 }
 
 
