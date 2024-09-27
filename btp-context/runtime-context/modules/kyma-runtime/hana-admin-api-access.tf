@@ -1,3 +1,5 @@
+data "btp_globalaccount_entitlements" "all" {}
+
 # Read the entiltement data
 data "btp_subaccount_entitlements" "all" {
   subaccount_id = data.btp_subaccount.context.id
