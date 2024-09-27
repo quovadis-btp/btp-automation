@@ -257,6 +257,13 @@ data "http" "get_instanceMappings" {
     Content-Type = "application/json",
     Authorization = "Bearer ${local.access_token}"
   }
+
+  lifecycle {
+    postcondition {
+      condition     = contains([200], self.status_code)
+      error_message = self.response_body
+    }
+  }
 }
 
 output "get_instanceMappings" {
@@ -285,8 +292,8 @@ data "http" "add_instanceMappings" {
 
   lifecycle {
     postcondition {
-      condition     = contains([200, 201, 204], self.status_code)
-      error_message = "Status code invalid"
+      condition     = contains([200, 201], self.status_code)
+      error_message = self.response_body
     }
   }
 }
