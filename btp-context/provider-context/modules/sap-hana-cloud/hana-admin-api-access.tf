@@ -254,6 +254,7 @@ data "http" "get_instanceMappings" {
 
   method = "GET"
   request_headers = {
+    Content-Type = "application/json",
     Authorization = "Bearer ${local.access_token}"
   }
 }
@@ -274,12 +275,20 @@ data "http" "add_instanceMappings" {
 
   method = "POST"
   request_headers = {
+    Content-Type = "application/json",
     Authorization = "Bearer ${local.access_token}"
   }
   request_body = jsonencode({
         "platform": "kubernetes",
         "primaryID": "e047e702-c621-42a0-bba6-4fc0662c200a"
       })
+
+  lifecycle {
+    postcondition {
+      condition     = contains([200, 201, 204], self.status_code)
+      error_message = "Status code invalid"
+    }
+  }
 }
 
 output "add_instanceMappings" {
