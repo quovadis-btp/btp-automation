@@ -306,6 +306,7 @@ output "cluster_id" {
   value = local.cluster_id
 }
 
+#
 data "http" "add_instanceMappings" {
 
   count          = local.admin_api_access == {} ? 0 : 1
@@ -360,3 +361,6 @@ data "http" "delete_instanceMappings" {
   }
 }
 
+output "delete_instanceMappings" {
+  value = nonsensitive(one(data.http.delete_instanceMappings[*].response_body))
+}
