@@ -1,5 +1,5 @@
 resource "btp_subaccount_entitlement" "admin_api_access" {
-  count         = local.admin_api_access ? 1 : 0
+  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
 
   subaccount_id = data.btp_subaccount.context.id
   service_name  = var.service_name
