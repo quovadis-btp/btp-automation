@@ -1,10 +1,5 @@
-variable "toto" {
-  type = bool
-  default = local.admin_api_access == {} ? false : true
-}
-
 resource "btp_subaccount_entitlement" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count         = local.admin_api_access == {} ? 0 : 1
 
   subaccount_id = data.btp_subaccount.context.id
   service_name  = var.service_name
@@ -12,7 +7,7 @@ resource "btp_subaccount_entitlement" "admin_api_access" {
 }
 
 data "btp_subaccount_service_plan" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count         = local.admin_api_access == {} ? 0 : 1
 
   subaccount_id = data.btp_subaccount.context.id
   name          = "admin-api-access"
@@ -26,7 +21,7 @@ data "btp_subaccount_service_plan" "admin_api_access" {
 # https://help.sap.com/docs/hana-cloud/sap-hana-cloud-administration-guide/access-administration-api
 #
 resource "btp_subaccount_service_instance" "admin_api_access" {
-  count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count         = local.admin_api_access == {} ? 0 : 1
 
   subaccount_id  = data.btp_subaccount.context.id
   serviceplan_id = data.btp_subaccount_service_plan.admin_api_access[0].id
@@ -72,7 +67,7 @@ resource "btp_subaccount_service_binding" "admin_api_access_binding" {
 # create a parameterized admin_api_access service binding in a subaccount
 #
 resource "btp_subaccount_service_binding" "admin_api_access_binding_x509" {
-  count               = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count               = local.admin_api_access == {} ? 0 : 1
 
   subaccount_id       = data.btp_subaccount.context.id
   service_instance_id = btp_subaccount_service_instance.admin_api_access[0].id
@@ -87,7 +82,7 @@ resource "btp_subaccount_service_binding" "admin_api_access_binding_x509" {
 }
 
 resource "btp_subaccount_service_instance" "dest_admin_api_access" {
-  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count          = local.admin_api_access == {} ? 0 : 1
   depends_on     = [btp_subaccount_entitlement.destination, btp_subaccount_service_instance.admin_api_access]
 
   subaccount_id  = data.btp_subaccount.context.id
@@ -191,7 +186,7 @@ locals {
 }
 
 data "external" "openssl_cert_admin_api_access" {
-  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count          = local.admin_api_access == {} ? 0 : 1
   depends_on     = [btp_subaccount_service_instance.admin_api_access]
 
   program = ["bash", "${path.module}/openssl-cert.sh"]
@@ -220,7 +215,7 @@ output "hc-inventory" {
 
 
 data "http" "token-cert-admin_api_access" {
-  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count          = local.admin_api_access == {} ? 0 : 1
   depends_on     = [btp_subaccount_service_instance.admin_api_access]
 
   provider = http-full
@@ -250,7 +245,7 @@ output "token-cert-admin_api_access" {
 
 data "http" "get_instanceMappings" {
 
-  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count          = local.admin_api_access == {} ? 0 : 1
   depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
 
   provider = http-full
@@ -278,7 +273,7 @@ output "get_instanceMappings" {
 
 data "http" "add_instanceMappings" {
 
-  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  count          = local.admin_api_access == {} ? 0 : 1
   depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
 
   provider = http-full
