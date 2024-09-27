@@ -268,7 +268,7 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = nonsensitive(one(data.http.get_instanceMappings[*].response_body))
+  value = jsondecode(one(data.http.get_instanceMappings[*].response_body))
 }
 
 
