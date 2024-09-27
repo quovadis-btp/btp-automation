@@ -5,5 +5,8 @@ terraform {
     btp = {
       source  = "SAP/btp"
     }
+    http-full = {
+      source = "salrashid123/http-full"
+    }       
   }
 }
