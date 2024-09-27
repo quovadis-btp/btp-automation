@@ -246,7 +246,7 @@ output "token-cert-admin_api_access" {
 data "http" "get_instanceMappings" {
 
   count          = local.admin_api_access == {} ? 0 : 1
-  depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
+  depends_on     = [ data.http.token-cert-admin_api_access ]
 
   provider = http-full
 
@@ -271,6 +271,38 @@ output "get_instanceMappings" {
 }
 
 
+# https://developer.hashicorp.com/terraform/language/state/remote-state-data#the-terraform_remote_state-data-source
+# https://spacelift.io/blog/terraform-data-sources-how-they-are-utilised
+# https://ourcloudschool.medium.com/read-terraform-provisioned-resources-with-terraform-remote-state-datasource-ab9cf882ab63
+# https://spacelift.io/blog/terraform-remote-state
+# https://fabianlee.org/2023/08/06/terraform-terraform_remote_state-to-pass-values-to-other-configurations/
+#
+data "terraform_remote_state" "runtime_context" {
+  count   = var.runtime_context_backend != "tfe" ? 1 : 0
+
+  backend = var.runtime_context_backend 
+  config  = var.runtime_context_backend == "kubernetes" ? var.runtime_context_kubernetes_backend_config : var.runtime_context_local_backend_config 
+}
+
+# https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/data-sources/outputs?ajs_aid=3951d9c3-6a9a-4a4d-826b-b5a7fc7daf9f&product_intent=terraform
+#
+data "tfe_outputs" "runtime_context" {
+  count        = var.runtime_context_backend == "tfe" ? 1 : 0
+
+  organization = var.runtime_context_organization
+  workspace    = var.runtime_context_workspace
+}
+
+// this provider context can be null
+locals {
+  remote_backend = one(data.terraform_remote_state.runtime_context[*].outputs.cluster_id)
+  tfe_backend    = one(data.tfe_outputs.runtime_context[*].values.cluster_id)
+
+  cluster_id = nonsensitive(local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend))
+
+}
+
+
 data "http" "add_instanceMappings" {
 
   count          = local.admin_api_access == {} ? 0 : 1
@@ -287,7 +319,7 @@ data "http" "add_instanceMappings" {
   }
   request_body = jsonencode({
         "platform": "kubernetes",
-        "primaryID": "e047e702-c621-42a0-bba6-4fc0662c200a"
+        "primaryID": "${local.cluster_id}"
       })
 
   lifecycle {
