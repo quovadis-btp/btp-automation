@@ -217,7 +217,10 @@ output "hc-inventory" {
 
 data "http" "token-cert-admin_api_access" {
   count          = local.admin_api_access == {} ? 0 : 1
-  depends_on     = [btp_subaccount_service_instance.admin_api_access]
+  depends_on     = [
+    btp_subaccount_service_instance.my_sap_hana_cloud_instance,
+    btp_subaccount_service_instance.admin_api_access
+  ]
 
   provider = http-full
 
