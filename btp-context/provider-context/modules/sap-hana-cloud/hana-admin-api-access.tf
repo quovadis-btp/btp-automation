@@ -309,7 +309,7 @@ output "cluster_id" {
 data "http" "add_instanceMappings" {
 
   count          = local.admin_api_access == {} ? 0 : 1
-  depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
+  depends_on     = [data.http.token-cert-admin_api_access]
 
   provider = http-full
 
@@ -335,5 +335,28 @@ data "http" "add_instanceMappings" {
 
 output "add_instanceMappings" {
   value = nonsensitive(one(data.http.add_instanceMappings[*].response_body))
+}
+
+data "http" "delete_instanceMappings" {
+
+  count          = local.admin_api_access == {} ? 0 : 1
+  depends_on     = [data.http.token-cert-admin_api_access]
+
+  provider = http-full
+
+  url = "https://${local.admin_api_access-api}/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
+
+  method = "DELETE"
+  request_headers = {
+    Content-Type = "application/json",
+    Authorization = "Bearer ${local.access_token}"
+  }
+
+  lifecycle {
+    postcondition {
+      condition     = contains([200], self.status_code)
+      error_message = self.response_body
+    }
+  }
 }
 
