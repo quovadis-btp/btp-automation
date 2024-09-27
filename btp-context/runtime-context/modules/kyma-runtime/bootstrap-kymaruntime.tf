@@ -561,6 +561,7 @@ resource "terraform_data" "provider_context" {
       sleep 1
     done
     echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment api-gateway-controller-manager --timeout 5m
+    echo | ./kubectl wait --for condition=established crd apigateways.operator.kyma-project.io --timeout=180s --kubeconfig $KUBECONFIG
 
 
     ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="btp-operator")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
