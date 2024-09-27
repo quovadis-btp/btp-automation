@@ -77,7 +77,8 @@ resource "btp_subaccount_service_binding" "admin_api_access_binding_x509" {
     x509 = {    "key-length": 4096,"validity": 365,"validity-type": "DAYS" }
   })
   depends_on = [
-    btp_subaccount_service_instance.admin_api_access[0]
+    //btp_subaccount_service_instance.admin_api_access[0]
+    btp_subaccount_service_instance.admin_api_access
   ]
 }
 
