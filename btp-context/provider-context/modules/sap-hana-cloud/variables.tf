@@ -177,3 +177,34 @@ variable "whitelist_ips" {
   type        = list(string)
   default     = []
 }
+
+variable "runtime_context_organization" {
+  type        = string
+  description = "runtime_context_organization name (tfe provider)"
+}
+
+variable "runtime_context_workspace" {
+  type        = string
+  description = "runtime_context_workspace name (tfe provider)"
+}
+
+
+variable "runtime_context_backend" {
+  type        = string
+  description = "runtime_context_backend type"
+}
+
+variable "runtime_context_kubernetes_backend_config" {
+  type = object({
+    secret_suffix    = string
+    config_path      = string
+    namespace        = string
+    load_config_file = bool
+  })
+}
+
+variable "runtime_context_local_backend_config" {
+  type = object({
+    path = string
+  })
+}
