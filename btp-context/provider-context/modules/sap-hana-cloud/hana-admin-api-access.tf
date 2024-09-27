@@ -259,5 +259,5 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = nonsensitive(data.http.get_instanceMappings.response_body)
+  value = nonsensitive(one(data.http.get_instanceMappings[*].response_body))
 }
