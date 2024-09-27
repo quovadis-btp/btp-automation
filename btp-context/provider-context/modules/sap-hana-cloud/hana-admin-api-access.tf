@@ -1,3 +1,8 @@
+variable "toto" {
+  type = bool
+  default = local.admin_api_access == {} ? false : true
+}
+
 resource "btp_subaccount_entitlement" "admin_api_access" {
   count         = var.HC_ADMIN_API_ACCESS ? 1 : 0
 
