@@ -30,7 +30,7 @@ locals {
 }
 
 output "cluster_id" {
-  value =  jsonencode(local.cluster_id)
+  value = local.cluster_id
 }
 
 output "sap-btp-operator-config" {
