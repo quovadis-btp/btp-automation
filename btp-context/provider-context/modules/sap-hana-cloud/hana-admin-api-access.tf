@@ -319,7 +319,7 @@ data "http" "add_instanceMappings" {
   }
   request_body = jsonencode({
         "platform": "kubernetes",
-        "primaryID": "${local.cluster_id}"
+        "primaryID": ${local.cluster_id}
       })
 
   lifecycle {
