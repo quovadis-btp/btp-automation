@@ -336,7 +336,7 @@ data "http" "add_instanceMappings" {
 }
 
 output "add_instanceMappings" {
-  value = nonsensitive(one(data.http.add_instanceMappings[*].response_body))
+  value = jsondecode(one(data.http.add_instanceMappings[*].response_body))
 }
 
 /*
@@ -364,7 +364,7 @@ data "http" "delete_instanceMappings" {
 }
 
 output "delete_instanceMappings" {
-  value = nonsensitive(one(data.http.delete_instanceMappings[*].response_body))
+  value = jsondecode(one(data.http.delete_instanceMappings[*].response_body))
 }
 */
 
