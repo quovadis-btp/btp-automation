@@ -25,6 +25,10 @@ data "kubernetes_config_map_v1" "sap-btp-operator-config" {
   }
 }
 
+locals {
+  cluster_id = jsondecode(jsonencode(data.kubernetes_config_map_v1.sap-btp-operator-config.data)).CLUSTER_ID
+}
+
 output "sap-btp-operator-config" {
   value =  jsondecode(jsonencode(data.kubernetes_config_map_v1.sap-btp-operator-config.data))
 }
