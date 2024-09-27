@@ -261,3 +261,28 @@ data "http" "get_instanceMappings" {
 output "get_instanceMappings" {
   value = nonsensitive(one(data.http.get_instanceMappings[*].response_body))
 }
+
+
+data "http" "add_instanceMappings" {
+
+  count          = var.HC_ADMIN_API_ACCESS ? 1 : 0
+  depends_on     = [btp_subaccount_service_instance.admin_api_access, data.http.token-cert-admin_api_access]
+
+  provider = http-full
+
+  url = "https://${local.admin_api_access-api}/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
+
+  method = "POST"
+  request_headers = {
+    Authorization = "Bearer ${local.access_token}"
+  }
+  request_body = jsonencode({
+        "platform": "kubernetes",
+        "primaryID": "e047e702-c621-42a0-bba6-4fc0662c200a"
+      })
+}
+
+output "add_instanceMappings" {
+  value = nonsensitive(one(data.http.add_instanceMappings[*].response_body))
+}
+
