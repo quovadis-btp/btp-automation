@@ -134,6 +134,7 @@ resource "terraform_data" "httpbin" {
 
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
+   on_failure = continue
    command = <<EOF
      (
     KUBECONFIG=kubeconfig-headless.yaml
@@ -200,6 +201,7 @@ resource "terraform_data" "egress_ips" {
 
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
+   on_failure = continue
    command = <<EOF
      (
     KUBECONFIG=kubeconfig-headless.yaml
