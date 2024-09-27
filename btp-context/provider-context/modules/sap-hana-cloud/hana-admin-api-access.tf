@@ -298,7 +298,7 @@ locals {
   remote_backend = one(data.terraform_remote_state.runtime_context[*].outputs.cluster_id)
   tfe_backend    = one(data.tfe_outputs.runtime_context[*].values.cluster_id)
 
-  cluster_id = nonsensitive(local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend))
+  cluster_id = nonsensitive(local.remote_backend != null ? local.remote_backend : local.tfe_backend)
 
 }
 
@@ -322,7 +322,7 @@ data "http" "add_instanceMappings" {
   }
   request_body = jsonencode({
         "platform": "kubernetes",
-        "primaryID": "e047e702-c621-42a0-bba6-4fc0662c200a"  //local.cluster_id
+        "primaryID": "${local.cluster_id}"
       })
 
   lifecycle {
