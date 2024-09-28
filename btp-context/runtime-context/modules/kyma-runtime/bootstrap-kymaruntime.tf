@@ -507,10 +507,10 @@ data "tfe_outputs" "provider_context" {
 
 // this provider context can be null
 locals {
-  remote_backend = one(data.terraform_remote_state.provider_context[*].outputs.provider_k8s)
-  tfe_backend    = one(data.tfe_outputs.provider_context[*].values.provider_k8s)
+  remote_backend = try(one(data.terraform_remote_state.provider_context[*].outputs.provider_k8s), null)
+  tfe_backend    = try(one(data.tfe_outputs.provider_context[*].values.provider_k8s), null)
 
-  provider_k8s = nonsensitive(local.remote_backend != null ? jsonencode(local.remote_backend) : jsonencode(local.tfe_backend))
+  provider_k8s = local.remote_backend != null ? local.remote_backend : local.tfe_backend
 
 }
 
@@ -527,6 +527,8 @@ resource "terraform_data" "provider_context" {
         terraform_data.kubectl_getnodes
   ]
 
+ input = local.provider_k8s != null ? nonsensitive(jsonencode(local.provider_k8s)) : ""
+
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
    command = <<EOF
@@ -537,7 +539,9 @@ resource "terraform_data" "provider_context" {
     NAMESPACE3=montypython-xsuaa-mt
 
     set -e -o pipefail ;\
-    TOKEN=${local.provider_k8s}
+    ## TOKEN=${local.provider_k8s}
+    TOKEN='${self.input}'
+
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
     ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
@@ -584,14 +588,20 @@ resource "terraform_data" "provider_context" {
 
     SECRET=$(./kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
     echo $SECRET
-    CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
-    echo $CONFIG
-    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
-    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
-    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
-    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE2 -f - 
-    echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
-    | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE3 -f - 
+
+    if [ "$TOKEN" = "" ]
+    then
+      echo "provider_k8s is empty"
+    else
+      CONFIG=$(echo $SECRET | jq --arg token "$TOKEN"  ' .data |= . + { "clientid": $token | fromjson | .clientid , "clientsecret": $token | fromjson | .clientsecret, "tokenurl": $token | fromjson | .tokenurl , "sm_url": $token | fromjson | .sm_url }' )
+      echo $CONFIG
+      echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+      | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+      echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+      | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE2 -f - 
+      echo $CONFIG | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","uid", "selfLink", "ownerReferences", "annotations", "labels"])' \
+      | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE3 -f - 
+    fi
 
     while [ "$(./kubectl api-versions --kubeconfig $KUBECONFIG | grep services.cloud.sap.com/v1 )" = "" ]
     do
@@ -602,8 +612,4 @@ resource "terraform_data" "provider_context" {
      )
    EOF
  }
-}
-
-output "provider_context" {
-  value = terraform_data.provider_context.output
 }
