@@ -32,6 +32,9 @@ data "local_file" "cluster_ips" {
   filename = "cluster_ips.txt" 
 }
 
+output "cluster_ips" {
+ value = data.local_file.cluster_ips.content
+}
 
 # https://registry.terraform.io/providers/massdriver-cloud/jq/latest/docs/data-sources/query
 # https://stackoverflow.com/a/74681482
@@ -93,7 +96,7 @@ locals {
 }
 
 output "allow_access" {
-	value = nonsensitive(local.allow_access)
+	value = data.jq_query.allow_access.result //nonsensitive(local.allow_access)
 }
 
 output "postgresql" {
