@@ -217,7 +217,7 @@ resource "terraform_data" "egress_ips" {
     set -e -o pipefail ;\
     for zone in $(./kubectl get nodes --kubeconfig $KUBECONFIG -o 'custom-columns=NAME:.metadata.name,REGION:.metadata.labels.topology\.kubernetes\.io/region,ZONE:.metadata.labels.topology\.kubernetes\.io/zone' -o json | jq -r '.items[].metadata.labels["topology.kubernetes.io/zone"]' | sort | uniq); do
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
-    ./kubectl run -n $NAMESPACE--kubeconfig $KUBECONFIG --timeout=5m -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
+    ./kubectl run --kubeconfig $KUBECONFIG --timeout=5m -i --tty busybox --image=yauritux/busybox-curl --restart=Never  --overrides="$overrides" --rm --command -- curl http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
     sleep 2
     done
     cat temp_ips.txt
