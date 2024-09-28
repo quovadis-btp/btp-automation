@@ -317,7 +317,7 @@ output "cluster_id" {
 #
 data "http" "add_instanceMappings" {
 
-  count          = local.admin_api_access == {} ? 0 : 1
+  count          = local.admin_api_access == {} || local.cluster_id == null ? 0 : 1
   depends_on     = [data.http.token-cert-admin_api_access]
 
   provider = http-full
