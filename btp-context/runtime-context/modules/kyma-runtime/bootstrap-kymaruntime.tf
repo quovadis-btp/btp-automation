@@ -529,7 +529,8 @@ resource "terraform_data" "provider_context" {
         terraform_data.kubectl_getnodes
   ]
 
- input = local.provider_k8s != null ? nonsensitive(jsonencode(local.provider_k8s)) : ""
+ //input = local.provider_k8s != null ? nonsensitive(jsonencode(local.provider_k8s)) : ""
+ input = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
  ## TOKEN=${local.provider_k8s}
 
  provisioner "local-exec" {
