@@ -50,7 +50,7 @@ data "kubernetes_config_map_v1" "shoot_info" {
 }
 
 output "shoot_info" {
-  value =  data.kubernetes_config_map_v1.shoot_info.data
+  value =  jsondecode(jsonencode(data.kubernetes_config_map_v1.shoot_info.data))
 }
 
 
