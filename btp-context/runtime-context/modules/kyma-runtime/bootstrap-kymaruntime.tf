@@ -544,6 +544,7 @@ resource "terraform_data" "provider_context" {
     set -e -o pipefail ;\
 
     TOKEN=${self.input}
+    echo $TOKEN
 
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
@@ -619,5 +620,6 @@ resource "terraform_data" "provider_context" {
 
 output "provider_context" {
   //value = terraform_data.provider_context.output
-  value = terraform_data.provider_context.input
+  //value = terraform_data.provider_context.input
+  value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
 }
