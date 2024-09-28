@@ -86,6 +86,18 @@ resource "btp_subaccount_entitlement" "hana_cloud" {
   plan_name     = var.plan_name
 }
 
+resource "btp_subaccount_entitlement" "hana_schema" {
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "hana" 
+  plan_name     = "schema"
+}
+
+resource "btp_subaccount_entitlement" "hana_hdi_container" {
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "hana" 
+  plan_name     = "hdi-shared" 
+}
+
 resource "btp_subaccount_entitlement" "tools" {
   subaccount_id = data.btp_subaccount.context.id
   service_name  = var.hana_cloud_tools_app_name
