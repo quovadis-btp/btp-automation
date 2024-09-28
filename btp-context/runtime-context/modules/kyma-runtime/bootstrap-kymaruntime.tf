@@ -516,6 +516,8 @@ locals {
 
 }
 
+# hooking up selected namespaces with the provider context
+#
 resource "terraform_data" "provider_context" {
   depends_on = [terraform_data.kubectl_getnodes, terraform_data.argocd_bootstrap]
 
@@ -545,7 +547,6 @@ resource "terraform_data" "provider_context" {
 
     TOKEN=${self.input}
     echo $TOKEN
-    echo '$TOKEN'
 
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
@@ -625,6 +626,6 @@ resource "terraform_data" "provider_context" {
 output "provider_context" {
   depends_on = [terraform_data.provider_context]
 
-  //value = terraform_data.provider_context.output
-  value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
+  value = jsondecode(terraform_data.provider_context.output)
+
 }
