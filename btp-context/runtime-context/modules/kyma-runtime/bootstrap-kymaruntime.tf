@@ -528,6 +528,7 @@ resource "terraform_data" "provider_context" {
   ]
 
  input = local.provider_k8s != null ? nonsensitive(jsonencode(local.provider_k8s)) : ""
+ ## TOKEN=${local.provider_k8s}
 
  provisioner "local-exec" {
    interpreter = ["/bin/bash", "-c"]
@@ -539,8 +540,8 @@ resource "terraform_data" "provider_context" {
     NAMESPACE3=montypython-xsuaa-mt
 
     set -e -o pipefail ;\
-    ## TOKEN=${local.provider_k8s}
-    TOKEN='${self.input}'
+
+    TOKEN=${self.input}
 
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
