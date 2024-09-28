@@ -303,8 +303,8 @@ data "tfe_outputs" "runtime_context" {
 
 // this runtime context can be null
 locals {
-  remote_backend = one(data.terraform_remote_state.runtime_context[*].outputs.cluster_id)
-  tfe_backend    = one(data.tfe_outputs.runtime_context[*].values.cluster_id)
+  remote_backend = try(one(data.terraform_remote_state.runtime_context[*].outputs.cluster_id), null)
+  tfe_backend    = try(one(data.tfe_outputs.runtime_context[*].values.cluster_id), null)
 
   cluster_id = nonsensitive(local.remote_backend != null ? local.remote_backend : local.tfe_backend)
 
