@@ -545,6 +545,7 @@ resource "terraform_data" "provider_context" {
 
     TOKEN=${self.input}
     echo $TOKEN
+    echo '$TOKEN'
 
     echo | ./kubectl get nodes --kubeconfig $KUBECONFIG ;\
     ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
@@ -618,9 +619,12 @@ resource "terraform_data" "provider_context" {
  }
 }
 
+// https://stackoverflow.com/a/58277124
+// https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+//
 output "provider_context" {
   depends_on = [terraform_data.provider_context]
 
-  value = terraform_data.provider_context.output
-  //value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
+  //value = terraform_data.provider_context.output
+  value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
 }
