@@ -209,10 +209,9 @@ locals {
 }
 
 locals {
-  hc-inventory = local.admin_api_access_x509-credentials == null 
-    ? "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
-    : "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
+  hc-inventory = local.admin_api_access_x509-credentials == null ? "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" : "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
 }
+
 output "hc-inventory" {
   value       = local.inventory
   
@@ -276,9 +275,7 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = one(data.http.get_instanceMappings[*].response_body) != null 
-                   ? jsondecode(one(data.http.get_instanceMappings[*].response_body))
-                   : local.inventory
+  value = one(data.http.get_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.get_instanceMappings[*].response_body)) : local.inventory
 }
 
 
@@ -346,9 +343,7 @@ data "http" "add_instanceMappings" {
 }
 
 output "add_instanceMappings" {
-  value = one(data.http.add_instanceMappings[*].response_body) != null 
-                   ? jsondecode(one(data.http.add_instanceMappings[*].response_body))
-                   : local.inventory
+  value = one(data.http.add_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.add_instanceMappings[*].response_body)) : local.inventory
 }
 
 /*
