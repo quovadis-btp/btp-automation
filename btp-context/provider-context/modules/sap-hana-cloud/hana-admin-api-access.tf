@@ -208,8 +208,13 @@ locals {
   admin_api_access-x509-p12 = one(data.external.openssl_cert_admin_api_access[*].result)
 }
 
+locals {
+  hc-inventory = local.admin_api_access_x509-credentials == null 
+    ? "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" 
+    : "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
+}
 output "hc-inventory" {
-  value       = local.admin_api_access_x509-credentials == null ? "${local.sap_approuter_dynamic_dest}/hc-services/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings" : "${local.sap_approuter_dynamic_dest}/hana-admin-api-access/inventory/v2/serviceInstances/${data.btp_subaccount_service_instance.my_hana_service.id}/instanceMappings"
+  value       = local.inventory
   
   description = "SAP HANA Cloud Management APIs"
 }
@@ -271,7 +276,9 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = jsondecode(one(data.http.get_instanceMappings[*].response_body))
+  value = one(data.http.get_instanceMappings[*].response_body) != null 
+                   ? jsondecode(one(data.http.get_instanceMappings[*].response_body))
+                   : local.inventory
 }
 
 
@@ -297,7 +304,7 @@ data "tfe_outputs" "runtime_context" {
   workspace    = var.runtime_context_workspace
 }
 
-// this provider context can be null
+// this runtime context can be null
 locals {
   remote_backend = one(data.terraform_remote_state.runtime_context[*].outputs.cluster_id)
   tfe_backend    = one(data.tfe_outputs.runtime_context[*].values.cluster_id)
@@ -339,7 +346,9 @@ data "http" "add_instanceMappings" {
 }
 
 output "add_instanceMappings" {
-  value = jsondecode(one(data.http.add_instanceMappings[*].response_body))
+  value = one(data.http.add_instanceMappings[*].response_body) != null 
+                   ? jsondecode(one(data.http.add_instanceMappings[*].response_body))
+                   : local.inventory
 }
 
 /*
