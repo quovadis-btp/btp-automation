@@ -506,6 +506,8 @@ data "tfe_outputs" "provider_context" {
 }
 
 // this provider context can be null
+// https://stackoverflow.com/a/74353092
+//
 locals {
   remote_backend = try(one(data.terraform_remote_state.provider_context[*].outputs.provider_k8s), null)
   tfe_backend    = try(one(data.tfe_outputs.provider_context[*].values.provider_k8s), null)
@@ -613,4 +615,8 @@ resource "terraform_data" "provider_context" {
      )
    EOF
  }
+}
+
+output "provider_context" {
+  value = terraform_data.provider_context.output
 }
