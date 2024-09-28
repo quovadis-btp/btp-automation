@@ -92,6 +92,10 @@ locals {
 
 }
 
+output "allow_access" {
+	value = nonsensitive(local.allow_access)
+}
+
 output "postgresql" {
 	value = yamlencode(jsondecode(local.postgresql))
 }
