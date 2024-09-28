@@ -213,7 +213,7 @@ locals {
 }
 
 output "hc-inventory" {
-  value       = local.inventory
+  value       = local.hc-inventory
   
   description = "SAP HANA Cloud Management APIs"
 }
@@ -275,7 +275,7 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = one(data.http.get_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.get_instanceMappings[*].response_body)) : local.inventory
+  value = one(data.http.get_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.get_instanceMappings[*].response_body)) : local.hc-inventory
 }
 
 
@@ -343,7 +343,7 @@ data "http" "add_instanceMappings" {
 }
 
 output "add_instanceMappings" {
-  value = one(data.http.add_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.add_instanceMappings[*].response_body)) : local.inventory
+  value = one(data.http.add_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.add_instanceMappings[*].response_body)) : local.hc-inventory
 }
 
 /*
