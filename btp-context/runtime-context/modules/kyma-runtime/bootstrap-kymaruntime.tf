@@ -619,7 +619,8 @@ resource "terraform_data" "provider_context" {
 }
 
 output "provider_context" {
-  //value = terraform_data.provider_context.output
-  //value = terraform_data.provider_context.input
-  value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
+  depends_on = [terraform_data.provider_context]
+
+  value = terraform_data.provider_context.output
+  //value = local.provider_k8s != null ? nonsensitive(local.provider_k8s) : ""
 }
