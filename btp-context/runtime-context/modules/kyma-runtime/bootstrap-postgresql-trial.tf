@@ -221,11 +221,11 @@ resource "terraform_data" "egress_ips" {
     for zone in $ZONES; do
     overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"nodeSelector\": { \"topology.kubernetes.io/zone\": \"$zone\" } } }"
     echo | ./kubectl run --kubeconfig $KUBECONFIG --timeout=5m -i --tty curl --image=everpeace/curl-jq --restart=Never  --overrides="$overrides" --rm --command -- curl -s http://ifconfig.me/ip >> temp_ips.txt 2>/dev/null
-    echo | ./kubectl delete pod/busybox --kubeconfig $KUBECONFIG --force --ignore-not-found
+    //echo | ./kubectl delete pod/curl --kubeconfig $KUBECONFIG --force --ignore-not-found
     sleep 2
     done
     cat temp_ips.txt
-    CLUSTER_IPS=$(awk '{gsub("pod \"busybox\" deleted", "", $0); print}' temp_ips.txt)
+    CLUSTER_IPS=$(awk '{gsub("pod \"curl\" deleted", "", $0); print}' temp_ips.txt)
     rm temp_ips.txt
     
     echo $CLUSTER_IPS > cluster_ips.txt
