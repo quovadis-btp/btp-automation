@@ -282,7 +282,7 @@ resource "terraform_data" "kubeconfig" {
   input = data.http.kubeconfig.response_body
 
   provisioner "local-exec" {
-    command = contains([201, 204], data.http.kubeconfig.status_code)
+    command = contains([200], data.http.kubeconfig.status_code)
 
   }
 }
