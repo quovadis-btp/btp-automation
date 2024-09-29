@@ -284,7 +284,7 @@ resource "local_file" "kubeconfig_url" {
 
 
 output "kubeconfig-oidc" {
-  description = "original oidc kubeconfig"
+  description = "original json-formatted oidc kubeconfig"
   value       = jsonencode(yamldecode(local.kyma_kubeconfig))
 }
 
