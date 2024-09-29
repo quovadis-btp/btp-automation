@@ -56,6 +56,12 @@ variable "BTP_POSTGRESQL_DRY_RUN" {
   default     = true
 }
 
+variable "BTP_DYNATRACE_DRY_RUN" {
+  type        = bool
+  description = "do not bootstrap kyma cluster with dynatrace/dynakube"
+  default     = true
+}
+
 variable "BTP_KYMA_PLAN" {
   type        = string
   description = "Plan name"
