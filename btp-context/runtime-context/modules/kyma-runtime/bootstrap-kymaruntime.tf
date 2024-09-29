@@ -254,20 +254,21 @@ data "http" "kubeconfig" {
     min_delay_ms = 1000
   }*/
   
-  /*
   lifecycle {
     postcondition {
       condition     = can(regex("kind: Config",self.response_body))
       error_message = "Invalid content of downloaded kubeconfig"
     }
-  }*/
+  }
 
+/*
   lifecycle {
     postcondition {
       condition     = contains([200, 201, 204], self.status_code)
       error_message = self.response_body
     }
   } 
+  */
 }
 
 
