@@ -36,11 +36,64 @@ resource "local_sensitive_file" "dynakube" {
    content  = jsonencode(yamldecode(data.http.dynakube.response_body))
 }
 
+locals {
+  dynakube = jsonencode({
+
+    "apiVersion": "dynatrace.com/v1beta2",
+    "kind": "DynaKube",
+    "metadata": {
+        "name": "dynakube",
+        "namespace": "dynatrace"
+    },
+    "spec": {
+        "apiUrl": "https://ENVIRONMENTID.live.dynatrace.com/api",
+        "metadataEnrichment": {
+            "enabled": true
+        },
+        "oneAgent": {
+            "cloudNativeFullStack": {
+                "tolerations": [
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node-role.kubernetes.io/master",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node-role.kubernetes.io/control-plane",
+                        "operator": "Exists"
+                    }
+                ]
+            }
+        },
+        "activeGate": {
+            "capabilities": [
+                "routing",
+                "kubernetes-monitoring",
+                "dynatrace-api"
+            ],
+            "resources": {
+                "requests": {
+                    "cpu": "500m",
+                    "memory": "512Mi"
+                },
+                "limits": {
+                    "cpu": "1000m",
+                    "memory": "1.5Gi"
+                }
+            }
+        }
+    }
+
+  })
+}
+
 data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
-   data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" }"
+   //data = jsonencode(yamldecode(data.http.dynakube.response_body))
+   data = local.dynakube
+   query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" | .spec.activeGate.resources.requests |= . + { cpu: \"100\"} }"
 }
 
 locals {
