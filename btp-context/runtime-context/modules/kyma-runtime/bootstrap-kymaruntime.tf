@@ -235,6 +235,7 @@ locals {
 #
 data "http" "kubeconfig" {
   depends_on = [btp_subaccount_environment_instance.kyma]
+  
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 
   # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
@@ -251,6 +252,12 @@ data "http" "kubeconfig" {
       error_message = "Invalid content of downloaded kubeconfig"
     }
   }*/
+  lifecycle {
+    precondition {
+      condition     = contains([200], self.status_code)
+      error_message = "Status code invalid"
+    }
+  }
 
   lifecycle {
     postcondition {
@@ -259,6 +266,7 @@ data "http" "kubeconfig" {
     }
   }  
 }
+
 
 resource "random_uuid" "kubeconfig" {
   lifecycle {
