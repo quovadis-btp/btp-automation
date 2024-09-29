@@ -254,12 +254,7 @@ data "http" "kubeconfig" {
     }
   }*/
 
-
   lifecycle {
-    precondition {
-      condition     = contains([200, 201, 204], data.http.kubeconfig.status_code)
-      error_message = data.http.kubeconfig.response_body
-    }
     postcondition {
       condition     = contains([200, 201, 204], self.status_code)
       error_message = self.response_body
@@ -272,8 +267,18 @@ resource "random_uuid" "kubeconfig" {
   lifecycle {
     precondition {
       condition     = contains([200], data.http.kubeconfig.status_code)
-      error_message = "Status code invalid"
+      error_message = data.http.kubeconfig.response_body
     }
+  }
+}
+
+resource "null_resource" "example" {
+  # On success, this will attempt to execute the true command in the
+  # shell environment running terraform.
+  # On failure, this will attempt to execute the false command in the
+  # shell environment running terraform.
+  provisioner "local-exec" {
+    command = contains([201, 204], data.http.kubeconfig.status_code)
   }
 }
 
