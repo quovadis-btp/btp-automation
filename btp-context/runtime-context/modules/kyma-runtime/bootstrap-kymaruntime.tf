@@ -245,6 +245,7 @@ data "http" "kubeconfig" {
   }  
 }
 
+/*
 resource "local_sensitive_file" "kubeconfig-oidc" {
   #filename = ".${data.btp_subaccount.context.id}-${var.BTP_KYMA_NAME}.kubeconfig"
   filename = "kubeconfig-oidc.json"
@@ -253,11 +254,25 @@ resource "local_sensitive_file" "kubeconfig-oidc" {
 
 resource "local_file" "kubeconfig_url" {
   depends_on = [btp_subaccount_environment_instance.kyma]
-  #content    = jsondecode(btp_subaccount_environment_instance.kyma[0].labels).KubeconfigURL
   content    = local.labels != null ? jsondecode(local.labels).KubeconfigURL : "dry run"
   filename   = "kubeconfig_url.txt"
 }
+*/
 
+output "kubeconfig-oidc" {
+  description = "original oidc kubeconfig"
+  value       = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+}
+
+output "kubeconfig-yaml" {
+  description = "original oidc kubeconfig"
+  value       = data.http.kubeconfig.response_body
+}
+
+output "kubeconfig-url" {
+  description = "deep link kubeconfig URL"
+  value       = local.labels != null ? jsondecode(local.labels).KubeconfigURL : "dry run"
+}
 
 # https://registry.terraform.io/browse/providers?tier=official
 # https://stackoverflow.com/questions/75400238/what-is-the-ideal-way-to-json-stringify-in-terraform
