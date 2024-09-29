@@ -15,6 +15,7 @@ locals {
   
 }
 
+/*
 data "http" "dynakube" {
   depends_on = [btp_subaccount_environment_instance.kyma]
 
@@ -35,6 +36,7 @@ resource "local_sensitive_file" "dynakube" {
    filename = "dynakube.json"
    content  = jsonencode(yamldecode(data.http.dynakube.response_body))
 }
+*/
 
 locals {
   dynakube_template = jsonencode({
@@ -89,9 +91,9 @@ locals {
 }
 
 data "jq_query" "dynakube" {
-   depends_on = [ data.http.dynakube ]
-
+   //depends_on = [ data.http.dynakube ]
    //data = jsonencode(yamldecode(data.http.dynakube.response_body))
+
    data = local.dynakube_template
    query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" } | .spec.activeGate.resources.requests |= . + { cpu: \"100\"} "
 }
@@ -150,7 +152,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
     crd=$(./kubectl get crd -n $NAMESPACE dynakubes.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
     crd2=$(./kubectl get crd -n $NAMESPACE edgeconnects.dynatrace.com --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
 
-    if [ "$crd" != "dynakubes.dynatrace.com" ] || [ "$crd2" != "edgeconnects.dynatrace.com" ]
+    if [ "$crd" = "dynakubes.dynatrace.com" ] || [ "$crd2" != "edgeconnects.dynatrace.com" ]
     then
       ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
       ./kubectl label namespace $NAMESPACE istio-injection=disabled --overwrite --kubeconfig $KUBECONFIG
