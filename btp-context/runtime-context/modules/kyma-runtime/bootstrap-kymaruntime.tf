@@ -238,6 +238,11 @@ data "http" "kubeconfig" {
   
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 
+  # Optional request headers
+  request_headers = {
+    Content-Type = "application/json"
+  }
+
   # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
   # this will be retried 3 times max
   retry {
@@ -272,13 +277,14 @@ resource "random_uuid" "kubeconfig" {
   }
 }
 
-resource "null_resource" "example" {
+resource "null_resource" "kubeconfig" {
   # On success, this will attempt to execute the true command in the
   # shell environment running terraform.
   # On failure, this will attempt to execute the false command in the
   # shell environment running terraform.
   provisioner "local-exec" {
     command = contains([201, 204], data.http.kubeconfig.status_code)
+
   }
 }
 
