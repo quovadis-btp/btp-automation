@@ -259,6 +259,7 @@ resource "local_file" "kubeconfig_url" {
 }
 */
 
+
 output "kubeconfig-oidc" {
   description = "original oidc kubeconfig"
   value       = jsonencode(yamldecode(data.http.kubeconfig.response_body))
@@ -293,7 +294,8 @@ data "jq_query" "kubeconfig" {
 }
 
 output "kubeconfig" {
-  value = jsondecode(data.jq_query.kubeconfig.result)
+  description = "headless, short lived token based kubeconfig"
+  value       = jsondecode(data.jq_query.kubeconfig.result)
 }
 
 output "kubeconfig_raw" {
@@ -323,11 +325,11 @@ EOF
 }
 */
 
+
 # headless kubeconfig
 locals {
   kubeconfig  = yamlencode(jsondecode(data.jq_query.kubeconfig.result) )
 }
-
 
 # https://spacelift.io/blog/terraform-yaml#what-is-the-yamldecode-function-in-terraform
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data#the-terraform_data-managed-resource-type
@@ -338,7 +340,7 @@ resource "terraform_data" "write_yaml" {
   }
  provisioner "local-exec" {
    command = <<EOF
-     echo "${local.kubeconfig}" > config2.yaml
+     echo "${local.kubeconfig}" > config.yaml
 EOF
  }
 }
