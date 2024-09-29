@@ -37,7 +37,7 @@ resource "local_sensitive_file" "dynakube" {
 }
 
 locals {
-  dynakube = jsonencode({
+  dynakube_template = jsonencode({
 
     "apiVersion": "dynatrace.com/v1beta2",
     "kind": "DynaKube",
@@ -92,7 +92,7 @@ data "jq_query" "dynakube" {
    depends_on = [ data.http.dynakube ]
 
    //data = jsonencode(yamldecode(data.http.dynakube.response_body))
-   data = local.dynakube
+   data = local.dynakube_template
    query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" | .spec.activeGate.resources.requests |= . + { cpu: \"100\"} }"
 }
 
