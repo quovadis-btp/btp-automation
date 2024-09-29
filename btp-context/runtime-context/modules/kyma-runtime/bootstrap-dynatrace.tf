@@ -93,7 +93,7 @@ data "jq_query" "dynakube" {
 
    //data = jsonencode(yamldecode(data.http.dynakube.response_body))
    data = local.dynakube_template
-   query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" | .spec.activeGate.resources.requests |= . + { cpu: \"100\"} }"
+   query = ".metadata |= . + {name: \"${local.name}\"  } | .spec |= . + { apiUrl: \"${local.apiUrl}\", tokens: \"${local.tokens}\" } | .spec.activeGate.resources.requests |= . + { cpu: \"100\"} }"
 }
 
 locals {
