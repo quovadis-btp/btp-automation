@@ -106,10 +106,21 @@ output "dynakube" {
   value = jsondecode(local.dynakube)
 }
 
+/*
+kubectl resource-capacity --kubeconfig kubeconfig_bot_exec.yaml -p --sort cpu.request | grep dyna
+
+ip-10-250-0-69.ec2.internal   dynatrace      dynatrace-oneagent-csi-driver-tgwkz                               390m (9%)      90m (2%)        260Mi (1%)        160Mi (1%)
+ip-10-250-0-69.ec2.internal   dynatrace      dynatrace-webhook-5f788dd7db-knpjr                                300m (7%)      300m (7%)       128Mi (0%)        128Mi (0%)
+ip-10-250-0-69.ec2.internal   dynatrace      dynatrace-webhook-5f788dd7db-9vhwl                                300m (7%)      300m (7%)       128Mi (0%)        128Mi (0%)
+ip-10-250-0-69.ec2.internal   dynatrace      dynakube-oneagent-zwg28                                           100m (2%)      0m (0%)         0Mi (0%)          0Mi (0%)
+ip-10-250-0-69.ec2.internal   dynatrace      dynatrace-operator-69987d867-smswk                                50m (1%)       100m (2%)       64Mi (0%)         128Mi (0%)
+
+*/
+
 # TODO: wait for the dynakube secret created and make dynatrace bootstrap optional
 #
 resource "terraform_data" "bootstrap-dynatrace" {
-  //count            = var.BTP_DYNATRACE_DRY_RUN ? 0 : 1
+  count      = var.BTP_DYNATRACE_DRY_RUN ? 0 : 1
   depends_on = [terraform_data.bootstrap-kymaruntime-bot]
 
   triggers_replace = [
