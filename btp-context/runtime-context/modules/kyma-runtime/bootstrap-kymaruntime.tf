@@ -242,7 +242,7 @@ data "http" "kubeconfig" {
 
   # Optional request headers
   request_headers = {
-    Content-Type = "application/json"
+    Content-Type = "application/x-yaml"
   }
 
   lifecycle {
