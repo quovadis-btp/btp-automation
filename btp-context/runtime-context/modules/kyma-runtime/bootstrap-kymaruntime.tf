@@ -237,10 +237,24 @@ data "http" "kubeconfig" {
   depends_on = [btp_subaccount_environment_instance.kyma]
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 
+
+  retry {
+    attempts = 2
+    max_delay_ms = 2000
+    min_delay_ms = 1000
+  }
+  /*
+  lifecycle {
+    postcondition {
+      condition     = can(regex("kind: Config",self.response_body))
+      error_message = "Invalid content of downloaded kubeconfig"
+    }
+  }*/
+
   lifecycle {
     postcondition {
       condition     = contains([200, 201, 204], self.status_code)
-      error_message = "Status code invalid"
+      error_message = self.response_body
     }
   }  
 }
