@@ -282,8 +282,15 @@ resource "terraform_data" "kubeconfig" {
   input = data.http.kubeconfig.response_body
 
   provisioner "local-exec" {
-    command = contains([200], data.http.kubeconfig.status_code)
-
+    //command = contains([200], data.http.kubeconfig.status_code)
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+   (
+      set -e -o pipefail   
+      echo "${data.http.kubeconfig.status_code}" 
+      echo ${self.input}
+    ) 
+   EOF
   }
 }
 
