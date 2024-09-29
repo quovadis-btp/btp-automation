@@ -237,7 +237,8 @@ data "http" "kubeconfig" {
   depends_on = [btp_subaccount_environment_instance.kyma]
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 
-
+  # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
+  # this will be retried 3 times max
   retry {
     attempts = 2
     max_delay_ms = 2000
@@ -257,6 +258,15 @@ data "http" "kubeconfig" {
       error_message = self.response_body
     }
   }  
+}
+
+resource "random_uuid" "kubeconfig" {
+  lifecycle {
+    precondition {
+      condition     = contains([200], data.http.kubeconfig.status_code)
+      error_message = "Status code invalid"
+    }
+  }
 }
 
 /*
