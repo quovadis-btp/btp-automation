@@ -258,46 +258,26 @@ data "http" "kubeconfig" {
 
 }
 
-
-resource "random_uuid" "kubeconfig" {
-  lifecycle {
-    precondition {
-      condition     = contains([200], data.http.kubeconfig.status_code)
-      error_message = data.http.kubeconfig.response_body
-    }
-  }
+locals {
+  kyma_kubeconfig = data.http.kubeconfig.response_body
 }
 
-resource "terraform_data" "kubeconfig" {
-  # On success, this will attempt to execute the true command in the
-  # shell environment running terraform.
-  # On failure, this will attempt to execute the false command in the
-  # shell environment running terraform.
-
-  input = data.http.kubeconfig.response_body
-
-  provisioner "local-exec" {
-    //command = contains([200], data.http.kubeconfig.status_code)
-   interpreter = ["/bin/bash", "-c"]
-   command = <<EOF
-   (
-      set -e -o pipefail   
-      echo "${data.http.kubeconfig.status_code}" 
-      echo ${self.input}
-    ) 
-   EOF
-  }
+/*
+data "tfe_outputs" "runtime_context" {
+  organization = "quovadis"
+  workspace    = "runtime-context-41bb3a1e-2c13-454e-976f-d9734acad3c4"
 }
 
-output "get_kubeconfig" {
-  value = terraform_data.kubeconfig.output
+locals {
+  oidc-kubeconfig = data.tfe_outputs.runtime_context.value
 }
+*/
 
 /*
 resource "local_sensitive_file" "kubeconfig-oidc" {
   #filename = ".${data.btp_subaccount.context.id}-${var.BTP_KYMA_NAME}.kubeconfig"
   filename = "kubeconfig-oidc.json"
-  content  = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+  content  = jsonencode(yamldecode(local.kyma_kubeconfig))
 }
 
 resource "local_file" "kubeconfig_url" {
@@ -310,12 +290,12 @@ resource "local_file" "kubeconfig_url" {
 
 output "kubeconfig-oidc" {
   description = "original oidc kubeconfig"
-  value       = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+  value       = jsonencode(yamldecode(local.kyma_kubeconfig))
 }
 
 output "kubeconfig-yaml" {
   description = "original oidc kubeconfig"
-  value       = data.http.kubeconfig.response_body
+  value       = local.kyma_kubeconfig
 }
 
 output "kubeconfig-url" {
@@ -337,7 +317,7 @@ locals {
 #
 data "jq_query" "kubeconfig" {
    depends_on = [btp_subaccount_environment_instance.kyma]
-   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   data = jsonencode(yamldecode(local.kyma_kubeconfig))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { token: ${local.id_token} } }"
 }
 

@@ -488,7 +488,7 @@ locals {
 data "jq_query" "kubeconfig_bot_exec" {
    depends_on = [data.http.kubeconfig]
 
-   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   data = jsonencode(yamldecode(local.kyma_kubeconfig))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_bot_exec} } }"
 }
 
@@ -504,7 +504,7 @@ output "kubeconfig_bot_exec" {
 data "jq_query" "kubeconfig_prod_exec" {
    depends_on = [data.http.kubeconfig]
 
-   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   data = jsonencode(yamldecode(local.kyma_kubeconfig))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_prod_exec} } }"
 }
 

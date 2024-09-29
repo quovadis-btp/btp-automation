@@ -260,7 +260,7 @@ locals {
 data "jq_query" "kubeconfig_exec" {
    depends_on = [data.http.kubeconfig]
 
-   data = jsonencode(yamldecode(data.http.kubeconfig.response_body))
+   data = jsonencode(yamldecode(local.kyma_kubeconfig))
    query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_exec} } }"
 }
 
