@@ -240,18 +240,13 @@ data "http" "kubeconfig" {
   
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
 
-  # Optional request headers
-  request_headers = {
-    Content-Type = "application/x-yaml"
-  }
-
   lifecycle {
     postcondition {
       condition     = can(regex("kind: Config",self.response_body))
       error_message = "Invalid content of downloaded kubeconfig"
     }
     postcondition {
-      condition     = contains([200, 201, 204], self.status_code)
+      condition     = contains([200], self.status_code)
       error_message = self.response_body
     }
   } 
@@ -293,13 +288,13 @@ output "kubeconfig-oidc" {
   value       = jsonencode(yamldecode(local.kyma_kubeconfig))
 }
 
-output "kubeconfig-yaml" {
-  description = "original oidc kubeconfig"
+output "kyma-kubeconfig" {
+  description = "original oidc yaml formatted kubeconfig"
   value       = local.kyma_kubeconfig
 }
 
-output "kubeconfig-url" {
-  description = "deep link kubeconfig URL"
+output "kyma-kubeconfig-url" {
+  description = "deep link to download kubeconfig URL"
   value       = local.labels != null ? jsondecode(local.labels).KubeconfigURL : "dry run"
 }
 
