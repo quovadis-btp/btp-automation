@@ -235,7 +235,7 @@ locals {
 #
 data "http" "kubeconfig" {
   provider = http-full
-  
+
   depends_on = [btp_subaccount_environment_instance.kyma]
   
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
@@ -247,11 +247,12 @@ data "http" "kubeconfig" {
 
   # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
   # this will be retried 3 times max
+  /*
   retry {
     attempts = 2
     max_delay_ms = 2000
     min_delay_ms = 1000
-  }
+  }*/
   
   /*
   lifecycle {
