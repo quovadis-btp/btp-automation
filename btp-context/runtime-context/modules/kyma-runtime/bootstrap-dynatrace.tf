@@ -10,13 +10,15 @@ locals {
 
   tokens = "dynakube" // the tokens name in dynakube.yaml must match the secret name
   name = "dynakube"
+
+  version_tag = "v1.3.0" //"v1.2.2"
   
 }
 
 data "http" "dynakube" {
   depends_on = [btp_subaccount_environment_instance.kyma]
 
-  url = "https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/v1.2.2/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml"
+  url = "https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/${local.version_tag}/assets/samples/dynakube/v1beta2/cloudNativeFullStack.yaml"
 
   lifecycle {
     postcondition {
@@ -52,6 +54,7 @@ output "dynakube" {
 # TODO: wait for the dynakube secret created and make dynatrace bootstrap optional
 #
 resource "terraform_data" "bootstrap-dynatrace" {
+  //count            = var.BTP_DYNATRACE_DRY_RUN ? 0 : 1
   depends_on = [terraform_data.bootstrap-kymaruntime-bot]
 
   triggers_replace = [
@@ -98,8 +101,8 @@ resource "terraform_data" "bootstrap-dynatrace" {
     then
       ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
       ./kubectl label namespace $NAMESPACE istio-injection=disabled --overwrite --kubeconfig $KUBECONFIG
-      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes.yaml --kubeconfig $KUBECONFIG
-      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.2.2/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
+      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/${local.version_tag}/kubernetes.yaml --kubeconfig $KUBECONFIG
+      echo | ./kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/${local.version_tag}/kubernetes-csi.yaml --kubeconfig $KUBECONFIG
 
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd dynakubes.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
       echo | ./kubectl wait --for condition=established -n $NAMESPACE crd edgeconnects.dynatrace.com --timeout=300s --kubeconfig $KUBECONFIG
