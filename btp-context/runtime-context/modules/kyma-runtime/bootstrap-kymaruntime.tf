@@ -258,13 +258,13 @@ data "http" "kubeconfig" {
       error_message = "Status code invalid"
     }
   }
-
+/*
   lifecycle {
     postcondition {
       condition     = contains([200, 201, 204], self.status_code)
       error_message = self.response_body
     }
-  }  
+  }  */
 }
 
 
