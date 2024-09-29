@@ -234,6 +234,8 @@ locals {
 # https://developer.hashicorp.com/terraform/language/expressions/custom-conditions#preconditions-and-postconditions
 #
 data "http" "kubeconfig" {
+  provider = http-full
+  
   depends_on = [btp_subaccount_environment_instance.kyma]
   
   url = local.labels != null ? jsondecode(local.labels)["KubeconfigURL"] : "https://sap.com"
