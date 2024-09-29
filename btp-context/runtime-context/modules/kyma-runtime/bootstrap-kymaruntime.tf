@@ -244,31 +244,23 @@ data "http" "kubeconfig" {
   request_headers = {
     Content-Type = "application/json"
   }
-
-  # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
-  # this will be retried 3 times max
-  /*
-  retry {
-    attempts = 2
-    max_delay_ms = 2000
-    min_delay_ms = 1000
-  }*/
   
+ /* 
   lifecycle {
     postcondition {
       condition     = can(regex("kind: Config",self.response_body))
       error_message = "Invalid content of downloaded kubeconfig"
     }
   }
+*/
 
-/*
   lifecycle {
     postcondition {
       condition     = contains([200, 201, 204], self.status_code)
       error_message = self.response_body
     }
   } 
-  */
+
 }
 
 
@@ -281,15 +273,22 @@ resource "random_uuid" "kubeconfig" {
   }
 }
 
-resource "null_resource" "kubeconfig" {
+resource "terraform_data" "kubeconfig" {
   # On success, this will attempt to execute the true command in the
   # shell environment running terraform.
   # On failure, this will attempt to execute the false command in the
   # shell environment running terraform.
+
+  input = data.http.kubeconfig.response_body
+
   provisioner "local-exec" {
     command = contains([201, 204], data.http.kubeconfig.status_code)
 
   }
+}
+
+output "get_kubeconfig" {
+  value = terraform_data.kubeconfig.output
 }
 
 /*
