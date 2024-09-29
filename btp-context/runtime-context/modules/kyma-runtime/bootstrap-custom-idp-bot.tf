@@ -463,6 +463,7 @@ output "headless-token-bot-cert" {
 #
 locals {  
 
+/*
     kubeconfig_bot_exec = jsonencode({
 
     "apiVersion": "client.authentication.k8s.io/v1",
@@ -473,9 +474,9 @@ locals {
         "set -e -o pipefail\n\nKEY=\"${local.bot-cert.key}\"\nCERT=\"${local.bot-cert.certificate}\"\nIDTOKEN=$(curl -X POST  \"${local.bot.url}/oauth2/token\" \\\n--key <(echo $KEY) \\\n--cert <(echo $CERT) \\\n-H 'Content-   Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"${local.bot.clientid}\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1]\n| @base64d | fromjson')\" >&2\n\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson |\n.exp')\n\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \n\ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
     ]
 
-    })         
+    })
+*/             
 
-/*
     kubeconfig_bot_exec = jsonencode({
         "apiVersion": "client.authentication.k8s.io/v1",
         "interactiveMode": "Never",
@@ -484,8 +485,7 @@ locals {
             "-c",
             "set -e -o pipefail\n\nIDTOKEN=$(curl -X POST  \"${local.bot.url}/oauth2/token\" \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"${local.bot.clientid}\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
         ]
-    })   
-*/          
+    })            
 
     kubeconfig_prod_exec = jsonencode({
         "apiVersion": "client.authentication.k8s.io/v1",
