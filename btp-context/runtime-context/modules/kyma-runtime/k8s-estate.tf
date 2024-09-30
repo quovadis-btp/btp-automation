@@ -222,6 +222,8 @@ output "Ingress_LoadBalancer" {
 }
 
 #---------------
+
+/*
 resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
   depends_on = [
         terraform_data.provider_context
@@ -267,7 +269,9 @@ resource "kubernetes_secret_v1" "quovadis-btp" {
       "kubernetes.io/service-account.name" = "default"
     }
     name = "quovadis-btp-token-sa"
+    namespace = "quovadis-btp"
   }
   type                           = "kubernetes.io/service-account-token"
   wait_for_service_account_token = true  
 }
+*/
