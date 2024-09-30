@@ -223,7 +223,6 @@ output "Ingress_LoadBalancer" {
 
 #---------------
 
-/*
 resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
   depends_on = [
         terraform_data.provider_context
@@ -243,6 +242,9 @@ resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
     name      = "default"
     namespace = "quovadis-btp"
   }
+  lifecycle {
+    ignore_changes = all
+  }  
 }
 
 resource "kubernetes_default_service_account_v1" "quovadis-btp" {
@@ -257,6 +259,10 @@ resource "kubernetes_default_service_account_v1" "quovadis-btp" {
   secret {
     name = "${kubernetes_secret_v1.quovadis-btp.metadata.0.name}"
   }
+  automount_service_account_token = false  
+  lifecycle {
+    ignore_changes = all
+  }  
 }
 
 resource "kubernetes_secret_v1" "quovadis-btp" {
@@ -273,5 +279,8 @@ resource "kubernetes_secret_v1" "quovadis-btp" {
   }
   type                           = "kubernetes.io/service-account-token"
   wait_for_service_account_token = true  
+
+  lifecycle {
+    ignore_changes = all
+  }  
 }
-*/
