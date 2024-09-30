@@ -194,7 +194,7 @@ data "kubernetes_service_v1" "LoadBalancer" {
   depends_on = [
         terraform_data.provider_context
   ]  
-  
+
   metadata {
     name = "istio-ingressgateway"
     namespace = "istio-system"
@@ -203,6 +203,17 @@ data "kubernetes_service_v1" "LoadBalancer" {
 
 // kubectl -n istio-system get svc istio-ingressgateway  --kubeconfig kubeconfig_prod_exec.yaml -o json | jq '.status'
 //
+/*
+{
+  "loadBalancer": {
+    "ingress": [
+      {
+        "hostname": "a6f2a621efb344d4ebf6f010952246de-1219680835.us-east-1.elb.amazonaws.com"
+      }
+    ]
+  }
+}
+*/
 output "LoadBalancer" {
   value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress.0.hostname]
 }
