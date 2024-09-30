@@ -190,7 +190,7 @@ output "ServiceInstance" {
 
 // kubectl -n istio-system get svc istio-ingressgateway
 //
-data "kubernetes_service_v1" "LoadBalancer" {
+data "kubernetes_service_v1" "Ingress_LoadBalancer" {
   depends_on = [
         terraform_data.provider_context
   ]  
@@ -214,6 +214,9 @@ data "kubernetes_service_v1" "LoadBalancer" {
   }
 }
 */
-output "LoadBalancer" {
-  value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress.0.hostname]
+output "Ingress_LoadBalancer" {
+  //value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress.0.hostname]
+  //value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress.0.ip]
+  value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress]
+
 }
