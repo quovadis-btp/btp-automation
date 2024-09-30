@@ -220,3 +220,54 @@ output "Ingress_LoadBalancer" {
   value = data.kubernetes_service_v1.Ingress_LoadBalancer.status.0.load_balancer.0.ingress
 
 }
+
+#---------------
+resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
+  depends_on = [
+        terraform_data.provider_context
+  ]  
+
+  metadata {
+    name = "quovadis-btp"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "default"
+    namespace = "quovadis-btp"
+  }
+}
+
+resource "kubernetes_default_service_account_v1" "quovadis-btp" {
+  depends_on = [
+        terraform_data.provider_context,
+        kubernetes_secret_v1.quovadis-btp
+  ]  
+
+  metadata {
+    namespace = "quovadis-btp"
+  }
+  secret {
+    name = "${kubernetes_secret_v1.quovadis-btp.metadata.0.name}"
+  }
+}
+
+resource "kubernetes_secret_v1" "quovadis-btp" {
+  depends_on = [
+        terraform_data.provider_context
+  ]  
+
+  metadata {
+    annotations = {
+      "kubernetes.io/service-account.name" = "default"
+    }
+    name = "quovadis-btp-token-sa"
+  }
+  type                           = "kubernetes.io/service-account-token"
+  wait_for_service_account_token = true  
+}
