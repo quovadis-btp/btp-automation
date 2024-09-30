@@ -217,6 +217,6 @@ data "kubernetes_service_v1" "Ingress_LoadBalancer" {
 output "Ingress_LoadBalancer" {
   //value = [data.kubernetes_service_v1.Ingress_LoadBalancer.status.0.load_balancer.0.ingress.0.hostname]
   //value = [data.kubernetes_service_v1.Ingress_LoadBalancer.status.0.load_balancer.0.ingress.0.ip]
-  value = [data.kubernetes_service_v1.Ingress_LoadBalancer.status.0.load_balancer.0.ingress]
+  value = data.kubernetes_service_v1.Ingress_LoadBalancer.status.0.load_balancer.0.ingress
 
 }
