@@ -187,3 +187,22 @@ output "ServiceInstance" {
  #value = "kubectl get serviceinstances -A --kubeconfig kubeconfig_bot_exec.yaml"
 }
 */
+
+// kubectl -n istio-system get svc istio-ingressgateway
+//
+data "kubernetes_service_v1" "LoadBalancer" {
+  depends_on = [
+        terraform_data.provider_context
+  ]  
+  
+  metadata {
+    name = "istio-ingressgateway"
+    namespace = "istio-system"
+  }
+}
+
+// kubectl -n istio-system get svc istio-ingressgateway  --kubeconfig kubeconfig_prod_exec.yaml -o json | jq '.status'
+//
+output "LoadBalancer" {
+  value = [data.kubernetes_service_v1.LoadBalancer.status.0.load_balancer.0.ingress.0.hostname]
+}
