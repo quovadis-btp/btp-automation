@@ -253,6 +253,7 @@ data "http" "kubeconfig" {
 
 }
 
+# yaml formatted default (oid-based) kyma kubeconfig
 locals {
   kyma_kubeconfig = data.http.kubeconfig.response_body
 }
