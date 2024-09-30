@@ -463,16 +463,56 @@ output "headless-token-bot-cert" {
 #
 locals {  
 
+   kubeconfig_bot_cert_template = jsonencode({
+
+    "apiVersion": "v1",
+    "kind": "Config",
+    "current-context": "garden-kyma--f20268f-external",
+    "clusters": [
+        {
+            "name": "garden-kyma--f20268f-external",
+            "cluster": {
+                "certificate-authority-data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUQ1akNDQWs2Z0F3SUJBZ0lRZDZxU0dNVVU2UFEyZmNFcTVtM1FzakFOQmdrcWhraUc5dzBCQVFzRkFEQU4KTVFzd0NRWURWUVFERXdKallUQWVGdzB5TkRBNU1qa3lNREl4TURCYUZ3MHpOREE1TWpreU1ESXhNREJhTUEweApDekFKQmdOVkJBTVRBbU5oTUlJQm9qQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FZOEFNSUlCaWdLQ0FZRUExa1JxCnEyeGNUbForV2EyK2xPaDN5VjhqT1VFNDFpTDZ6WmtZbE1ybFlPSmoyeExONERZSVFnUjNDdDRxSHVGamwrVFIKUm5XRlBiWGtHOE9GT2FQSksrSTFrQUowbU1QRjdSRFU2Tm1qRkp6UEx6bDJQUVd0Nnpza3ZDYWpaQnVzVWRQRQozZnBiZS9xUzlNR1drT3ByR0NueDNJVE94cHpIQTY4a0Q3SHdhNitKMk80eTRXWVlHSnFTSlRNaE43cXdySGo0CnNNTjVPb2JRZEpyeEhCSGh2NWZZbnJ4MVN6RTdaaU9mU0hhSEpjZFZra05pYmNKV3RVYmF6emhkL3lOcVRNaWcKWVV2aE9NOTBxZjAvK3lKanFGbGt0UXVWV0FoczM2UnIwTmcvTGV3UDEva0FLcWZFV1lJdWdRbktQakRGNytTYQpuYWNDS0twa2JJUXVSeHN0NTNtMExkTUhWVGtYUTd4a1dYVFJ1cVJLb2tCemhqZVA3SHNmL1VDQTlrNHRVL2dxCjdxUFR5ZzZXaE5KNkh3bnFIdUErQm11dXdWRG1seHo3UkhLQVpSQ3FqdUJXRkp5TnJxNzRIY3Roajg2VU54NHMKdUtZWXJERXNJRGc0SjBmTHlRb2YxZm5wL0xUc3Y2NVNPMnRYZ2VqNm5XK3lZREdIL2lPb2oyaFhoZUU5QWdNQgpBQUdqUWpCQU1BNEdBMVVkRHdFQi93UUVBd0lCcGpBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXCkJCU0g1N0JKZW94cktzN1dFOThyVmVaVEU4VysvREFOQmdrcWhraUc5dzBCQVFzRkFBT0NBWUVBdXYzMDBRcDcKb0U2aUhnc0xLN3A1SGtGQmk4YVVSWkZrZmorVE1pd1AyL045dG5CWkkzMUtTcUNwVXI4TjB3cFYyMENqTE8vQwpEWmxIM0wyYjZDRWlTVDI3ajdvV2dXODR2RUhIbVVkK0czdlV2aE55S2NES1BPdGJ4TU9UalhSMXVQWFB3VXpLCjBXaTM1R1NyYnBaczFrZTVFZlArUUdFRW02RjBqaTJISFI3RmkvWlFtQkhXRzVoditUM0xvcFUwZ2h2cG51TTIKaloxWi9IRHdZRnVpQU9pbEZEMmdHeEkyeTBhMFJMTncvbXp6MGxMeWM2eU5DTHVMaXg1ZkxGcEVOOXlLUEtuagpkTitqenRDQWZpTU1FbmJVemJSZTMvNmx1MzhPQXJsV1FwWElnREk1NDVLZkpvM2lRQWRMNWcwMXAvSEVvMWo5CjlnTXZ2VmQzZWd1KzdEQmFxZHFZOXNicXlKM2UxK3cwd0wrci9JRkZJY3VwMzFLRTBLbWRZUGZGZ3J0N09FMjcKS1NRc0tweTNLMmFHSFlkdGdQWkZrbWdHeWY5RTY4d3pQUWNFQTFuN1dJOW1LNU1HeTMrSlpIQUYwKzNCUEZTYgpCUC9Ecy9tUjJPcnd4NjJXTmwvZ1RwNUFpY1MzNVFBUktQY3lrMktuTU8xaEovM1VUUkwwQmp3bgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
+                "server": "https://api.f20268f.kyma.ondemand.com"
+            }
+        }
+    ],
+    "contexts": [
+        {
+            "name": "garden-kyma--f20268f-external",
+            "context": {
+                "cluster": "garden-kyma--f20268f-external",
+                "user": "garden-kyma--f20268f-external"
+            }
+        }
+    ],
+    "users": [
+        {
+            "name": "garden-kyma--f20268f-external",
+            "user": {
+                "exec": {
+                    "apiVersion": "client.authentication.k8s.io/v1",
+                    "interactiveMode": "Never",
+                    "command": "bash",
+                    "args": [
+                        "-c",
+                        "set -e -o pipefail\n\nISSUER=\"{clientid: \"${local.bot-cert.clientid}\" , key: \"${local.bot-cert.key}\",  certificate: \"${local.bot-cert.certificate}\", url: \"${local.bot-cert.url}/oauth2/token\" }\"\necho ::debug:: ISSUER content: \"$(echo \"$ISSUER\" )\" >&2\n\nKEY=$(jq  -r '. | .key' <<< $ISSUER )\necho ::debug:: KEY content: \"$(echo \"$KEY\" )\" >&2\nCERT=$(jq  -r '. | .certificate' <<< $ISSUER )\necho ::debug:: CERT content: \"$(echo \"$CERT\" )\" >&2\n\nIDTOKEN=$(curl -X POST  $(jq -r '. | .url'  <<< $ISSUER  ) \\\n--key <(echo \"$KEY\") \\\n--cert <(echo \"$CERT\") \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='$(jq -r '. | .clientid' <<< $ISSUER ) \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
+                    ]
+                }
+            }
+        }
+    ]
+    }) 
 
     kubeconfig_bot_cert = jsonencode({
 
-        "apiVersion": "client.authentication.k8s.io/v1",
-        "interactiveMode": "Never",
-        "command": "bash",
-        "args": [
-            "-c",
-            "set -e -o pipefail\n\nKEY=\"${local.bot-cert.key}\"\nCERT=\"${local.bot-cert.certificate}\"\nIDTOKEN=$(curl -X POST  \"${local.bot.url}/oauth2/token\" \\\n--key <(echo $KEY) \\\n--cert <(echo $CERT) \\\n-H 'Content-   Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='\"${local.bot.clientid}\" \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
-        ]
+              "apiVersion": "client.authentication.k8s.io/v1",
+              "interactiveMode": "Never",
+              "command": "bash",
+              "args": [
+                  "-c",
+                  "set -e -o pipefail\n\nISSUER=\"{clientid: \"${local.bot-cert.clientid}\" , key: \"${local.bot-cert.key}\",  certificate: \"${local.bot-cert.certificate}\", url: \"${local.bot-cert.url}/oauth2/token\" }\"\necho ::debug:: ISSUER content: \"$(echo \"$ISSUER\" )\" >&2\n\nKEY=$(jq  -r '. | .key' <<< $ISSUER )\necho ::debug:: KEY content: \"$(echo \"$KEY\" )\" >&2\nCERT=$(jq  -r '. | .certificate' <<< $ISSUER )\necho ::debug:: CERT content: \"$(echo \"$CERT\" )\" >&2\n\nIDTOKEN=$(curl -X POST  $(jq -r '. | .url'  <<< $ISSUER  ) \\\n--key <(echo \"$KEY\") \\\n--cert <(echo \"$CERT\") \\\n-H 'Content-Type: application/x-www-form-urlencoded' \\\n-d 'grant_type=password' \\\n-d 'username='\"${var.BTP_BOT_USER}\" \\\n-d 'password='\"${var.BTP_BOT_PASSWORD}\" \\\n-d 'client_id='$(jq -r '. | .clientid' <<< $ISSUER ) \\\n-d 'scope=groups, email' \\\n| jq -r '. | .id_token ' ) \n\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\n\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\n# EXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)          \ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\"\n  }\n}\nEOF\n"
+              ]
 
     })
              
