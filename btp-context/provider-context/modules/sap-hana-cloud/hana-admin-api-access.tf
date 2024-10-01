@@ -253,8 +253,8 @@ output "token-cert-admin_api_access" {
 
 data "http" "get_instanceMappings" {
 
-  count          = local.admin_api_access == {} ? 0 : 1
-  depends_on     = [ data.http.token-cert-admin_api_access ]
+  count      = local.admin_api_access == {} ? 0 : 1
+  depends_on = [ data.http.token-cert-admin_api_access ]
 
   provider = http-full
 
@@ -275,7 +275,9 @@ data "http" "get_instanceMappings" {
 }
 
 output "get_instanceMappings" {
-  value = one(data.http.get_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.get_instanceMappings[*].response_body)) : {}
+  depends_on = [ data.http.get_instanceMappings ]
+
+  value      = one(data.http.get_instanceMappings[*].response_body) != null ? jsondecode(one(data.http.get_instanceMappings[*].response_body)) : {}
 }
 
 
