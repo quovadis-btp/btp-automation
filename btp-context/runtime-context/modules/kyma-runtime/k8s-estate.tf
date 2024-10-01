@@ -222,6 +222,7 @@ output "Ingress_LoadBalancer" {
 }
 
 #---------------
+/* this should be put in a separate terraform configuration
 
 resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
   depends_on = [
@@ -284,3 +285,4 @@ resource "kubernetes_secret_v1" "quovadis-btp" {
     ignore_changes = all
   }  
 }
+*/
