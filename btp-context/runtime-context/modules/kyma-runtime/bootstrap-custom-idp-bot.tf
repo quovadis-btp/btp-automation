@@ -27,7 +27,7 @@ resource "btp_subaccount_service_instance" "quovadis-ias-bot" {
                 "refresh-parallel": 3,
                 "access-token-format": "default"
             },
-            "public-client": true,
+            "public-client": false,
             "redirect-uris": [
                 "https://dashboard.kyma.cloud.sap",
                 "https://dashboard.dev.kyma.cloud.sap",
