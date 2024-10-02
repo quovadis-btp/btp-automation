@@ -186,6 +186,25 @@ I've chosen the kubernetes secrets as a terraform backend.  I did it with a mana
 kubectl get secret tfstate-default-state-89982f73trial  -n tf-runtime-context --kubeconfig ~/.kube/kubeconfig--c-***-default.yaml -o jsonpath="{.data.tfstate}" | base64 -d | gzip -d > tfstate.json
 ```
 
+<h3 id="terraform-workspaces">2.4. Working with terraform workspaces.</h3>
+
+  * List and select a working workspace before running terraform init and apply commands
+    
+```
+terraform workspace list
+  provider-context-1afe5b3btrial
+  provider-context-41bb3a1e-2c13-454e-976f-d9734acad3c4
+  provider-context-89ebab58trial
+  provider-context-pxxxxxxx
+* provider-context-quovadis-anywhere
+  provider-context-rthxxxxx
+```
+  * run terraform apply against a specific set of input values
+
+```
+terraform apply -var-file=kyma-adoption-live/btp-live.tfvars -input=false -auto-approve
+```
+
 #### References
 
   * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
