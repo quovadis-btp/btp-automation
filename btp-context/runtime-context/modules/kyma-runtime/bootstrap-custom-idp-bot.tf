@@ -21,7 +21,7 @@ resource "btp_subaccount_service_instance" "quovadis-ias-bot" {
                 "refresh_token"
             ],
             "token-policy": {
-                "token-validity": 7200,
+                "token-validity": 3600,
                 "refresh-validity": 15552000,
                 "refresh-usage-after-renewal": "off",
                 "refresh-parallel": 3,
