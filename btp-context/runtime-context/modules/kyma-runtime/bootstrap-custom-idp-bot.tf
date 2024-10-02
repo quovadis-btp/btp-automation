@@ -17,8 +17,6 @@ resource "btp_subaccount_service_instance" "quovadis-ias-bot" {
         "user-access": "public",
         "oauth2-configuration": {
             "grant-types": [
-                //"authorization_code",
-                //"authorization_code_pkce_s256",
                 "password",
                 "refresh_token"
             ],
