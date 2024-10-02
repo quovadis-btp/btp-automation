@@ -17,13 +17,13 @@ resource "btp_subaccount_service_instance" "quovadis-ias-bot" {
         "user-access": "public",
         "oauth2-configuration": {
             "grant-types": [
-                "authorization_code",
-                "authorization_code_pkce_s256",
+                //"authorization_code",
+                //"authorization_code_pkce_s256",
                 "password",
                 "refresh_token"
             ],
             "token-policy": {
-                "token-validity": 3600,
+                "token-validity": 7200,
                 "refresh-validity": 15552000,
                 "refresh-usage-after-renewal": "off",
                 "refresh-parallel": 3,
