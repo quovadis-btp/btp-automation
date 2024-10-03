@@ -32,9 +32,11 @@ resource "null_resource" "cache_kyma_region" {
     region = var.BTP_KYMA_REGION != "" ? var.BTP_KYMA_REGION  : jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.region.enum[0]
   }
 
+/*
   lifecycle {
     ignore_changes = all
   }
+  */
 }
 
 resource "null_resource" "cache_kyma_machine_type" {
@@ -44,9 +46,10 @@ resource "null_resource" "cache_kyma_machine_type" {
     machineType = var.BTP_KYMA_MACHINE_TYPE != "" ? var.BTP_KYMA_MACHINE_TYPE  : jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.machineType.enum[1]
   }
 
+/*
   lifecycle {
     ignore_changes = all
-  }
+  }*/
 }
 
 locals {
