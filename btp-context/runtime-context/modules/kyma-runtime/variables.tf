@@ -75,6 +75,7 @@ variable "BTP_KYMA_NAME" {
 variable "BTP_KYMA_REGION" {
   type        = string
   description = "Kyma region"
+  default     = ""
 }
 
 variable "BTP_KYMA_MACHINE_TYPE" {
