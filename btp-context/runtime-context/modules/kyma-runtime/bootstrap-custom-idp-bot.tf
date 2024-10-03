@@ -327,6 +327,7 @@ locals {
         }
   })*/
 
+  # user name: actions-oidc:repo:quovadis-btp/btp-boosters:ref:refs/heads/main
   OpenIDConnect_GITHUB = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
