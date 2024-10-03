@@ -198,21 +198,7 @@ resource "local_sensitive_file" "bot-secret" {
 */
 
 
-/*
-.PHONY: bootstrap-kymaruntime-bot
-bootstrap-kymaruntime-bot: ## bootstrap kyma openidconnect resource
-  btp get services/binding --name ias-bot-binding | jq '.credentials | { clientid,  url }' > bot.json
-  jq 'input as  $$idp  | .metadata |= . + {name: $$idp.clientid} | .spec |= . + { clientID: $$idp.clientid , issuerURL: $$idp.url, usernameClaim: "sub", usernamePrefix: "bot-identity:" , groupsClaim: "", groupsPrefix: "" }' kyma-bot-template.json bot.json
-  kubectl create ns $(NAMESPACE) --kubeconfig $(KUBECONFIG) --dry-run=client -o yaml | kubectl apply --kubeconfig $(KUBECONFIG) -f -
-  kubectl label namespace $(NAMESPACE) istio-injection=enabled --kubeconfig $(KUBECONFIG)
-  jq 'input as  $$idp  | .metadata |= . + {name: $$idp.clientid} | .spec |= . + { clientID: $$idp.clientid , issuerURL: $$idp.url, usernameClaim: "email", usernamePrefix: "bot-identity:" , groupsClaim: "", groupsPrefix: "" }' kyma-bot-template.json bot.json \
-  | kubectl apply --kubeconfig $(KUBECONFIG) -n $(NAMESPACE) -f - 
 
-
-    echo $OpenIDConnect | kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
-    jq -r '.' <<< "$OpenIDConnect"  > bootstrap-kymaruntime-bot.json
-
-*/
 
 /* debug only
 locals {
@@ -306,38 +292,20 @@ locals {
   # https://github.com/pPrecel/gardener-oidc-extension-poc/blob/main/.github/workflows/setup-serverless-on-gardener.yaml
   # https://github.com/kyma-project/cli/issues/2093
   #
-  /*
-  OpenIDConnect_GITHUB = jsonencode({
-
-        "apiVersion": "authentication.gardener.cloud/v1alpha1",
-        "kind": "OpenIDConnect",
-        "metadata": {
-            "name": "github-oidc"
-        },
-        "spec": {
-            "issuerURL": "https://token.actions.githubusercontent.com",
-            "clientID": "${local.cluster_id}",
-            "usernameClaim": "sub",
-            "usernamePrefix": "actions-oidc:",
-            "requiredClaims": {
-                "repository": "quovadis-btp/btp-boosters",
-                "workflow": "quovadis-kyma"
-                "ref": "refs/heads/main"
-            }
-        }
-  })*/
 
   # user name: actions-oidc:repo:quovadis-btp/btp-boosters:ref:refs/heads/main
+  # the clientID (Audience) could be provided as input values, same goes for repo, workflow and ref values
+  #
   OpenIDConnect_GITHUB = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
         "kind": "OpenIDConnect",
         "metadata": {
-            "name": "github-oidc"
+            "name": "gh-${local.cluster_id}"
         },
         "spec": {
             "issuerURL": "https://token.actions.githubusercontent.com",
-            "clientID": "quovadis-kyma",
+            "clientID": "gh-${local.cluster_id}",
             "usernameClaim": "sub",
             "usernamePrefix": "actions-oidc:",
             "requiredClaims": {
@@ -347,7 +315,6 @@ locals {
             }
         }
   })
-
 
   OpenIDConnect = jsonencode({
 
