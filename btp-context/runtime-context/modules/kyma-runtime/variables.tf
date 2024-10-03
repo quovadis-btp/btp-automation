@@ -193,6 +193,7 @@ variable "apiUrl" {
 variable "GITHUB_ACTIONS_REPOSITORY" {
   type        = string
   description = "myOrg/myRepo"
+  default     = "quovadis-btp/btp-boosters"
 }
 
 variable "GITHUB_ACTIONS_WORKFLOW" {
