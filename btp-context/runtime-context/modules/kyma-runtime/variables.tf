@@ -190,3 +190,19 @@ variable "apiUrl" {
   description = "dynatrace apiUrl"
 }
 
+variable "GITHUB_ACTIONS_REPOSITORY" {
+  type        = string
+  description = "myOrg/myRepo"
+}
+
+variable "GITHUB_ACTIONS_WORKFLOW" {
+  type        = string
+  description = "GITHUB_ACTIONS_WORKFLOW"
+  default     = "quovadis-kyma"
+}
+
+variable "GITHUB_ACTIONS_REF" {
+  type        = string
+  description = "GITHUB_ACTIONS_REF"
+  default     = "refs/heads/main"
+}
