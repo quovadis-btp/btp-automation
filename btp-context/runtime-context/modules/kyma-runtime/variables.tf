@@ -190,6 +190,12 @@ variable "apiUrl" {
   description = "dynatrace apiUrl"
 }
 
+variable "GITHUB_ACTIONS_TOKEN_ISSUER" {
+  type        = string
+  description = "GITHUB_ACTIONS_TOKEN_ISSUER"
+  default     = "https://token.actions.githubusercontent.com"
+}
+
 variable "GITHUB_ACTIONS_REPOSITORY" {
   type        = string
   description = "myOrg/myRepo"

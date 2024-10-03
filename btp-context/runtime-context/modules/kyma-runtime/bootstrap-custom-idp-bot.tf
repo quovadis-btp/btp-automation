@@ -276,8 +276,6 @@ locals {
         }
   })
 
-
-
   # https://token.actions.githubusercontent.com/.well-known/openid-configuration
   # https://token.actions.githubusercontent.com/.well-known/jwks
   # https://mahendranp.medium.com/configure-github-openid-connect-oidc-provider-in-aws-b7af1bca97dd
@@ -306,7 +304,7 @@ locals {
             "name": "gh-${local.cluster_id}"
         },
         "spec": {
-            "issuerURL": "https://token.actions.githubusercontent.com",
+            "issuerURL": "${var.GITHUB_ACTIONS_TOKEN_ISSUER}",
             "clientID": "gh-${local.cluster_id}",
             "usernameClaim": "sub",
             "usernamePrefix": "actions-oidc:",
@@ -334,7 +332,6 @@ locals {
             "groupsPrefix": ""
         }
   })
-
 }
 
 
