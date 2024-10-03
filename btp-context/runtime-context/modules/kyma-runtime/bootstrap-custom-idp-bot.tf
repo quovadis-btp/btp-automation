@@ -290,6 +290,64 @@ locals {
         }
   })
 
+  # https://token.actions.githubusercontent.com/.well-known/openid-configuration
+  # https://token.actions.githubusercontent.com/.well-known/jwks
+  # https://mahendranp.medium.com/configure-github-openid-connect-oidc-provider-in-aws-b7af1bca97dd
+  # https://github.com/google-github-actions/auth
+  #
+  # https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#overview-of-openid-connect
+  # 
+  # https://github.com/gardener/oidc-webhook-authenticator/blob/master/README.md
+  # https://github.com/gardener/gardener-extension-shoot-oidc-service/blob/master/docs/usage/openidconnects.md
+  # https://community.sap.com/t5/open-source-blogs/using-github-actions-openid-connect-in-kubernetes/ba-p/13542513
+  #
+  # user name format: actions-oidc:repo:myOrg/myRepo:ref:refs/heads/main
+  #
+  # https://github.com/pPrecel/gardener-oidc-extension-poc/blob/main/.github/workflows/setup-serverless-on-gardener.yaml
+  # https://github.com/kyma-project/cli/issues/2093
+  #
+  /*
+  OpenIDConnect_GITHUB = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "github-oidc"
+        },
+        "spec": {
+            "issuerURL": "https://token.actions.githubusercontent.com",
+            "clientID": "${local.cluster_id}",
+            "usernameClaim": "sub",
+            "usernamePrefix": "actions-oidc:",
+            "requiredClaims": {
+                "repository": "quovadis-btp/btp-boosters",
+                "workflow": "quovadis-kyma"
+                "ref": "refs/heads/main"
+            }
+        }
+  })*/
+
+  OpenIDConnect_GITHUB = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "github-oidc"
+        },
+        "spec": {
+            "issuerURL": "https://token.actions.githubusercontent.com",
+            "clientID": "quovadis-kyma",
+            "usernameClaim": "sub",
+            "usernamePrefix": "actions-oidc:",
+            "requiredClaims": {
+                "repository": "quovadis-btp/btp-boosters",
+                "workflow": "quovadis-kyma"
+                "ref": "refs/heads/main"
+            }
+        }
+  })
+
+
   OpenIDConnect = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
@@ -334,7 +392,8 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
   input = [ 
       nonsensitive(local.OpenIDConnect), 
       nonsensitive(local.OpenIDConnect_PROD), 
-      nonsensitive(local.OpenIDConnect_STAGE) 
+      nonsensitive(local.OpenIDConnect_STAGE), 
+      nonsensitive(local.OpenIDConnect_GITHUB) 
       ]
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
@@ -374,6 +433,12 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       echo $OpenIDConnect
       echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+      OpenIDConnect='${self.input[3]}'
+      echo $OpenIDConnect
+      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
     else
       echo $crd
     fi
