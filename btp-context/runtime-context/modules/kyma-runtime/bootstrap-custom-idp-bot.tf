@@ -316,6 +316,45 @@ locals {
         }
   })
 
+  # https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/kubernetes-configuration#configure-kubernetes
+  # https://developer.hashicorp.com/terraform/tutorials/cloud/dynamic-credentials
+  # https://github.com/hashicorp-education/learn-terraform-dynamic-credentials/tree/main?tab=readme-ov-file
+  #
+  # "User" value is formatted as: 
+/*
+  organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>.
+
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-quovadis-anywhere:run_phase:plan
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-quovadis-anywhere:run_phase:apply
+
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-41bb3a1e-2c13-454e-976f-d9734acad3c4:run_phase:plan
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-41bb3a1e-2c13-454e-976f-d9734acad3c4:run_phase:apply
+
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-89ebab58trial:run_phase:plan
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-89ebab58trial:run_phase:apply
+
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-1afe5b3btrial:run_phase:plan
+  organization:quovadis:project:terraform-stories:workspace:runtime-context-1afe5b3btrial:run_phase:apply
+*/  
+  #
+  OpenIDConnect_HCP = jsonencode({
+
+        "apiVersion": "authentication.gardener.cloud/v1alpha1",
+        "kind": "OpenIDConnect",
+        "metadata": {
+            "name": "terraform-cloud"
+        },
+        "spec": {
+            "issuerURL": "https://app.terraform.io",
+            "clientID": "terraform-cloud",
+            "usernameClaim": "sub",
+            "usernamePrefix": "-",
+            "groupsClaim": "terraform_organization_name",
+            "groupsPrefix": ""
+        }
+  })
+
+
   OpenIDConnect = jsonencode({
 
         "apiVersion": "authentication.gardener.cloud/v1alpha1",
@@ -360,7 +399,8 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       nonsensitive(local.OpenIDConnect), 
       nonsensitive(local.OpenIDConnect_PROD), 
       nonsensitive(local.OpenIDConnect_STAGE), 
-      nonsensitive(local.OpenIDConnect_GITHUB) 
+      nonsensitive(local.OpenIDConnect_GITHUB), 
+      nonsensitive(local.OpenIDConnect_HCP) 
       ]
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
@@ -402,6 +442,11 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
 
       OpenIDConnect='${self.input[3]}'
+      echo $OpenIDConnect
+      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+      OpenIDConnect='${self.input[4]}'
       echo $OpenIDConnect
       echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
