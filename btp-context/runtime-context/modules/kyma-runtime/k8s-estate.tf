@@ -301,7 +301,6 @@ So, you must bind RBAC roles to the OIDC identity in Kubernetes.
 You can use both "User" and "Group" subjects in your role bindings. 
 */
 
-/*
 resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
   depends_on = [ 
       terraform_data.bootstrap-tcf-oidc
@@ -325,4 +324,4 @@ resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
   lifecycle {
     ignore_changes = all
   }    
-}*/
+}
