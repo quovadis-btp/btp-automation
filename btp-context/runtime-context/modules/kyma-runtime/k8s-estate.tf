@@ -323,8 +323,8 @@ resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
     name      = var.provider_context_organization //"${local.organization_name}"
     namespace = ""
   }
-
+/*
   lifecycle {
     ignore_changes = all
-  }    
+  } */   
 }
