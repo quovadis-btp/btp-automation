@@ -16,7 +16,8 @@ ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
 
 data "kubernetes_config_map_v1" "sap-btp-operator-config" {
   depends_on = [
-        terraform_data.bootstrap-tcf-oidc
+        terraform_data.provider_context
+        
   ]  
 
   metadata {
@@ -40,7 +41,8 @@ output "sap-btp-operator-config" {
 
 data "kubernetes_config_map_v1" "shoot_info" {
   depends_on = [
-        terraform_data.kubectl_getnodes
+        //terraform_data.kubectl_getnodes
+        terraform_data.provider_context
   ]  
 
   metadata {
@@ -57,7 +59,8 @@ output "shoot_info" {
 
 data "kubernetes_nodes" "k8s_nodes" {
   depends_on = [
-        terraform_data.kubectl_getnodes
+        //terraform_data.kubectl_getnodes
+        terraform_data.provider_context
   ]  
 }
 
