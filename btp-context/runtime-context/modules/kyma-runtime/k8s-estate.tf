@@ -127,7 +127,8 @@ output "OpenIDConnect" {
 #
 data "kubernetes_resource" "KymaModules" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.provider_context,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   api_version    = "operator.kyma-project.io/v1beta2"
@@ -146,7 +147,8 @@ locals {
 
 data "jq_query" "KymaModules" {
   depends_on = [
-        data.kubernetes_resource.KymaModules
+        data.kubernetes_resource.KymaModules,
+        terraform_data.bootstrap-kymaruntime-bot
   ] 
   data =  jsonencode(local.KymaModules)
   query = "[ .[] | { channel, name, version, state, api: .resource.apiVersion, fqdn } ]"
@@ -174,7 +176,8 @@ output "KymaModules_raw" {
 /*
 data "kubernetes_resources" "ServiceInstance" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.provider_context,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   api_version    = "services.cloud.sap.com/v1"
@@ -192,7 +195,8 @@ output "ServiceInstance" {
 //
 data "kubernetes_service_v1" "Ingress_LoadBalancer" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.provider_context,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   metadata {
@@ -228,7 +232,8 @@ output "Ingress_LoadBalancer" {
 
 resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.provider_context,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   metadata {
@@ -253,7 +258,8 @@ resource "kubernetes_cluster_role_binding_v1" "quovadis-btp" {
 resource "kubernetes_default_service_account_v1" "quovadis-btp" {
   depends_on = [
         terraform_data.provider_context,
-        kubernetes_secret_v1.quovadis-btp
+        kubernetes_secret_v1.quovadis-btp,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   metadata {
@@ -270,7 +276,8 @@ resource "kubernetes_default_service_account_v1" "quovadis-btp" {
 
 resource "kubernetes_secret_v1" "quovadis-btp" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.provider_context,
+        terraform_data.bootstrap-kymaruntime-bot
   ]  
 
   metadata {
