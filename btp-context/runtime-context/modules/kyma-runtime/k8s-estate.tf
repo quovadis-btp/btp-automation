@@ -308,7 +308,7 @@ resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
       ] 
 
   metadata {
-    name = "terraform-identity"
+    name = "terraform-identity-admin"
   }
 
   role_ref {
