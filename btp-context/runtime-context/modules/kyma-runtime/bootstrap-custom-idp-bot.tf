@@ -374,6 +374,65 @@ locals {
 }
 
 
+resource "terraform_data" "bootstrap-tcf-oidc" {
+  depends_on = [
+       terraform_data.kubectl_getnodes
+  ]
+
+/*
+  triggers_replace = {
+    always_run = "${timestamp()}"
+  }
+*/
+
+  triggers_replace = [
+        terraform_data.kubectl_getnodes
+  ]
+
+  # the input becomes a definition of an OpenIDConnect provider as a non-sensitive json encoded string 
+  #
+  input = [ 
+      nonsensitive(local.OpenIDConnect_HCP) 
+      ]
+
+ # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
+ # https://stackoverflow.com/questions/75255995/how-to-echo-a-jq-json-with-double-quotes-escaped-with-backslash
+ #
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-c"]
+   command = <<EOF
+     (
+    KUBECONFIG=kubeconfig-headless.yaml
+    NAMESPACE=quovadis-btp
+    set -e -o pipefail ;\
+    
+    ./kubectl wait --for condition=established crd openidconnects.authentication.gardener.cloud --timeout=180s --kubeconfig $KUBECONFIG
+    crd=$(./kubectl get crd openidconnects.authentication.gardener.cloud --kubeconfig $KUBECONFIG -ojsonpath='{.metadata.name}' --ignore-not-found)
+    if [ "$crd" = "openidconnects.authentication.gardener.cloud" ]
+    then
+      OpenIDConnect='${self.input[0]}'
+      echo $(jq -r '.' <<< $OpenIDConnect)
+      echo $OpenIDConnect
+
+      echo | ./kubectl get nodes --kubeconfig $KUBECONFIG
+      ./kubectl create ns $NAMESPACE --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
+      ./kubectl label namespace $NAMESPACE istio-injection=enabled --kubeconfig $KUBECONFIG
+
+      # a debug line until the OpenIDConnect CRD is installed via the oidc shoot extension
+      #
+      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-bot.json
+      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
+
+    else
+      echo $crd
+    fi
+
+     )
+   EOF
+ }
+}
+
+
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax#the-self-object
 # https://developer.hashicorp.com/terraform/language/resources/terraform-data
 # https://developer.hashicorp.com/terraform/language/functions/nonsensitive
@@ -381,7 +440,10 @@ locals {
 # bootstrap kyma openidconnect resource
 #
 resource "terraform_data" "bootstrap-kymaruntime-bot" {
-  depends_on = [terraform_data.provider_context]
+  depends_on = [
+       terraform_data.provider_context,
+       data.kubernetes_config_map_v1.sap-btp-operator-config
+  ]
 
 /*
   triggers_replace = {
@@ -399,8 +461,7 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       nonsensitive(local.OpenIDConnect), 
       nonsensitive(local.OpenIDConnect_PROD), 
       nonsensitive(local.OpenIDConnect_STAGE), 
-      nonsensitive(local.OpenIDConnect_GITHUB), 
-      nonsensitive(local.OpenIDConnect_HCP) 
+      nonsensitive(local.OpenIDConnect_GITHUB)
       ]
 
  # https://discuss.hashicorp.com/t/resource-attribute-json-quotes-getting-stripped/45752/4
@@ -442,11 +503,6 @@ resource "terraform_data" "bootstrap-kymaruntime-bot" {
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
 
       OpenIDConnect='${self.input[3]}'
-      echo $OpenIDConnect
-      echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
-      echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
-
-      OpenIDConnect='${self.input[4]}'
       echo $OpenIDConnect
       echo $(jq -r '.' <<< $OpenIDConnect ) >  bootstrap-kymaruntime-stage.json
       echo $OpenIDConnect | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
