@@ -17,7 +17,7 @@ ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
 data "kubernetes_config_map_v1" "sap-btp-operator-config" {
   depends_on = [
         terraform_data.provider_context
-        
+
   ]  
 
   metadata {
@@ -291,4 +291,38 @@ resource "kubernetes_secret_v1" "quovadis-btp" {
     ignore_changes = all
   }  
 }
-/* */
+
+/*
+https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/kubernetes-configuration#configure-an-oidc-identity-provider
+
+The OIDC identity resolves authentication to the Kubernetes API, but it first requires authorization to interact with that API. 
+So, you must bind RBAC roles to the OIDC identity in Kubernetes.
+
+You can use both "User" and "Group" subjects in your role bindings. 
+*/
+
+/*
+resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
+  depends_on = [ 
+      terraform_data.bootstrap-tcf-oidc
+      ] 
+
+  metadata {
+    name = "terraform-identity"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Group"
+    name      = var.provider_context_organization //"${local.organization_name}"
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }    
+}*/
