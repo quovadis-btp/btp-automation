@@ -564,8 +564,7 @@ locals {
 #
 resource "terraform_data" "provider_context" {
   depends_on = [
-    //terraform_data.kubectl_getnodes, 
-    terraform_data.bootstrap-kymaruntime-bot,
+    terraform_data.kubectl_getnodes, 
     terraform_data.argocd_bootstrap
   ]
 

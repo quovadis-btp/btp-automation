@@ -381,7 +381,7 @@ locals {
 # bootstrap kyma openidconnect resource
 #
 resource "terraform_data" "bootstrap-kymaruntime-bot" {
-  depends_on = [terraform_data.kubectl_getnodes]
+  depends_on = [terraform_data.provider_context]
 
 /*
   triggers_replace = {
