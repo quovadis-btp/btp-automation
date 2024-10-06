@@ -16,7 +16,7 @@ ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
 
 data "kubernetes_config_map_v1" "sap-btp-operator-config" {
   depends_on = [
-        terraform_data.provider_context
+        terraform_data.bootstrap-tcf-oidc
   ]  
 
   metadata {
