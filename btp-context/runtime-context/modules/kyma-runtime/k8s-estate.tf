@@ -301,6 +301,8 @@ So, you must bind RBAC roles to the OIDC identity in Kubernetes.
 You can use both "User" and "Group" subjects in your role bindings. 
 */
 
+# https://developer.hashicorp.com/terraform/tutorials/cloud/dynamic-credentials
+#
 resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
   depends_on = [ 
       terraform_data.bootstrap-tcf-oidc
@@ -319,6 +321,7 @@ resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Group"
     name      = var.provider_context_organization //"${local.organization_name}"
+    namespace = ""
   }
 
   lifecycle {
