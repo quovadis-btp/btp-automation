@@ -441,7 +441,7 @@ resource "terraform_data" "bootstrap-tcf-oidc" {
 #
 resource "terraform_data" "bootstrap-kymaruntime-bot" {
   depends_on = [
-       terraform_data.provider_context,
+       //terraform_data.provider_context,
        data.kubernetes_config_map_v1.sap-btp-operator-config
   ]
 
