@@ -637,7 +637,7 @@ locals {
                           "uses": "azure/k8s-set-context@v4",
                           "with": {
                               "method": "kubeconfig",
-                              "kubeconfig": "\"string\"\n"
+                              "kubeconfig": "\n\"string\"\n"
                           }
                       },
                       {
@@ -734,7 +734,7 @@ data "jq_query" "gh_workflow" {
    depends_on = [data.http.kubeconfig]
 
    data = local.gh_workflow
-   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: \"${data.jq_query.kubeconfig_gh_exec.result}\n\"   }"
+   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: \"\n\"${data.jq_query.kubeconfig_gh_exec.result}   }"
 }
 
 output "gh_workflow_json" {
