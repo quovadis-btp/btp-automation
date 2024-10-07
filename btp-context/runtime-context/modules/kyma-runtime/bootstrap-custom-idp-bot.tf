@@ -637,7 +637,7 @@ locals {
                           "uses": "azure/k8s-set-context@v4",
                           "with": {
                               "method": "kubeconfig",
-                              "kubeconfig": null
+                              "kubeconfig": "\"string\"\n"
                           }
                       },
                       {
