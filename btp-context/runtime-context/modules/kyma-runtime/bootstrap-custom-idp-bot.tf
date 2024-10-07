@@ -617,6 +617,37 @@ locals {
         ]
     })            
 
+   gh_workflow = jsoonencode({
+          "name": "terraform-stories",
+          "permissions": {
+              "id-token": "write"
+          },
+          "on": {
+              "workflow_dispatch": null
+          },
+          "jobs": {
+              "apply-manifest": {
+                  "runs-on": [
+                      "self-hosted",
+                      "solinas-ubuntu_22_04"
+                  ],
+                  "steps": [
+                      {
+                          "name": "Setup Kube Context",
+                          "uses": "azure/k8s-set-context@v4",
+                          "with": {
+                              "method": "kubeconfig",
+                              "kubeconfig": ""
+                          }
+                      },
+                      {
+                          "name": "check permissions",
+                          "run": "kubectl auth can-i --list --namespace quovadis-btp\nkubectl get nodes\nkubectl get pod -A\nkubectl get -n kyma-system kymas default -o json | jq '.spec.modules[] '\n"
+                      }
+                  ]
+              }
+          }
+   })
 
     kubeconfig_gh_exec = jsonencode({
 
@@ -694,19 +725,17 @@ output "kubeconfig_gh_exec" {
 }
 
 
-/* 
-resource "local_sensitive_file" "kubeconfig_bot_exec" {
-  depends_on = [data.jq_query.kubeconfig_bot_exec]
+data "jq_query" "gh_workflow" {
+   depends_on = [data.http.kubeconfig]
 
-  content  = yamlencode(jsondecode(data.jq_query.kubeconfig_bot_exec.result) )
-  filename = "kubeconfig_bot_exec.yaml"
+   data = local.gh_workflow
+   query = ".jobs[] | .steps[0].with |= . + { kubeconfig: ${local.gh_workflow} }"
 }
 
-resource "local_sensitive_file" "kubeconfig_bot_exec_json" {
-  depends_on = [data.jq_query.kubeconfig_bot_exec]
+output "gh_workflow" {
+  value = yamlencode(jsondecode(data.jq_query.gh_workflow.result))
 
-  content  = data.jq_query.kubeconfig_bot_exec.result
-  filename = "kubeconfig_bot_exec.json"
+  # https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+  #
+  depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
-*/
- 
