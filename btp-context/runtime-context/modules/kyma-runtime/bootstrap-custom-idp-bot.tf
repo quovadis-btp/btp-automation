@@ -708,6 +708,8 @@ output "kubeconfig_prod_exec" {
   depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
 
+// github workflow dynamic kubeconfig generation
+//
 data "jq_query" "kubeconfig_gh_exec" {
    depends_on = [data.http.kubeconfig]
 
@@ -724,12 +726,22 @@ output "kubeconfig_gh_exec" {
   depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
 
-
+// github workflow generation
+// https://github.com/hashicorp/terraform/issues/23322#issuecomment-1263778792
+//
 data "jq_query" "gh_workflow" {
    depends_on = [data.http.kubeconfig]
 
    data = local.gh_workflow
    query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result} }"
+}
+
+output "gh_workflow_json" {
+  value = data.jq_query.gh_workflow.result
+
+  # https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+  #
+  depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
 
 output "gh_workflow" {
