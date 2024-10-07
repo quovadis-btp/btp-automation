@@ -729,7 +729,7 @@ data "jq_query" "gh_workflow" {
    depends_on = [data.http.kubeconfig]
 
    data = local.gh_workflow
-   query = ".jobs[] | .steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_exec} }"
+   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_exec} }"
 }
 
 output "gh_workflow" {
