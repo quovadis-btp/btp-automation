@@ -617,7 +617,7 @@ locals {
         ]
     })            
 
-   gh_workflow = jsoonencode({
+   gh_workflow = jsonencode({
           "name": "terraform-stories",
           "permissions": {
               "id-token": "write"
