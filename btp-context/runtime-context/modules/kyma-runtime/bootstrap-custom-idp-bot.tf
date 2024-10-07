@@ -731,7 +731,7 @@ output "kubeconfig_gh_exec" {
 // https://blog.linoproject.net/terraform-study-notes-read-generate-and-modify-configuration-pt-2/
 
 locals {
-  kubeconfig_gh_json = format("<<-EOT\n%s\nEOT", data.jq_query.kubeconfig_gh_exec.result)
+  kubeconfig_gh_json = format("\\n%s\\n", data.jq_query.kubeconfig_gh_exec.result)
 }
 
 data "jq_query" "gh_workflow" {
