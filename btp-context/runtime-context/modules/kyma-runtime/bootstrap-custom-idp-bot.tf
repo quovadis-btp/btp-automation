@@ -617,7 +617,22 @@ locals {
         ]
     })            
 
-    kubeconfig_prod_exec = jsonencode({
+
+    kubeconfig_gh_exec = jsonencode({
+
+        "apiVersion": "client.authentication.k8s.io/v1",
+        "interactiveMode": "Never",
+        "command": "bash",
+        "args": [
+            "-c",
+            "set -e -o pipefail\nOIDC_URL_WITH_AUDIENCE=\"$ACTIONS_ID_TOKEN_REQUEST_URL&audience=gh-${local.cluster_id}\"\nIDTOKEN=$(curl -sS \\\n  -H \"Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \\\n  -H \"Accept: application/json; api-version=2.0\" \\\n  \"$OIDC_URL_WITH_AUDIENCE\" | jq -r .value)\n# Print decoded token information for debugging purposes\necho ::debug:: JWT content: \"$(echo \"$IDTOKEN\" | jq -c -R 'split(\".\") | .[1] | @base64d | fromjson')\" >&2\nEXP_TS=$(echo $IDTOKEN | jq -R 'split(\".\") | .[1] | @base64d | fromjson | .exp')\nEXP_DATE=$(date -d @$EXP_TS --iso-8601=seconds)\n# return token back to the credential plugin\ncat << EOF\n{\n  \"apiVersion\": \"client.authentication.k8s.io/v1\",\n  \"kind\": \"ExecCredential\",\n  \"status\": {\n    \"token\": \"$IDTOKEN\",\n    \"expirationTimestamp\": \"$EXP_DATE\"\n  }\n}\nEOF\n"
+        ]
+
+    })            
+
+
+
+    kubeconfig_kyma_oidc = jsonencode({
         "apiVersion": "client.authentication.k8s.io/v1",
         "interactiveMode": "Never",
         "command": "bash",
@@ -661,6 +676,23 @@ output "kubeconfig_prod_exec" {
   #
   depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
 }
+
+data "jq_query" "kubeconfig_gh_exec" {
+   depends_on = [data.http.kubeconfig]
+
+   data = jsonencode(yamldecode(local.kyma_kubeconfig))
+   query = "del(.users[] | .user | .exec) | .users[] |= . + { user: { exec: ${local.kubeconfig_gh_exec} } }"
+}
+
+output "kubeconfig_gh_exec" {
+#  value = jsondecode(data.jq_query.kubeconfig_gh_exec.result)
+  value = yamlencode(jsondecode(data.jq_query.kubeconfig_gh_exec.result))
+
+  # https://stackoverflow.com/questions/58275233/terraform-depends-on-with-modules
+  #
+  depends_on = [ terraform_data.bootstrap-kymaruntime-bot ]
+}
+
 
 /* 
 resource "local_sensitive_file" "kubeconfig_bot_exec" {
