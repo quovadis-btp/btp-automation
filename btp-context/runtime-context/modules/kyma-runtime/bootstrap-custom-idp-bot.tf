@@ -740,7 +740,8 @@ data "jq_query" "gh_workflow" {
 
    data = local.gh_workflow
 //   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result}   }"
-   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json} | tostring  }"
+//   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json} | tostring  }"
+   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json} | tojson  }"
 }
 
 output "gh_workflow_json" {
