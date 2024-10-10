@@ -163,6 +163,12 @@ resource "btp_subaccount_service_instance" "dest_admin_api_access" {
        }
    }  
   })
+
+  timeouts = {
+    create = "25m"
+    update = "15m"
+    delete = "15m"
+  }
 }
 
 locals {
