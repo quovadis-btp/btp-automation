@@ -112,6 +112,10 @@ resource "kubectl_manifest" "postgresql-trial" {
     yaml_body = yamlencode(jsondecode(local.postgresql))
 
     depends_on = [terraform_data.bootstrap-kymaruntime-bot, terraform_data.egress_ips]
+
+    lifecycle {
+      ignore_changes = all
+    }    
 }
 
 
@@ -120,6 +124,10 @@ resource "kubectl_manifest" "postgresql-trial-binding" {
     yaml_body = yamlencode(jsondecode(local.postgresql_binding))
 
     depends_on = [terraform_data.bootstrap-kymaruntime-bot, terraform_data.egress_ips]
+
+    lifecycle {
+      ignore_changes = all
+    }    
 }
 
 /*  
