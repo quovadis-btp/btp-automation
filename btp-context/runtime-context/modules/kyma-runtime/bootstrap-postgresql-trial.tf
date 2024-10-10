@@ -114,6 +114,14 @@ resource "kubectl_manifest" "postgresql-trial" {
     depends_on = [terraform_data.bootstrap-kymaruntime-bot, terraform_data.egress_ips]
 }
 
+
+resource "kubectl_manifest" "postgresql-trial-binding" {
+    count     = var.BTP_POSTGRESQL_DRY_RUN ? 0 : 1
+    yaml_body = yamlencode(jsondecode(local.postgresql_binding))
+
+    depends_on = [terraform_data.bootstrap-kymaruntime-bot, terraform_data.egress_ips]
+}
+
 /*  
 resource "btp_subaccount_entitlement" "postgresql" {
   subaccount_id = data.btp_subaccount.context.id
