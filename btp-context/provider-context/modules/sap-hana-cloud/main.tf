@@ -42,6 +42,10 @@ locals {
     for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "trial" && service.service_name == "postgresql-db"
   }
 
+  postgresql_standard_plan = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "standard" && service.service_name == "postgresql-db"
+  }
+
 
   launchpad_free = {
     for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "QUOTA_BASED_APPLICATION" && service.plan_name == "free" && service.service_name == "SAPLaunchpad" && service.quota_remaining >=  0
@@ -375,6 +379,11 @@ resource "btp_subaccount_service_instance" "dest_provider" {
   
   })
 
+  timeouts = {
+    create = "25m"
+    update = "15m"
+    delete = "15m"
+  }
 /*
   lifecycle {
     replace_triggered_by = [
