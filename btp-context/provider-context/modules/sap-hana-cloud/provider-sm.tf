@@ -39,6 +39,7 @@ locals {
   provider_credentials = jsondecode(btp_subaccount_service_binding.provider_sm.credentials)
 }
 
+
 resource "local_sensitive_file" "provider_sm" {
   content = jsonencode({
     clientid       = base64encode(local.provider_credentials.clientid)
@@ -49,16 +50,3 @@ resource "local_sensitive_file" "provider_sm" {
   })
   filename = "provider_sm.json"
 }
-
-/*
-resource "local_file" "provider_sm" {
-  content  = <<EOT
-clientid=${local.provider_credentials.clientid}
-clientsecret=${local.provider_credentials.clientsecret}
-sm_url=${local.provider_credentials.sm_url}
-tokenurl=${local.provider_credentials.url}
-tokenurlsuffix=/oauth/token
-EOT
-  filename = "provider-sm-decoded.env"
-}
-*/
