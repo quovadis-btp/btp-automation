@@ -190,7 +190,7 @@ resource "terraform_data" "bootstrap-dynatrace" {
 
       echo | ./kubectl -n $NAMESPACE create secret generic $SECRET_NAME --from-literal="apiToken=$API_TOKEN" --from-literal="dataIngestToken=$DATA_INGEST_TOKEN" --from-literal="apiurl=$DT_ENVIRONMENT_API_URL" --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
 
-      echo | ./kubectl wait --for=create --timeout=180s secret/$SECRET_NAME -n $NAMESPACE --kubeconfig $KUBECONFIG
+      echo | ./kubectl wait --for=create --timeout=480s secret/$SECRET_NAME -n $NAMESPACE --kubeconfig $KUBECONFIG
 
       echo $DYNAKUBE | ./kubectl apply --kubeconfig $KUBECONFIG -n $NAMESPACE -f - 
       while [ "$(./kubectl --kubeconfig $KUBECONFIG -n $NAMESPACE get dynakube dynakube --ignore-not-found)" = "" ]
