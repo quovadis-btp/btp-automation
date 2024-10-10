@@ -32,10 +32,12 @@ data "btp_subaccount" "context" {
   id = var.subaccount_id != "" ? var.subaccount_id : btp_subaccount.this[0].id
 }
 
+/*
 resource "local_file" "subaccount_id" {
   content  = data.btp_subaccount.context.id
   filename = "subaccount_id.txt"
 }
+*/
 
 resource "btp_subaccount_role_collection_assignment" "subaccount_users" {
   depends_on           = [data.btp_subaccount.context, btp_subaccount_trust_configuration.custom_idp]
