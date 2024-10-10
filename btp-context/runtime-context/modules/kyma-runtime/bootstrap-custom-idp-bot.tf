@@ -310,7 +310,7 @@ locals {
             "usernamePrefix": "actions-oidc:",
             "requiredClaims": {
                 "repository": "${var.GITHUB_ACTIONS_REPOSITORY}",
-                "workflow": "${var.GITHUB_ACTIONS_WORKFLOW}"
+                "workflow": "${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}"
                 "ref": "${var.GITHUB_ACTIONS_REF}"
             }
         }
@@ -618,7 +618,7 @@ locals {
     })            
 
    gh_workflow = jsonencode({
-          "name": "terraform-stories",
+          "name": "${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}",
           "permissions": {
               "id-token": "write"
           },
@@ -627,10 +627,7 @@ locals {
           },
           "jobs": {
               "apply-manifest": {
-                  "runs-on": [
-                      "self-hosted",
-                      "solinas-ubuntu_22_04"
-                  ],
+                  "runs-on": "${var.GITHUB_ACTIONS_WORKFLOW_RUNNER}",
                   "steps": [
                       {
                           "name": "Setup Kube Context",

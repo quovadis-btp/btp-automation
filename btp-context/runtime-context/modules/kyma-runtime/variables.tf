@@ -205,7 +205,13 @@ variable "GITHUB_ACTIONS_REPOSITORY" {
 variable "GITHUB_ACTIONS_WORKFLOW" {
   type        = string
   description = "GITHUB_ACTIONS_WORKFLOW"
-  default     = "quovadis-kyma"
+  default     = "workflow-name"
+}
+
+variable "GITHUB_ACTIONS_WORKFLOW_RUNNER" {
+  type        = list(string)
+  description = "GITHUB_ACTIONS_WORKFLOW_RUNNER"
+  default     = ["ubuntu-latest"]
 }
 
 variable "GITHUB_ACTIONS_REF" {
