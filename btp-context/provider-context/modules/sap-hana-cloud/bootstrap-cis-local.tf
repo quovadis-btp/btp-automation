@@ -38,6 +38,7 @@ locals {
   cis-secret = jsondecode(btp_subaccount_service_binding.cis-local-binding.credentials)
 }
 
+/*
 resource "local_sensitive_file" "cis-secret" {
   content = jsonencode({
     clientid     = local.cis-secret.uaa.clientid
@@ -46,6 +47,7 @@ resource "local_sensitive_file" "cis-secret" {
   })
   filename = "cis-secret.json"
 }
+*/
 
 
 resource "btp_subaccount_entitlement" "destination" {
@@ -197,13 +199,6 @@ resource "btp_subaccount_subscription" "build_workzone" {
   app_name      = local.service_name__build_workzone
   plan_name     = var.service_plan__build_workzone
   depends_on    = [btp_subaccount_entitlement.build_workzone]
-
-  /*
-  timeouts = {
-    create = "25m"
-    delete = "15m"
-  }
-  */
 }
 
 # Assign users to Role Collection: Launchpad_Admin
