@@ -159,7 +159,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
       NEW_KYMAS_CONFIG=$(echo $KYMAS_DEFAULT_CONFIG | jq --arg m "$MODULE" 'del(.spec.modules[] | select(.name == $m) )' )
       echo $NEW_KYMAS_CONFIG
       echo $NEW_KYMAS_CONFIG | ./kubectl apply --kubeconfig $KUBECONFIG -n kyma-system -f -
-      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=180s
+      ./kubectl wait --for=delete --kubeconfig $KUBECONFIG -n kyma-system statefulset/connectivity-proxy --timeout=480s
        )
      EOF
   } 
@@ -605,7 +605,7 @@ resource "terraform_data" "provider_context" {
     ./kubectl create ns $NAMESPACE3 --kubeconfig $KUBECONFIG --dry-run=client -o yaml | ./kubectl apply --kubeconfig $KUBECONFIG -f -
     ./kubectl label namespace $NAMESPACE3 istio-injection=enabled --kubeconfig $KUBECONFIG
 
-    echo | ./kubectl wait --for condition=established crd kymas.operator.kyma-project.io -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for condition=established crd kymas.operator.kyma-project.io -n kyma-system --timeout=480s --kubeconfig $KUBECONFIG
 
     echo | ./kubectl wait --for=jsonpath='{.status.modules[?(@.name=="api-gateway")].state}'=Ready kyma default -n kyma-system --timeout 5m --kubeconfig $KUBECONFIG
     while [ "$(./kubectl --kubeconfig $KUBECONFIG -n kyma-system get deployment api-gateway-controller-manager --ignore-not-found)" = "" ]
@@ -614,7 +614,7 @@ resource "terraform_data" "provider_context" {
       sleep 1
     done
     echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment api-gateway-controller-manager --timeout 5m
-    echo | ./kubectl wait --for condition=established crd apigateways.operator.kyma-project.io --timeout=180s --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for condition=established crd apigateways.operator.kyma-project.io --timeout=480s --kubeconfig $KUBECONFIG
 
     echo | ./kubectl get apigateways/default --kubeconfig $KUBECONFIG --ignore-not-found
 
@@ -636,8 +636,8 @@ resource "terraform_data" "provider_context" {
     done
     echo | ./kubectl --kubeconfig $KUBECONFIG -n kyma-system rollout status deployment sap-btp-operator-controller-manager --timeout 5m
 
-    echo | ./kubectl wait --for condition=established crd serviceinstances.services.cloud.sap.com -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
-    echo | ./kubectl wait --for condition=established crd servicebindings.services.cloud.sap.com -n kyma-system --timeout=180s --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for condition=established crd serviceinstances.services.cloud.sap.com -n kyma-system --timeout=480s --kubeconfig $KUBECONFIG
+    echo | ./kubectl wait --for condition=established crd servicebindings.services.cloud.sap.com -n kyma-system --timeout=480s --kubeconfig $KUBECONFIG
 
     SECRET=$(./kubectl get secret sap-btp-service-operator -n kyma-system --kubeconfig $KUBECONFIG -o json )
     echo $SECRET
