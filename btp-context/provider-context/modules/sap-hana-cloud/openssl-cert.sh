@@ -3,7 +3,7 @@
 set -e -o pipefail 
 #ISSUER=$(terraform output -json hc_credentials_x509 | jq -r '.uaa | {clientid, key, certificate, url: (.certurl+ "/oauth/token") }' ) 
 ISSUER=$(jq -r '{clientid: "\(.clientid)", key: "\(.key)", certificate: "\(.certificate)", url: "\(.url)", location: "\(.location)" }' )
-KEYSTORE=$(echo -n | penssl pkcs12 -export \
+KEYSTORE=$(echo -n | openssl pkcs12 -export \
 -in <(echo "$(jq  -r '. | .certificate' <<< $ISSUER )") \
 -inkey <(echo "$(jq  -r '. | .key' <<< $ISSUER )") \
 -passout pass:Password1 | base64) 
