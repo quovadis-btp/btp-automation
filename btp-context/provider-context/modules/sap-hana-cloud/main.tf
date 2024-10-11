@@ -498,7 +498,9 @@ data "external" "openssl_cert" {
 
 locals {
   //hc-x509-p12 = data.external.openssl_cert.result
-  Content = replace(data.external.openssl_cert.result.Content, "\n", "")
+
+//  Content = replace(data.external.openssl_cert.result.Content, "\n", "")
+  Content = base64encode(data.external.openssl_cert.result.Content)
   Name    = data.external.openssl_cert.result.Name
   Type    = data.external.openssl_cert.result.Type
 
