@@ -499,8 +499,10 @@ data "external" "openssl_cert" {
 locals {
   //hc-x509-p12 = data.external.openssl_cert.result
 
-//  Content = replace(data.external.openssl_cert.result.Content, "\n", "")
-  Content = base64encode(data.external.openssl_cert.result.Content)
+  // base64 behaves differently on linux and the encoded output has newline characters
+  // base64 -w 0 would do suppress the newlines however it is not supported on OsX
+  // 
+  Content = replace(data.external.openssl_cert.result.Content, "\n", "")
   Name    = data.external.openssl_cert.result.Name
   Type    = data.external.openssl_cert.result.Type
 
