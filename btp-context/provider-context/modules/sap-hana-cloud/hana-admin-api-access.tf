@@ -211,7 +211,20 @@ data "external" "openssl_cert_admin_api_access" {
 
 
 locals {
-  admin_api_access-x509-p12 = one(data.external.openssl_cert_admin_api_access[*].result)
+  //admin_api_access-x509-p12 = one(data.external.openssl_cert_admin_api_access[*].result)
+
+  result = one(data.external.openssl_cert_admin_api_access[*].result)
+
+  // base64 behaves differently on linux and the encoded output has newline characters
+  // base64 -w 0 would do suppress the newlines however it is not supported on OsX
+  // 
+
+  admin_api_access-x509-p12 = result |= null ? tomap({
+          "Content" = replace(local.result.Content, "\n", "")
+           "Name" = local.result.Name
+           "Type" = llocal.result.Type
+          }) : null
+
 }
 
 locals {
