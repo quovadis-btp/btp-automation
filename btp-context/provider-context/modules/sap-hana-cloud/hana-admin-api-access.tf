@@ -221,7 +221,7 @@ locals {
   admin_api_access-x509-p12 = tomap({
           "Content" = replace(local.result.Content, "\n", "")
            "Name" = local.result.Name
-           "Type" = llocal.result.Type
+           "Type" = local.result.Type
           })
 
 }
