@@ -496,6 +496,9 @@ data "external" "openssl_cert" {
 }
 
 
+# https://stackoverflow.com/a/15490765
+# https://unix.stackexchange.com/a/672640
+#
 locals {
   //hc-x509-p12 = data.external.openssl_cert.result
 
