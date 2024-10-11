@@ -483,7 +483,8 @@ data "external" "openssl_cert" {
 
 
 locals {
-  hc-x509-p12 = data.external.openssl_cert.result
+//  hc-x509-p12 = data.external.openssl_cert.result
+  hc-x509-p12 = jsondecode(data.external.openssl_cert.result)
 }
 
 output "dest-httpbin" {
