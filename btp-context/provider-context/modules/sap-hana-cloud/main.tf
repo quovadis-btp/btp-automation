@@ -498,7 +498,7 @@ data "external" "openssl_cert" {
 
 locals {
   hc-x509-p12 = data.external.openssl_cert.result
-  local.hc-x509-p12.Content = replace(data.external.openssl_cert.result.Content, "\n", "")
+  hc-x509-p12.Content = replace(data.external.openssl_cert.result.Content, "\n", "")
 }
 
 output "hc-x509-p12" {
