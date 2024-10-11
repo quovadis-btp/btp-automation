@@ -500,6 +500,10 @@ locals {
   hc-x509-p12 = data.external.openssl_cert.result
 }
 
+output "hc-x509-p12" {
+  value = nonsensitive(local.hc-x509-p12)
+}
+
 output "dest-httpbin" {
   value       = "${local.sap_approuter_dynamic_dest}/dest-httpbin/headers"
   description = "dest-httpbin"
