@@ -6,7 +6,7 @@ ISSUER=$(jq -r '{clientid: "\(.clientid)", key: "\(.key)", certificate: "\(.cert
 KEYSTORE=$(openssl pkcs12 -export \
 -in <(echo "$(jq  -r '. | .certificate' <<< $ISSUER )") \
 -inkey <(echo "$(jq  -r '. | .key' <<< $ISSUER )") \
--passout pass:Password1 | base64) 
+-passout pass:Password1 | base64 -w 0) 
 #echo $KEYSTORE 
 #openssl pkcs12 -nokeys -info -in <(echo -n $KEYSTORE | base64 -d) -passin pass:Password1 
 #jq -n --arg keystore "$KEYSTORE" '{"Name": "hc-x509.p12", "Type": "CERTIFICATE", "Content":$keystore}'
