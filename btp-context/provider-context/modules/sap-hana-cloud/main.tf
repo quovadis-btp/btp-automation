@@ -458,7 +458,7 @@ resource "terraform_data" "openssl_cert" {
       -inkey <(echo "$(jq  -r '. | .key' <<< $ISSUER )") \
       -passout pass:Password1 | base64)   ;\
       echo $KEYSTORE ;\
-      openssl pkcs12 -nokeys -info -in <(echo -ne $KEYSTORE | base64 -d) -passin pass:Password1 ;\
+      openssl pkcs12 -nokeys -info -in <(echo -n $KEYSTORE | base64 -di) -passin pass:Password1 ;\
       )
    EOF
  }
