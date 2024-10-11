@@ -497,8 +497,16 @@ data "external" "openssl_cert" {
 
 
 locals {
-  hc-x509-p12 = data.external.openssl_cert.result
-  hc-x509-p12.Content = replace(data.external.openssl_cert.result.Content, "\n", "")
+  //hc-x509-p12 = data.external.openssl_cert.result
+  Content = replace(data.external.openssl_cert.result.Content, "\n", "")
+  Name    = data.external.openssl_cert.result.Name
+  Type    = data.external.openssl_cert.result.Type
+
+   hc-x509-p12 = tomap({
+          "Content" = local.Content
+           "Name" = local.Name
+           "Type" = local.Type
+          })
 }
 
 output "hc-x509-p12" {
