@@ -442,7 +442,10 @@ locals {
 
 
 
-/**/
+/*
+# https://stackoverflow.com/a/15490765
+# https://unix.stackexchange.com/a/672640
+#
 resource "terraform_data" "openssl_cert" {
   triggers_replace = {
     always_run = "${timestamp()}"
@@ -463,7 +466,7 @@ resource "terraform_data" "openssl_cert" {
    EOF
  }
 }
-/**/
+*/
 
 # https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external
 #
