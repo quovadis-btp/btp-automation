@@ -219,7 +219,7 @@ locals {
   // base64 -w 0 would do suppress the newlines however it is not supported on OsX
   // 
 
-  admin_api_access-x509-p12 = result |= null ? tomap({
+  admin_api_access-x509-p12 = local.result |= null ? tomap({
           "Content" = replace(local.result.Content, "\n", "")
            "Name" = local.result.Name
            "Type" = llocal.result.Type
