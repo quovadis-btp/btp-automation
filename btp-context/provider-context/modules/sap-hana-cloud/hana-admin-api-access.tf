@@ -215,9 +215,14 @@ locals {
 
   result = one(data.external.openssl_cert_admin_api_access[*].result)
 
-  // base64 behaves differently on linux and the encoded output has newline characters
+  // base64 behaves differently on linux then on MacOS and the encoded output has newline characters
   // base64 -w 0 would do suppress the newlines however it is not supported on OsX
-  // 
+  // using replace function to remove newline characters is doing the trick even if the base64 encoded p12 keystore string doesnt
+  // have the trailing == (double eqhal sign) characters
+  //
+  // https://stackoverflow.com/questions/15490728/decode-base64-invalid-input
+  // https://unix.stackexchange.com/questions/569570/encode-file-content-and-echo-it-as-one-line
+  //
   admin_api_access-x509-p12 = tomap({
           "Content" = replace(local.result == null ? "" : local.result.Content, "\n", "")
            "Name" = local.result == null ? "" : local.result.Name
