@@ -268,6 +268,18 @@ terraform apply -var-file=kyma-adoption-live/btp-live.tfvars -input=false -auto-
 
 <h2 id="references">3. Useful links.</h2>
 
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://www.scalr.com/blog/top-20-terraform-providers"><img class="aligncenter" src="https://github.com/user-attachments/assets/26a0f1eb-48aa-4c21-8bc3-2b9d7b57b2f0" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
   * https://spacelift.io/blog/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content/tree/master/terraform-best-practices
   * https://github.com/spacelift-io-blog-posts/Blog-Technical-Content
