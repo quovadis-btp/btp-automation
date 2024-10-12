@@ -95,7 +95,7 @@ locals {
 }
 
 output "postgresql-binding" {
-  value = nonsensitive( one(data.btp_subaccount_service_binding.postgresql[*]) )
+  value = nonsensitive( local.postgresql-credentials )
 }
 
 
