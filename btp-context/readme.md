@@ -51,7 +51,13 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 
 <ol>
  	<li><a href="#btp-automation">Bootstrap toolkit for business users.</a></li>
- 	<li><a href="#terraform-automation">terraform.</a></li>
+<ol>
+ 	<li><a href="#runtime-context">"Depleted" runtime ennvironment.</a></li>
+ 	<li><a href="#provider-context">Provider Context</a>.</li>
+ 	<li><a href="#approach-benefits">Advantages of this approach</a>.</li>
+</ol>
+
+ <li><a href="#terraform-automation">terraform.</a></li>
 <ol>
  	<li><a href="#terraform-visual-cli">terraform visual cli.</a></li>
  	<li><a href="#terraform-graph">terraform graph</a>.</li>
@@ -73,7 +79,9 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 
 
 
-Your concept of a "depleted" runtime environment in the context of SAP Business Technology Platform (BTP) is intriguing. It seems you're proposing a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime. Let me summarize and expand on your ideas:
+The concept of a "depleted" runtime environment in the context of SAP Business Technology Platform (BTP) may be intriguing.  
+It seems you're proposing a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
+Let me summarize and expand on your ideas:
 
 ### "Depleted" Runtime Environment:
 
@@ -90,20 +98,20 @@ Services in the provider context are referenced from Kyma clusters via service s
 
 ### Advantages of this approach:
 
-Flexibility: Kyma clusters can be easily torn down, detached, or re-attached to provider contexts
-Cross-landscape compatibility: Provider can be in a different BTP landscape or global account
-Multi-region support: Provider can be in a different BTP region (data center)
-Hybrid/Multi-cloud potential: Provider could be implemented using non-BTP services or a mix of BTP and other hyperscaler services
+  * Flexibility: Kyma clusters can be easily torn down, detached, or re-attached to provider contexts
+  * Cross-landscape compatibility: Provider can be in a different BTP landscape or global account
+  * Multi-region support: Provider can be in a different BTP region (data center)
+  * Hybrid/Multi-cloud potential: Provider could be implemented using non-BTP services or a mix of BTP and other hyperscaler services
 
 
 ### Enhanced Features:
 
-Location and data center transparency
-Intrinsic failover between runtime and provider contexts
+  * Location and data center transparency
+  * Intrinsic failover between runtime and provider contexts
 
 
 
-## This approach seems to offer several benefits:
+### This approach seems to offer several benefits:
 
   * Simplified Management: By centralizing core services in a provider context, you reduce the complexity of individual Kyma clusters.
   * Resource Efficiency: "Depleted" environments likely consume fewer resources, potentially reducing costs.
@@ -111,7 +119,7 @@ Intrinsic failover between runtime and provider contexts
   * Improved Disaster Recovery: The intrinsic failover capability enhances system resilience.
   * Multi-Cloud and Hybrid Cloud Support: This architecture seems well-suited for complex, distributed environments spanning multiple cloud providers or on-premises/cloud hybrid setups.
 
-## To fully realize this concept, you'd likely need to consider:
+### To fully realize this concept, you'd likely need to consider:
 
   * Service Discovery and Routing: Ensuring efficient communication between "depleted" environments and provider contexts.
   * Security: Maintaining proper access controls and data protection across distributed components.
