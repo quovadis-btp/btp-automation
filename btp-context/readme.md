@@ -56,7 +56,7 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
  	<li><a href="#provider-context">Provider Context</a>.</li>
  	<li><a href="#main-benefits">Advantages of this approach</a>.</li>
  	<li><a href="#enhanced-features">Enhanced Features.</a></li>
- 	<li><a href="#other-benefits">Other benefitst</a>.</li>
+ 	<li><a href="#overall-benefits">Overall Benefits</a>.</li>
  	<li><a href="#things-to-consider">Things to consider</a>.</li>
 </ol>
 
@@ -106,7 +106,7 @@ Let me summarize and expand on the concept's main ideas:
   * Location and data center transparency
   * Intrinsic failover between runtime and provider contexts
 
-<h3 id="other-benefits">1.5 Other benefits</h3>  
+<h3 id="overall-benefits">1.5 Overall benefits</h3>  
 
 This approach seems to offer several benefits:
 
