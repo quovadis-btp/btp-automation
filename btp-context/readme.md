@@ -52,7 +52,7 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 <ol>
  	<li><a href="#btp-automation">Bootstrap toolkit for business users.</a></li>
 <ol>
- 	<li><a href="#runtime-context">"Depleted" runtime ennvironment.</a></li>
+ 	<li><a href="#runtime-context">"Depleted" runtime environment.</a></li>
  	<li><a href="#provider-context">Provider Context</a>.</li>
  	<li><a href="#main-benefits">Advantages of this approach</a>.</li>
  	<li><a href="#enhanced-features">Enhanced Features.</a></li>
@@ -78,12 +78,11 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>  
 
-
 The value proposition behind a "depleted" runtime environment concept [in the context of SAP Business Technology Platform (BTP)] 
 is a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
 Let me summarize and expand on the main ideas:
 
-### "Depleted" Runtime Environment:
+<h3 id="runtime-context">1.1 "Depleted" Runtime Environment.</h3>  
 
   * Consists of one or more Kyma clusters
   * Has a limited set of BTP services directly associated
