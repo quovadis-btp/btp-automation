@@ -76,25 +76,21 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>  
 
 
-
-
-
-The concept of a "depleted" runtime environment in the context of SAP Business Technology Platform (BTP) may be intriguing.  
-It seems you're proposing a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
-Let me summarize and expand on your ideas:
+The value proposition behind a "depleted" runtime environment concept [in the context of SAP Business Technology Platform (BTP)] 
+is a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
+Let me summarize and expand on the main ideas:
 
 ### "Depleted" Runtime Environment:
 
-Consists of one or more Kyma clusters
-Has a limited set of BTP services directly associated
-Lacks some standard services (e.g., XSUAA) in the immediate environment
+  * Consists of one or more Kyma clusters
+  * Has a limited set of BTP services directly associated
+  * Lacks some standard services (e.g., XSUAA) in the immediate environment
 
 
 ### Provider Context:
 
-A dedicated subaccount containing all necessary kernel and business BTP services
-Services in the provider context are referenced from Kyma clusters via service sharing
-
+  * A dedicated subaccount containing all necessary kernel and business BTP services
+  * Services in the provider context are referenced from Kyma clusters via service sharing mechanism
 
 ### Advantages of this approach:
 
@@ -108,7 +104,6 @@ Services in the provider context are referenced from Kyma clusters via service s
 
   * Location and data center transparency
   * Intrinsic failover between runtime and provider contexts
-
 
 
 ### This approach seems to offer several benefits:
