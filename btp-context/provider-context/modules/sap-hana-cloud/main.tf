@@ -83,6 +83,17 @@ resource "btp_subaccount_entitlement" "postgresql" {
   amount        = 1
 }
 
+data "btp_subaccount_service_binding" "postgresql" {
+  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+
+  subaccount_id = data.btp_subaccount.context.id
+  name          = "postgresql-binding"  
+}
+
+output "postgresql-binding" {
+  value = nonsensitive( one(data.btp_subaccount_service_binding.postgresql[*]) )
+}
+
 
 resource "btp_subaccount_entitlement" "hana_cloud" {
   subaccount_id = data.btp_subaccount.context.id
