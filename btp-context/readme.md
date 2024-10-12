@@ -73,7 +73,7 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
  	<li><a href="#things-to-consider">Things to consider</a>.</li>
 </ol>
 
- <li><a href="#terraform-automation">terraform.</a></li>
+ <li><a href="#terraform-automation">Terraform automation.</a></li>
 <ol>
  	<li><a href="#terraform-visual-cli">terraform visual cli.</a></li>
  	<li><a href="#terraform-graph">terraform graph</a>.</li>
@@ -146,7 +146,7 @@ This approach aligns well with modern cloud-native architectures and microservic
   * [Seamless deployment of SaaS provider applications to kyma environments](https://github.com/kyma-project/kyma/issues/18666)
 
 
-<h2 id="terraform-automation">2. terraform.</h2>  
+<h2 id="terraform-automation">2. Terraform automation.</h2>  
 
 Terraform is a popular declarative CaC tool that allows you to describe and orchestrate infrastructure landscapes in the form of code.  
 It allows to plan, apply and maintain the desired state of our defined btp contexts, laying the bricks towards business landscape automation - our ultimate goal.    
