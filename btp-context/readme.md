@@ -94,15 +94,14 @@ Let me summarize and expand on the concept's main ideas:
   * A dedicated subaccount containing all necessary kernel and business BTP services
   * Services in the provider context are referenced from Kyma clusters via service sharing mechanism
 
-<h3 id="provider-context">1.3 Advantages of this approach.</h3>  
+<h3 id="main-benefits">1.3 Advantages of this approach.</h3>  
 
   * Flexibility: Kyma clusters can be easily torn down, detached, or re-attached to provider contexts
   * Cross-landscape compatibility: Provider can be in a different BTP landscape or global account
   * Multi-region support: Provider can be in a different BTP region (data center)
   * Hybrid/Multi-cloud potential: Provider could be implemented using non-BTP services or a mix of BTP and other hyperscaler services
 
-
-### Enhanced Features:
+<h3 id="enhanced-features">1.4 Enhanced Features.</h3>  
 
   * Location and data center transparency
   * Intrinsic failover between runtime and provider contexts
