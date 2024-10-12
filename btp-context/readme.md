@@ -54,7 +54,10 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 <ol>
  	<li><a href="#runtime-context">"Depleted" runtime ennvironment.</a></li>
  	<li><a href="#provider-context">Provider Context</a>.</li>
- 	<li><a href="#approach-benefits">Advantages of this approach</a>.</li>
+ 	<li><a href="#main-benefits">Advantages of this approach</a>.</li>
+ 	<li><a href="#enhanced-features">Enhanced Features.</a></li>
+ 	<li><a href="#other-benefits">Other benefitst</a>.</li>
+ 	<li><a href="#things-to-consider">Things to consider</a>.</li>
 </ol>
 
  <li><a href="#terraform-automation">terraform.</a></li>
@@ -106,7 +109,7 @@ Let me summarize and expand on the main ideas:
   * Intrinsic failover between runtime and provider contexts
 
 
-### This approach seems to offer several benefits:
+ ### This approach seems to offer several benefits:
 
   * Simplified Management: By centralizing core services in a provider context, you reduce the complexity of individual Kyma clusters.
   * Resource Efficiency: "Depleted" environments likely consume fewer resources, potentially reducing costs.
