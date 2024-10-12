@@ -106,8 +106,9 @@ Let me summarize and expand on the concept's main ideas:
   * Location and data center transparency
   * Intrinsic failover between runtime and provider contexts
 
+<h3 id="other-benefits">1.5 Other benefits</h3>  
 
- ### This approach seems to offer several benefits:
+This approach seems to offer several benefits:
 
   * Simplified Management: By centralizing core services in a provider context, you reduce the complexity of individual Kyma clusters.
   * Resource Efficiency: "Depleted" environments likely consume fewer resources, potentially reducing costs.
@@ -115,7 +116,9 @@ Let me summarize and expand on the concept's main ideas:
   * Improved Disaster Recovery: The intrinsic failover capability enhances system resilience.
   * Multi-Cloud and Hybrid Cloud Support: This architecture seems well-suited for complex, distributed environments spanning multiple cloud providers or on-premises/cloud hybrid setups.
 
-### To fully realize this concept, you'd likely need to consider:
+<h3 id="things-to-consider">1.6 Things to consider</h3>  
+
+To fully realize this concept, one'd likely need to consider:
 
   * Service Discovery and Routing: Ensuring efficient communication between "depleted" environments and provider contexts.
   * Security: Maintaining proper access controls and data protection across distributed components.
