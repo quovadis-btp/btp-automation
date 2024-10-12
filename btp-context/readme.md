@@ -2,6 +2,20 @@
 Business Landscape Automation
 ==========
 
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/e4c7b90e-eaee-4461-bc1d-7325e0868518" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
@@ -36,6 +50,9 @@ Furthermore, this approach allows for _location and data center transparency_ wi
 
 Introduction to btp contexts
 =============
+
+![298451_GettyImages-1362788786_x_small_jpg](https://github.com/user-attachments/assets/7a899dda-f5d5-44d4-bba9-f3713f8b4536)
+
 
 BTP contexts are logical entities defined to host and implement various infrastructure contexts, namely bootstrap, runtime, provider and consumer.  
 
