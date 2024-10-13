@@ -79,7 +79,10 @@ locals {
 
 	postgresql = data.jq_query.postgresql.result
 	//allow_access = jsondecode(data.jq_query.allow_access.result) 
-  allow_access = format("%s,%s", jsondecode(data.jq_query.allow_access.result), "188.214.8.0/24,13.105.117.0/24,13.105.49.0/24")
+
+  // add macos-latest runners and solinas runners addresses
+  //
+  allow_access = format("%s,%s,%s", jsondecode(data.jq_query.allow_access.result), "188.214.8.0/24,13.105.117.0/24,13.105.49.0/24", "34.141.69.247,34.159.216.62,34.159.191.69")
 
 	postgresql_binding = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
