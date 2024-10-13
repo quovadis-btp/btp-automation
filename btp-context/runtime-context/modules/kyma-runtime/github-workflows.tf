@@ -12,8 +12,13 @@ data "local_file" "gh_workflow" {
   filename = local_file.gh_workflow.filename
 }
 
+output "gh_workflow"_file" {
+  value = data.local_file.gh_workflow.content
+}
+
+/*
 resource "github_repository_file" "gh_workflow" {
-  repository          = "btp-boosters" //var.GITHUB_ACTIONS_REPOSITORY
+  repository          = var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
   commit_message      = "[Actions Bot] Update Github Actions workflow"
   overwrite_on_create = true
@@ -21,6 +26,7 @@ resource "github_repository_file" "gh_workflow" {
   content             = data.local_file.gh_workflow.content
 
 }
+*/
 
 
 data "github_repository" "gh_workflow" {
