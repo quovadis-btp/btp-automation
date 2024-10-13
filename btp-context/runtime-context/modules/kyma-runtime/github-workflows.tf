@@ -12,7 +12,7 @@ data "local_file" "gh_workflow" {
   filename = local_file.gh_workflow.filename
 }
 
-output "gh_workflow"_file" {
+output "gh_workflow_file" {
   value = data.local_file.gh_workflow.content
 }
 
