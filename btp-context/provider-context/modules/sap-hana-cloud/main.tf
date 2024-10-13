@@ -104,9 +104,8 @@ data "btp_subaccount_service_binding" "postgresql" {
 }
 
 locals {
-
-  credentials = one(data.btp_subaccount_service_binding.postgresql[*].credentials)
-  postgresql-credentials = local.credentials |= null ? jsondecode(local.credentials) : {username: "", password: "" }
+  credentials            = one(data.btp_subaccount_service_binding.postgresql[*].credentials)
+  postgresql-credentials = local.credentials != null ? jsondecode(local.credentials) : {username: "", password: "" }
 }
 
 output "postgresql-binding" {
