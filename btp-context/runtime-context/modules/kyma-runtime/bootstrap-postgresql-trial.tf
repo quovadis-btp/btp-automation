@@ -78,7 +78,7 @@ locals {
 	depends_on = [terraform_data.egress_ips]
 
 	postgresql = data.jq_query.postgresql.result
-	allow_access = jsondecode(data.jq_query.allow_access.result)
+	allow_access = jsondecode(data.jq_query.allow_access.result) // 188.214.8.0/24,13.105.117.0/24,13.105.49.0/24
 
 	postgresql_binding = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
@@ -93,6 +93,24 @@ locals {
 	    }
 	})
 
+   postgresql_instance = jsonencode({
+      "apiVersion": "services.cloud.sap.com/v1",
+      "kind": "ServiceInstance",
+      "metadata": {
+          "name": "postgresql",
+          "namespace" : "quovadis-btp"
+      },
+      "spec": {
+          "serviceOfferingName": "postgresql-db",
+          "servicePlanName": "trial",
+          "parameters": {
+              "region": "us-east-1",
+              "allow_access": data.jq_query.allow_access.result
+          }
+      } 
+  })
+
+
 }
 
 output "allow_access" {
@@ -105,6 +123,10 @@ output "postgresql" {
 
 output "postgresql-binding" {
 	value = yamlencode(jsondecode(local.postgresql_binding))
+}
+
+output "postgresql-instance" {
+  value = yamlencode(jsondecode(local.postgresql_instance))
 }
 
 resource "kubectl_manifest" "postgresql-trial" {
