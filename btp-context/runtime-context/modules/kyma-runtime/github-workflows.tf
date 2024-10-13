@@ -9,11 +9,27 @@ data "local_file" "gh_workflow" {
   filename = local_file.gh_workflow.filename
 }
 
-resource "github_repository_file" "workflow_dependabot" {
+resource "github_repository_file" "gh_workflow" {
   repository          = var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
   commit_message      = "[Actions Bot] Update Github Actions workflow"
   overwrite_on_create = true
   file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
   content             = data.local_file.gh_workflow.content
+}
+
+
+data "github_repository" "gh_workflow" {
+  full_name = var.GITHUB_ACTIONS_REPOSITORY
+}
+
+output "github_repository" {
+  value = data.github_repository.gh_workflow.html_url
+}
+
+
+data "github_repository_file" "foo" {
+  repository          = gvar.GITHUB_ACTIONS_REPOSITORY
+  branch              = "main"
+  file                = "".github/workflows/stale.yml"
 }
