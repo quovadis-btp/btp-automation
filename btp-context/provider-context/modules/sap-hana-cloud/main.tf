@@ -104,7 +104,8 @@ data "btp_subaccount_service_binding" "postgresql" {
 }
 
 locals {
-  postgresql-credentials = jsondecode(one(data.btp_subaccount_service_binding.postgresql[*].credentials))
+
+  postgresql-credentials = jsondecode( try(one(data.btp_subaccount_service_binding.postgresql[*].credentials), "") )
 }
 
 output "postgresql-binding" {
