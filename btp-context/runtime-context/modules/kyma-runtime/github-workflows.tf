@@ -16,7 +16,7 @@ output "gh_workflow_file" {
   value = data.local_file.gh_workflow.content
 }
 
-/*
+
 resource "github_repository_file" "gh_workflow" {
   repository          = var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
@@ -26,7 +26,6 @@ resource "github_repository_file" "gh_workflow" {
   content             = data.local_file.gh_workflow.content
 
 }
-*/
 
 
 data "github_repository" "gh_workflow" {
