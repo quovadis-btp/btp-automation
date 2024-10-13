@@ -28,8 +28,8 @@ output "github_repository" {
 }
 
 
-data "github_repository_file" "foo" {
-  repository          = gvar.GITHUB_ACTIONS_REPOSITORY
+data "github_repository_file" "stale" {
+  repository          = var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
-  file                = "".github/workflows/stale.yml"
+  file                = ".github/workflows/stale.yml"
 }
