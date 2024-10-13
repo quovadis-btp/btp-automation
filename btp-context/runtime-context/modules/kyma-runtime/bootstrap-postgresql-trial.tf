@@ -136,9 +136,10 @@ resource "kubectl_manifest" "postgresql-trial" {
 
     depends_on = [terraform_data.bootstrap-kymaruntime-bot, terraform_data.egress_ips]
 
+/*
     lifecycle {
       ignore_changes = all
-    }    
+    }  */  
 }
 
 
@@ -152,15 +153,6 @@ resource "kubectl_manifest" "postgresql-trial-binding" {
       ignore_changes = all
     }    
 }
-
-/*  
-resource "btp_subaccount_entitlement" "postgresql" {
-  subaccount_id = data.btp_subaccount.context.id
-  service_name  = "postgresql-db"
-  plan_name     = "trial"
-  amount        = 1
-}
-*/
 
 
 
