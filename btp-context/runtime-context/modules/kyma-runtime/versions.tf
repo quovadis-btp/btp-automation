@@ -23,5 +23,9 @@ terraform {
       source  = "oboukili/argocd"
       version = "~> 6.2"
     } 
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.0"
+    }
   }
 }
