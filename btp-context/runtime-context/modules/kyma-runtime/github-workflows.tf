@@ -34,7 +34,7 @@ data "github_repository" "gh_workflow" {
 }
 
 output "github_repository" {
-  value = data.github_repository.gh_workflow.html_url
+  value = data.github_repository.gh_workflow
 }
 
 
