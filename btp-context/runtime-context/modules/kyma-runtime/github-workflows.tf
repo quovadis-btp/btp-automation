@@ -5,8 +5,8 @@ resource "local_file" "gh_workflow" {
   content  =  yamlencode(jsondecode(data.jq_query.gh_workflow.result)) // "(put YAML content in here)"
 }
 
-data "local_file" "example" {
-  filename = local_file.example.filenamen
+data "local_file" "gh_workflow" {
+  filename = local_file.gh_workflow.filename
 }
 
 resource "github_repository_file" "workflow_dependabot" {
