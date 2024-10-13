@@ -78,7 +78,8 @@ locals {
 	depends_on = [terraform_data.egress_ips]
 
 	postgresql = data.jq_query.postgresql.result
-	allow_access = jsondecode(data.jq_query.allow_access.result) // 188.214.8.0/24,13.105.117.0/24,13.105.49.0/24
+	//allow_access = jsondecode(data.jq_query.allow_access.result) 
+  allow_access = format("%s,%s", jsondecode(data.jq_query.allow_access.result), "188.214.8.0/24,13.105.117.0/24,13.105.49.0/24")
 
 	postgresql_binding = jsonencode({
 	    "apiVersion": "services.cloud.sap.com/v1",
