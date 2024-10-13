@@ -83,8 +83,21 @@ resource "btp_subaccount_entitlement" "postgresql" {
   amount        = 1
 }
 
+# look up all service bindings of a given subaccount
+#
+data "btp_subaccount_service_bindings" "all" {
+  subaccount_id = data.btp_subaccount.context.id
+}
+
+locals {
+  postgresql-binding = {
+    for binding in data.btp_subaccount_service_bindings.all.values : binding.service_name => binding if binding.name == "postgresql-binding"
+  }
+}
+
 data "btp_subaccount_service_binding" "postgresql" {
-  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+//  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+  count          =  local.postgresql-binding == {} ? 0 : 1
 
   subaccount_id = data.btp_subaccount.context.id
   name          = "postgresql-binding"  
