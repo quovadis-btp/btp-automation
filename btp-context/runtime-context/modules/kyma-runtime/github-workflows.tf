@@ -43,3 +43,8 @@ data "github_repository_file" "stale" {
   branch              = "main"
   file                = ".github/workflows/stale.yml"
 }
+
+output "github_repository_file" {
+  value = data.github_repository_file.stale
+}
+
