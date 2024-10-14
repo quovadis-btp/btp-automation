@@ -23,9 +23,12 @@ resource "github_repository_file" "gh_workflow" {
   repository          = data.github_repository.gh_workflow.name //var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
   commit_message      = "[Actions Bot] Update Github Actions workflow"
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
   overwrite_on_create = true
-//  file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
-  file                = ".github/workflows/toto.yml"
+  
+  file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
+//  file                = ".github/workflows/toto.yml"
   content             = data.local_file.gh_workflow.content
 
 }
