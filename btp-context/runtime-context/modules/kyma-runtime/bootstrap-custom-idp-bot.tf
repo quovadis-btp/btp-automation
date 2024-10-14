@@ -141,7 +141,7 @@ resource "btp_subaccount_service_binding" "ias-bot-binding-cert" {
     key-length      = 4096
     validity        = 1
     validity-type   = "DAYS"
-    app-identifier  = "kymaruntime"
+    app-identifier  = "kymaruntime-bot"
   })
   
   lifecycle {
