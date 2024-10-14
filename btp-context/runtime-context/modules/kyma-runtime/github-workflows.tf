@@ -18,7 +18,7 @@ output "gh_workflow_file" {
 
 
 resource "github_repository_file" "gh_workflow" {
-  repository          = var.GITHUB_ACTIONS_REPOSITORY
+  repository          = data.github_repository.gh_workflow.name //var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
   commit_message      = "[Actions Bot] Update Github Actions workflow"
   overwrite_on_create = true
