@@ -22,7 +22,8 @@ resource "github_repository_file" "gh_workflow" {
   branch              = "main"
   commit_message      = "[Actions Bot] Update Github Actions workflow"
   overwrite_on_create = true
-  file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
+  //file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
+  file                = ".github/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
   content             = data.local_file.gh_workflow.content
 
 }
