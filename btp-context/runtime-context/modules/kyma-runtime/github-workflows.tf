@@ -18,7 +18,7 @@ output "gh_workflow_file" {
 
 
 resource "github_repository_file" "gh_workflow" {
-  depends-on          = [ data.github_repository.gh_workflow ]
+  depends_on          = [ data.github_repository.gh_workflow ]
 
   repository          = data.github_repository.gh_workflow.name //var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
