@@ -755,7 +755,8 @@ locals {
   })
 */
 
-  kubeconfig_gh_json = format("%s%s%s", "\"kubeconfig\":",data.jq_query.kubeconfig_gh_exec.result,"\\n")
+//  kubeconfig_gh_json = format("%s%s%s", "\"kubeconfig\":",data.jq_query.kubeconfig_gh_exec.result,"\\n")
+  kubeconfig_gh_json = format("%s%s%s", "{\"kubeconfig\":\\n",data.jq_query.kubeconfig_gh_exec.result,"\\n")
 }
 
 output "kubeconfig_gh_json" {
