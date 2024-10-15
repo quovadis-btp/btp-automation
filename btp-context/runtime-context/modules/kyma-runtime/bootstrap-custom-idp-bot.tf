@@ -652,7 +652,7 @@ locals {
    //"${{ secrets.TF_API_TOKEN }}"
 
     kubeconfig_gh_exec = jsonencode({
-        <<-EOT
+        config = <<-EOT
         "apiVersion": "client.authentication.k8s.io/v1",
         "interactiveMode": "Never",
         "command": "bash",
