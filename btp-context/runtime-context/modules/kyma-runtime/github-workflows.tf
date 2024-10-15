@@ -28,6 +28,7 @@ resource "github_repository_file" "gh_workflow" {
   overwrite_on_create = true
 
   file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
+//  file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.context_id}.yml"
   content             = data.local_file.gh_workflow.content
 
 }
@@ -60,7 +61,7 @@ data "github_actions_public_key" "repo_public_key" {
   repository = var.GITHUB_ACTIONS_REPOSITORY
 }*/
 
-resource "github_actions_secret" "example_secret" {
+resource "github_actions_secret" "gh_workflow" {
   depends_on       = [ data.github_repository.gh_workflow ]
 
   repository       = data.github_repository.gh_workflow.name 
@@ -69,7 +70,7 @@ resource "github_actions_secret" "example_secret" {
 }
 
 /*
-resource "github_actions_secret" "example_secret" {
+resource "github_actions_secret" "gh_workflow" {
   repository       = "example_repository"
   secret_name      = "example_secret_name"
   encrypted_value  = var.some_encrypted_secret_string
