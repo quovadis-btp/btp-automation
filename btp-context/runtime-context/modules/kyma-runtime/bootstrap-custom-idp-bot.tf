@@ -755,7 +755,7 @@ locals {
   })
 */
 
-  kubeconfig_gh_json = formamt("%s%s%s", jsonencode({"kubeconfig" = "<<-EOT"}),${data.jq_query.kubeconfig_gh_exec.result},"\nEOT")
+  kubeconfig_gh_json = format("%s%s%s", jsonencode({"kubeconfig" = "<<-EOT"}),${data.jq_query.kubeconfig_gh_exec.result},"\nEOT")
 }
 
 output "kubeconfig_gh_json" {
