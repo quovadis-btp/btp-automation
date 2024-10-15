@@ -647,7 +647,7 @@ locals {
    })
 
 
-   audience = format("%s%s%s%s%s", '${{ ', 'secret, '.', replace(local.subaccount_name, "-", "_"), ' }}') 
+   audience = format("%s%s%s%s%s", '${{ ', 'secret', '.', replace(local.subaccount_name, "-", "_"), ' }}') 
    //"${{ secrets.TF_API_TOKEN }}"
 
     kubeconfig_gh_exec = jsonencode({
