@@ -753,6 +753,10 @@ locals {
   })
 }
 
+output "kubeconfig_gh_json" {
+  value = local.kubeconfig_gh_json
+}
+
 data "jq_query" "gh_workflow" {
    depends_on = [data.http.kubeconfig]
 
