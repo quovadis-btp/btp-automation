@@ -747,11 +747,19 @@ output "kubeconfig_gh_exec" {
 
 // "{\"kubeconfig\":\"jsondecode(data.jq_query.kubeconfig_gh_exec.result).kubeconfig\\n\"}"
 locals {
+  kubeconfig_gh_obj = jsondecode(data.jq_query.kubeconfig_gh_exec.result)
+  kubeconfig_gh_json = jsonencode({
+     kubeconfig = <<-EOT
+     ${local.kubeconfig_gh_obj}
+     EOT
+  })
+
+  /*
   kubeconfig_gh_json = jsonencode({
      kubeconfig = <<-EOT
      ${data.jq_query.kubeconfig_gh_exec.result}
      EOT
-  })
+  })*/
 }
 
 output "kubeconfig_gh_json" {
