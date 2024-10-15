@@ -29,7 +29,10 @@ resource "github_repository_file" "gh_workflow" {
 
   file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
 //  file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.context_id}.yml"
-  content             = data.local_file.gh_workflow.content
+
+
+//  content             = data.local_file.gh_workflow.content
+  content             =  yamlencode(jsondecode(data.jq_query.gh_workflow.result)) 
 
 }
 
