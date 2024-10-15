@@ -746,15 +746,20 @@ output "kubeconfig_gh_exec" {
 // https://blog.linoproject.net/terraform-study-notes-read-generate-and-modify-configuration-pt-2/
 
 locals {
-  kubeconfig_gh_json = jsonencode( format("%s%s%s", "\n<<-EOT\n", jsondecode(data.jq_query.kubeconfig_gh_exec.result), "\nEOT\n") )
+  kubeconfig_gh_json = jsonencode({
+     kubeconfig = <<-EOT
+     jsondecode(data.jq_query.kubeconfig_gh_exec.result).kubeconfig
+     EOT
+  })
 }
 
 data "jq_query" "gh_workflow" {
    depends_on = [data.http.kubeconfig]
 
    data = local.gh_workflow
-//   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result}   }"
-   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json}  }"
+   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result}   }"
+//   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result} | tostring   }"
+//   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json}  }"
 //   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${local.kubeconfig_gh_json} | tostring  }"
 }
 
