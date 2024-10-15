@@ -55,15 +55,16 @@ output "github_repository_file" {
 
 # https://stackoverflow.com/questions/64008302/question-re-terraform-and-github-actions-secrets
 
+/*
 data "github_actions_public_key" "repo_public_key" {
   repository = var.GITHUB_ACTIONS_REPOSITORY
-}
+}*/
 
 resource "github_actions_secret" "example_secret" {
   depends_on       = [ data.github_repository.gh_workflow ]
 
   repository       = data.github_repository.gh_workflow.name 
-  secret_name      = local.subaccount_name // "${var.GITHUB_ACTIONS_WORKFLOW}-${local.context_id}"
+  secret_name      = replace(local.subaccount_name, "-", "_") // replace("${var.GITHUB_ACTIONS_WORKFLOW}-${local.context_id}", "-", "_")
   plaintext_value  = "gh-${local.cluster_id}"
 }
 
