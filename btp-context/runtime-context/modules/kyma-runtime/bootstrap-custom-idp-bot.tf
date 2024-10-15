@@ -749,7 +749,7 @@ output "kubeconfig_gh_exec" {
 locals {
   kubeconfig_gh_json = jsonencode({
      kubeconfig = <<-EOT
-     ${data.jq_query.kubeconfig_gh_exec.result)}
+     ${data.jq_query.kubeconfig_gh_exec.result}
      EOT
   })
 }
