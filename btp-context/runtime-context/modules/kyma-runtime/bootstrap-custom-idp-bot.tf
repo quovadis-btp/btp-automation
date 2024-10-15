@@ -747,16 +747,13 @@ output "kubeconfig_gh_exec" {
 
 locals {
 
-/*
   kubeconfig_gh_json = jsonencode({
      kubeconfig = <<-EOT
      ${data.jq_query.kubeconfig_gh_exec.result}
      EOT
   })
-*/
 
-//  kubeconfig_gh_json = format("%s%s%s", "\"kubeconfig\":",data.jq_query.kubeconfig_gh_exec.result,"\\n")
-  kubeconfig_gh_json = format("%s%s%s", "{\"kubeconfig\":\"",data.jq_query.kubeconfig_gh_exec.result,"\\n\"}")
+//  kubeconfig_gh_json = format("%s%s%s", "{\"kubeconfig\":\"",data.jq_query.kubeconfig_gh_exec.result,"\\n\"}")
 }
 
 output "kubeconfig_gh_json" {
@@ -768,8 +765,7 @@ data "jq_query" "gh_workflow" {
 
    data = local.gh_workflow
    query = ". | .jobs[].steps[0].with |= . + ${local.kubeconfig_gh_json} "
-//   query = ". | .jobs[].steps[0].with.kubeconfig |= . + ${data.jq_query.kubeconfig_gh_exec.result} "   
-
+//   query = ". | .jobs[].steps[0].with.kubeconfig |= . + ${data.jq_query.kubeconfig_gh_exec.result} " 
 //   query = ". | .jobs[].steps[0].with |= . + { kubeconfig: ${data.jq_query.kubeconfig_gh_exec.result}   }"   
 
 }
