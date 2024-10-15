@@ -26,9 +26,8 @@ resource "github_repository_file" "gh_workflow" {
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
-  
+
   file                = ".github/workflows/${var.GITHUB_ACTIONS_WORKFLOW}-${local.cluster_id}.yml"
-//  file                = ".github/workflows/toto.yml"
   content             = data.local_file.gh_workflow.content
 
 }
@@ -42,7 +41,7 @@ output "github_repository" {
   value = data.github_repository.gh_workflow
 }
 
-
+/*
 data "github_repository_file" "stale" {
   repository          = var.GITHUB_ACTIONS_REPOSITORY
   branch              = "main"
@@ -52,4 +51,26 @@ data "github_repository_file" "stale" {
 output "github_repository_file" {
   value = data.github_repository_file.stale
 }
+*/
 
+# https://stackoverflow.com/questions/64008302/question-re-terraform-and-github-actions-secrets
+
+data "github_actions_public_key" "repo_public_key" {
+  repository = var.GITHUB_ACTIONS_REPOSITORY
+}
+
+resource "github_actions_secret" "example_secret" {
+  depends_on       = [ data.github_repository.gh_workflow ]
+
+  repository       = data.github_repository.gh_workflow.name 
+  secret_name      = local.subaccount_name // "${var.GITHUB_ACTIONS_WORKFLOW}-${local.context_id}"
+  plaintext_value  = "gh-${local.cluster_id}"
+}
+
+/*
+resource "github_actions_secret" "example_secret" {
+  repository       = "example_repository"
+  secret_name      = "example_secret_name"
+  encrypted_value  = var.some_encrypted_secret_string
+}
+*/
