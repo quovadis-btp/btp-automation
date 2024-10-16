@@ -91,7 +91,6 @@ variable "BTP_POSTGRESQL_PLAN" {
 variable "HAS_POSTGRESQL_BINDING" {
   description = "Has Postgres binding with credentials"
   type        = bool
-  default     = false
 }
 
 
