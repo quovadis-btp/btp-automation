@@ -7,7 +7,7 @@ data "btp_globalaccount_entitlements" "all" {}
 
 # look up all available subaccounts of a global acount that have a specific label attached
 data "btp_subaccounts" "filtered" {
-  labels_filter = "btp-provider="
+  labels_filter = "btp-provider= "
 }
 
 data "btp_subaccount" "context" {
