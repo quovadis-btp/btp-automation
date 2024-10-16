@@ -19,33 +19,8 @@ locals {
 }
 
 
-# Read the entiltement data
-data "btp_subaccount_entitlements" "all" {
-  subaccount_id = data.btp_subaccount.context.id
-}
-
 # Extract the right entry from all entitlements
 locals {
-/*
-  postgresql_db = {
-    for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement 
-    if entitlement.service_name == "postgresql-db" && entitlement.plan_name == "trial"
-  }
-
-
-  launchpad_free = {
-    for entitlement in data.btp_subaccount_entitlements.all.values : entitlement.service_name => entitlement 
-    if entitlement.service_name == "SAPLaunchpad" && entitlement.plan_name == "free"
-  }*/
-
-  postgresql_db = {
-    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "trial" && service.service_name == "postgresql-db"
-  }
-
-  postgresql_standard_plan = {
-    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "standard" && service.service_name == "postgresql-db"
-  }
-
 
   launchpad_free = {
     for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "QUOTA_BASED_APPLICATION" && service.plan_name == "free" && service.service_name == "SAPLaunchpad" && service.quota_remaining >=  0
@@ -57,64 +32,12 @@ locals {
   }
 }
 
-// only use the trial postresql plan, the reson being even the free postfresql plan incurs a charge
-#
-output "postgresql_db" {
-  value       = local.postgresql_db
-}
-
 output "launchpad_free" {
   value       = local.launchpad_free
 }
 
 output "admin_api_access" {
   value       = local.admin_api_access
-}
-
-
-# adding postgresql-db entitlement (quota-based)
-#
-resource "btp_subaccount_entitlement" "postgresql" {
-  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
-
-  subaccount_id = data.btp_subaccount.context.id
-  service_name  = "postgresql-db"
-  plan_name     = "trial"
-  amount        = 1
-}
-
-# look up all service bindings of a given subaccount
-#
-data "btp_subaccount_service_bindings" "all" {
-  subaccount_id = data.btp_subaccount.context.id
-}
-
-locals {
-  has_postgresql_binding = {
-    for binding in data.btp_subaccount_service_bindings.all.values : binding.name => binding if binding.name == "postgresql-binding"
-  }
-}
-
-output "has_postgresql_binding" {
-  value       = local.has_postgresql_binding
-}
-
-data "btp_subaccount_service_binding" "postgresql" {
-  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
-//  count          =  local.has_postgresql_binding == {} ? 0 : 1
-//  count          =  var.HAS_POSTGRESQL_BINDING ? 1 : 0
-
-  subaccount_id = data.btp_subaccount.context.id
-  name          = "postgresql-binding"  
-}
-
-locals {
-  credentials            = one(data.btp_subaccount_service_binding.postgresql[*].credentials)
-  postgresql-credentials = local.credentials != null ? jsondecode(local.credentials) : null
-}
-
-output "postgresql-binding" {
-  value = nonsensitive( local.postgresql-credentials )
 }
 
 

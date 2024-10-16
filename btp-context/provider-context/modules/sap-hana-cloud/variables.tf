@@ -82,17 +82,6 @@ variable "plan_name" {
   default     = "hana"     
 }
 
-variable "BTP_POSTGRESQL_PLAN" {
-  description = "The name of the Postgresql-db Hyperscaler edition"
-  type        = string
-  default     = "freesbie"     
-}
-
-variable "HAS_POSTGRESQL_BINDING" {
-  description = "Has Postgres binding with credentials"
-  type        = bool
-}
-
 
 variable "BTP_FREE_LAUNCHPAD_QUOTA" {
   description = "Any free launchapd service available for the subaccount"
@@ -107,7 +96,6 @@ variable "HC_ADMIN_API_ACCESS" {
   type        = bool
 
 }
-
 
 
 variable "instance_name" {
