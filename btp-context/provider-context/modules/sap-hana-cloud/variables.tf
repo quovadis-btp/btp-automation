@@ -91,6 +91,7 @@ variable "BTP_POSTGRESQL_PLAN" {
 variable "HAS_POSTGRESQL_BINDING" {
   description = "Has Postgres binding with credentials"
   type        = bool
+  default     = false
 }
 
 
@@ -105,6 +106,7 @@ variable "BTP_FREE_LAUNCHPAD_QUOTA" {
 variable "HC_ADMIN_API_ACCESS" {
   description = "SAP HANA Cloud administration API service plan"
   type        = bool
+
 }
 
 
