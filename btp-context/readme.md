@@ -292,9 +292,19 @@ As we are able to gain a headless access to a kyma cluster we can leverage the c
 shoot_info = {
         extensions        = "shoot-auditlog-service,shoot-cert-service,shoot-dns-service,shoot-lakom-service,shoot-networking-problemdetector,shoot-oidc-service"
     }
-
 ```
 
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://www.scalr.com/blog/top-20-terraform-providers"><img class="aligncenter" src="(https://github.com/user-attachments/assets/cac7ec39-12f9-46fb-aad7-07e6dd5e1900" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 
 <h2 id="references">3. Useful links.</h2>
