@@ -65,7 +65,7 @@ data "btp_subaccount_service_bindings" "all" {
 }
 
 locals {
-  postgresql-binding = {
+  has_postgresql_binding = {
     for binding in data.btp_subaccount_service_bindings.all.values : binding.name => binding if binding.name == "postgresql-binding"
   }
 }
