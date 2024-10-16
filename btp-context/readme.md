@@ -78,6 +78,8 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
  	<li><a href="#terraform-visual-cli">terraform visual cli.</a></li>
  	<li><a href="#terraform-graph">terraform graph</a>.</li>
  	<li><a href="#terraform-k8s-backed">terraform kubernetes backend</a>.</li>
+  <li><a href="#terraform-k8s-dynamic-credentials">Dynamic Credentials with the Kubernetes and Helm providers</a>.</li>
+ 
 </ol>
 
  <li><a href="#references">Useful links.</a></li>
@@ -275,6 +277,13 @@ terraform workspace list
 ```
 terraform apply -var-file=kyma-adoption-live/btp-live.tfvars -input=false -auto-approve
 ```
+<h3 id="terraform-k8s-dynamic-credentials">2.5. Dynamic Credentials with the Kubernetes and Helm providers.</h3>
+
+This is only available if using TFC (HCP) to run your automation pipeline as described in the following article:
+  * [Dynamic Credentials with the Kubernetes and Helm providers](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/kubernetes-configuration#configure-hcp-terraform)
+
+From the moment we are able to gain a headless access to a kyma cluster we can leverage the cluster's oidc shoot extension with HCP acting as identity provider.  
+
 
 #### References
 
