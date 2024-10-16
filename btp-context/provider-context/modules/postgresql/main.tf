@@ -11,7 +11,7 @@ data "btp_subaccounts" "filtered" {
 }
 
 data "btp_subaccount" "context" {
-  id = var.subaccount_id != "" ? var.subaccount_id : data.btp_subaccounts.filtered.values.id
+  id = var.subaccount_id != "" ? var.subaccount_id : data.btp_subaccounts.filtered.values[0].id
 }
 
 
