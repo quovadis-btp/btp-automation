@@ -26,6 +26,20 @@ In a nutshell, a BTP global account has an owner (administrator) and comes with 
 For instance, whenever one creates a BTP trial account, one becomes the legal owner and a designated administrator of it.  
 As this is a trial agreement, (limited to a maximum period of 90 days), a predefined set of services with their entitlements is already baked into the agreement. 
 
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/03f0bf15-45e9-47c1-b5d1-d587696e0612" alt="" /></a></h1>
+</div>
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/f2471511-c09c-4215-8aaf-0bb3e47c2944" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 
 ### prepare a global account for contextual automation.  
@@ -66,7 +80,6 @@ This will result in a bootstrap context subaccount having been created as a plac
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/0b1f0199-f515-4311-a080-de72af59d759" alt="" /></a></h1>
 </div>
-
 </td>
 </tr>
 </tbody>
