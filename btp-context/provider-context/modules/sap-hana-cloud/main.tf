@@ -100,9 +100,9 @@ output "has_postgresql_binding" {
 }
 
 data "btp_subaccount_service_binding" "postgresql" {
-//  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+  count          = var.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
 //  count          =  local.postgresql-binding == {} ? 0 : 1
-  count          =  var.HAS_POSTGRESQL_BINDING ? 1 : 0
+//  count          =  var.HAS_POSTGRESQL_BINDING ? 1 : 0
 
   subaccount_id = data.btp_subaccount.context.id
   name          = "postgresql-binding"  
