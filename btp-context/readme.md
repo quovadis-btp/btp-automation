@@ -299,7 +299,7 @@ shoot_info = {
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://www.scalr.com/blog/top-20-terraform-providers"><img class="aligncenter" src="(https://github.com/user-attachments/assets/cac7ec39-12f9-46fb-aad7-07e6dd5e1900" alt="" /></a></h1>
+<h1><a href="https://www.scalr.com/blog/top-20-terraform-providers"><img class="aligncenter" src="https://github.com/user-attachments/assets/cac7ec39-12f9-46fb-aad7-07e6dd5e1900" alt="" /></a></h1>
 </div>
 </td>
 </tr>
