@@ -78,6 +78,7 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
  	<li><a href="#terraform-visual-cli">terraform visual cli.</a></li>
  	<li><a href="#terraform-graph">terraform graph</a>.</li>
  	<li><a href="#terraform-k8s-backed">terraform kubernetes backend</a>.</li>
+  <li><a href="#terraform-k8s-dynamic-credentials">Dynamic Credentials with the TF Kubernetes and Helm providers</a>.</li> 
 </ol>
 
  <li><a href="#references">Useful links.</a></li>
@@ -279,6 +280,135 @@ terraform apply -var-file=kyma-adoption-live/btp-live.tfvars -input=false -auto-
 #### References
 
   * https://pet2cattle.com/2022/04/terraform-remote-state-kubernetes
+
+<h3 id="terraform-k8s-dynamic-credentials">2.5. Dynamic Credentials with the Kubernetes and Helm providers.</h3>
+
+This is only available if using TFC (HCP) to run your automation pipeline as described in the following article:
+  * [Dynamic Credentials with the Kubernetes and Helm providers](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/kubernetes-configuration#configure-hcp-terraform)
+
+As we are able to gain a headless access to a kyma cluster we can leverage the cluster's oidc shoot extension to create an OIDC provider with TF HCP acting as identity provider.  
+
+
+```
+shoot_info = {
+        extensions        = "shoot-auditlog-service,shoot-cert-service,shoot-dns-service,shoot-lakom-service,shoot-networking-problemdetector,shoot-oidc-service"
+    }
+```
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://www.scalr.com/blog/top-20-terraform-providers"><img class="aligncenter" src="https://github.com/user-attachments/assets/cac7ec39-12f9-46fb-aad7-07e6dd5e1900" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+During the TFC apply run the following variable will be populate with the kube token, namely
+
+```
+// https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/kubernetes-configuration#configure-hcp-terraform
+//
+variable "tfc_kubernetes_dynamic_credentials" {
+  description = "Object containing Kubernetes dynamic credentials configuration"
+  type = object({
+    default = object({
+      token_path = string
+    })
+    aliases = map(object({
+      token_path = string
+    }))
+  })
+}
+
+output "kube_token" {
+  sensitive = true
+  value = file(var.tfc_kubernetes_dynamic_credentials.default.token_path)
+}
+
+```
+
+with both kubernetes and kubectl providers blocks as follows:
+
+```
+provider "kubernetes" {
+
+  host                   = try(yamldecode(data.tfe_outputs.current-runtime-context.values.headless-kubeconfig).clusters.0.cluster.server, local.kubeconfig.clusters[0].cluster.server)
+
+  cluster_ca_certificate = base64decode(try(yamldecode(data.tfe_outputs.current-runtime-context.values.headless-kubeconfig).clusters.0.cluster.certificate-authority-data, local.kubeconfig.clusters[0].cluster.certificate-authority-data))
+
+  token = try(file(var.tfc_kubernetes_dynamic_credentials.default.token_path), local.kubeconfig.users[0].user.token)
+}
+
+provider "kubectl" {
+
+  host                   = try(yamldecode(data.tfe_outputs.current-runtime-context.values.headless-kubeconfig).clusters.0.cluster.server, local.kubeconfig.clusters[0].cluster.server)
+
+  cluster_ca_certificate = base64decode(try(yamldecode(data.tfe_outputs.current-runtime-context.values.headless-kubeconfig).clusters.0.cluster.certificate-authority-data, local.kubeconfig.clusters[0].cluster.certificate-authority-data))
+
+  token = try(file(var.tfc_kubernetes_dynamic_credentials.default.token_path), local.kubeconfig.users[0].user.token)
+   load_config_file       = false
+
+}
+```
+
+
+```
+// https://developer.hashicorp.com/terraform/cloud-docs/run/run-environment#environment-variables
+//
+variable "TFC_WORKSPACE_NAME" {
+  // HCP Terraform automatically injects the following environment variables for each run. 
+  description = "The name of the workspace used in this run."
+  type        = string
+}
+
+variable "TFC_PROJECT_NAME" {
+  // HCP Terraform automatically injects the following environment variables for each run. 
+  description = "The name of the project used in this run."
+  type        = string
+}
+
+variable "TFC_WORKSPACE_SLUG" {
+  // HCP Terraform automatically injects the following environment variables for each run. 
+  description = "The slug consists of the organization name and workspace name, joined with a slash."
+  type        = string
+}
+
+// organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>.
+locals {
+  organization_name = split("/", var.TFC_WORKSPACE_SLUG)[0]
+  user_plan = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${var.TFC_WORKSPACE_NAME}:run_phase:plan"
+  user_apply = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${var.TFC_WORKSPACE_NAME}:run_phase:apply"
+}
+
+output "user_plan" {
+  value = local.user_plan
+}
+
+output "user_apply" {
+  value = local.user_apply
+}
+
+data "tfe_workspace" "current-runtime-context" {
+  name         = var.TFC_WORKSPACE_NAME
+  organization = "${local.organization_name}"
+}
+
+output "workspace_id" {
+  value = data.tfe_workspace.current-runtime-context.id
+}
+
+// https://developer.hashicorp.com/terraform/language/terraform#tf_cloud_organization
+// https://developer.hashicorp.com/terraform/language/terraform#tf_workspace
+//
+data "tfe_outputs" "current-runtime-context" {
+  organization = "${local.organization_name}"
+  workspace    = var.TFC_WORKSPACE_NAME
+}
+```
 
 <h2 id="references">3. Useful links.</h2>
 
