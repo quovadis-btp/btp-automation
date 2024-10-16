@@ -88,6 +88,12 @@ variable "BTP_POSTGRESQL_PLAN" {
   default     = "freesbie"     
 }
 
+variable "HAS_POSTGRESQL_BINDING" {
+  description = "Has Postgres binding with credentials"
+  type        = bool
+}
+
+
 variable "BTP_FREE_LAUNCHPAD_QUOTA" {
   description = "Any free launchapd service available for the subaccount"
   type        = bool 
