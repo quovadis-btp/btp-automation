@@ -2,6 +2,19 @@ data "btp_globalaccount" "this" {}
 
 data "btp_globalaccount_entitlements" "all" {}
 
+
+
+
+# look up all available subaccounts of a global acount that have a specific label attached
+data "btp_subaccounts" "filtered" {
+  labels_filter = "btp-provider="
+}
+
+data "btp_subaccount" "context" {
+  id = var.subaccount_id != "" ? var.subaccount_id : data.btp_subaccounts.filtered.id
+}
+
+
 locals {
   
   free_entitlements = { 
