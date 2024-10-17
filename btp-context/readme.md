@@ -38,16 +38,13 @@ Introduction to btp contexts
 =============
 
 
+
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/299f0113-3ba6-47de-86b2-9bbfa2ad4e3f" alt="" /></a></h1>
-</div>
-
-<div>
-<h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/6777b2b9-36cf-4cfd-819d-b3b1435ada89" alt="" /></a></h1>
 </div>
 </td>
 </tr>
