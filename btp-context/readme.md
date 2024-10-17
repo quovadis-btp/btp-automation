@@ -37,8 +37,6 @@ Furthermore, this approach allows for _location and data center transparency_ wi
 Introduction to btp contexts
 =============
 
-
-
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
 <tbody>
 <tr style="height: 193px;">
@@ -46,6 +44,9 @@ Introduction to btp contexts
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/299f0113-3ba6-47de-86b2-9bbfa2ad4e3f" alt="" /></a></h1>
 </div>
+<div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8423e9e5-c292-4b94-84c7-530a2b8c2b37" alt="" /></a></h1>
+</div> 
 </td>
 </tr>
 </tbody>
