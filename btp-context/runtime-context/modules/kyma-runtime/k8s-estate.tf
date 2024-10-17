@@ -305,7 +305,8 @@ You can use both "User" and "Group" subjects in your role bindings.
 #
 resource "kubernetes_cluster_role_binding_v1" "oidc_role" {
   depends_on = [ 
-      terraform_data.bootstrap-tcf-oidc
+      //terraform_data.bootstrap-tcf-oidc
+      terraform_data.bootstrap-kymaruntime-bot
       ] 
 
   metadata {
