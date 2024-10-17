@@ -22,12 +22,12 @@ terraform {
       version = "~> 2.0"
     }  
     argocd = {
-      source  = "oboukili/argocd"
-      version = "~> 6.2"
+      source = "argoproj-labs/argocd"
+      version = "~> 7.0.3"      
     } 
     github = {
       source  = "integrations/github"
-      version = "6.3.1"
+      version = "~> 6.3.1"
     }
   }
 }
