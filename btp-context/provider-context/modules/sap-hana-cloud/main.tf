@@ -100,6 +100,11 @@ resource "btp_subaccount_subscription" "hana_cloud_tools" {
   app_name      = var.hana_cloud_tools_app_name
   plan_name     = var.hana_cloud_tools_plan_name
   depends_on    = [btp_subaccount_entitlement.tools]
+
+  timeouts = {
+    create = "25m"
+    delete = "15m"
+  }  
 }
 
 data "btp_subaccount_subscription" "hana_cloud_tools_data" {
