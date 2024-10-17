@@ -48,9 +48,7 @@ Introduction to btp contexts
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/4ce6df35-4de5-4bc9-93d2-cc0dae348266" alt="" /></a></h1>
 </div>
-<div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8423e9e5-c292-4b94-84c7-530a2b8c2b37" alt="" /></a></h1>
-</div> 
+
 </td>
 </tr>
 </tbody>
