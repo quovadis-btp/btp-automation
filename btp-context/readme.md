@@ -46,7 +46,7 @@ Introduction to btp contexts
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/299f0113-3ba6-47de-86b2-9bbfa2ad4e3f" alt="" /></a></h1>
 </div>
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/e0937f60-59ee-4258-bf6a-a98551d6a4fe" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/4ce6df35-4de5-4bc9-93d2-cc0dae348266" alt="" /></a></h1>
 </div>
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8423e9e5-c292-4b94-84c7-530a2b8c2b37" alt="" /></a></h1>
