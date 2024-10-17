@@ -9,7 +9,7 @@ A provider context is a source of BTP services for a given kyma cluster.
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/dff2f486-91f7-4f25-971b-294cb07de7b7" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/62361556-addb-431a-9f39-a9c1b6ca3517" alt="" /></a></h1>
 </div>
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8a1eea65-5ff0-4150-a561-8bb674973719" alt="" /></a></h1>
