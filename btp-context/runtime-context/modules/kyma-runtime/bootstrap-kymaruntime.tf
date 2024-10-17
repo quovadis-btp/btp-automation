@@ -673,6 +673,6 @@ resource "terraform_data" "provider_context" {
 output "provider_context" {
   depends_on = [terraform_data.provider_context]
 
-  value = jsondecode(terraform_data.provider_context.output)
+  value = try(jsondecode(terraform_data.provider_context.output), "")
 
 }
