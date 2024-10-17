@@ -10,6 +10,9 @@ As depicted below, the kyma runtime environment evolves in a depleted context wh
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8423e9e5-c292-4b94-84c7-530a2b8c2b37" alt="" /></a></h1>
+</div> 
+<div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/5e41e629-be42-4e65-a9bf-c76d8f58ea60" alt="" /></a></h1>
 </div>
 <div>
