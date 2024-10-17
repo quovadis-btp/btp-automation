@@ -41,6 +41,39 @@ output "admin_api_access" {
 }
 
 
+
+# Extract the right entry from all entitlements
+locals {
+
+  postgresql_db = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "trial" && service.service_name == "postgresql-db"
+  }
+
+  postgresql_standard_plan = {
+    for service in data.btp_globalaccount_entitlements.all.values : service.service_name => service if service.category == "SERVICE" && service.plan_name == "standard" && service.service_name == "postgresql-db"
+  }
+  
+  BTP_POSTGRESQL_PLAN = local.postgresql_db == {} ? "" : "trial"
+}
+
+// only use the trial postresql plan, the reson being even the free postfresql plan incurs a charge
+#
+output "postgresql_db" {
+  value       = local.postgresql_db
+}
+
+# adding postgresql-db entitlement (quota-based)
+#
+resource "btp_subaccount_entitlement" "postgresql" {
+  count          = local.BTP_POSTGRESQL_PLAN != "trial" ? 0 : 1
+
+  subaccount_id = data.btp_subaccount.context.id
+  service_name  = "postgresql-db"
+  plan_name     = "trial"
+  amount        = 1
+}
+
+
 resource "btp_subaccount_entitlement" "hana_cloud" {
   subaccount_id = data.btp_subaccount.context.id
   service_name  = var.service_name
