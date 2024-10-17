@@ -15,12 +15,13 @@ A provider context is a source of BTP services for a given kyma cluster.
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/8a1eea65-5ff0-4150-a561-8bb674973719" alt="" /></a></h1>
 </div>
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/cfb76bc4-eae6-4b08-8b8e-56eb9b5d853a" alt="" /></a></h1>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/d216c5dd-ec52-4cff-8465-7ad9f43846af" alt="" /></a></h1>
 </div>  
 </td>
 </tr>
 </tbody>
 </table>
+
 
 ## Destinations
 
