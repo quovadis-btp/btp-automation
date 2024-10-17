@@ -42,13 +42,16 @@ Introduction to btp contexts
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
+<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/bb9cb33f-e870-40a2-b23e-14f1beedca53" alt="" /></a></h1>
+</div>
+
+<div>
 <h1><a href="https://github.com/kyma-project/kyma/issues/18666#issuecomment-2082901529"><img class="aligncenter" src="https://github.com/user-attachments/assets/6777b2b9-36cf-4cfd-819d-b3b1435ada89" alt="" /></a></h1>
 </div>
 </td>
 </tr>
 </tbody>
 </table>
-
 
 BTP contexts are logical entities defined to host and implement various infrastructure contexts, namely bootstrap, runtime, provider and consumer.  
 
