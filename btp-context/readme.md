@@ -44,7 +44,7 @@ Introduction to btp contexts
 <td style="width: 71.6%; height: 193px;">
 
 <div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/4ce6df35-4de5-4bc9-93d2-cc0dae348266" alt="" /></a></h1>
+<h1><a href="#"><img class="aligncenter" src="https://github.com/user-attachments/assets/4ce6df35-4de5-4bc9-93d2-cc0dae348266" alt="" /></a></h1>
 </div>
 
 </td>
@@ -155,7 +155,7 @@ This approach aligns well with modern cloud-native architectures and microservic
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/e7bfe7d5-1aa3-4b5c-a4aa-596884bed105" alt="" /></a></h1>
+<h1><a href="#"><img class="aligncenter" src="https://github.com/user-attachments/assets/e7bfe7d5-1aa3-4b5c-a4aa-596884bed105" alt="" /></a></h1>
 </div>
 </td>
 </tr>
@@ -178,7 +178,7 @@ For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/lates
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
 <div>
-<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/7babdaf3-8255-4496-b7a5-bc2d816c7348" alt="" /></a></h1>
+<h1><a href="https://www.terraform.io/"><img class="aligncenter" src="https://github.com/user-attachments/assets/7babdaf3-8255-4496-b7a5-bc2d816c7348" alt="" /></a></h1>
 </div>
 </td>
 </tr>
