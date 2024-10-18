@@ -42,9 +42,7 @@ Introduction to btp contexts
 <tbody>
 <tr style="height: 193px;">
 <td style="width: 71.6%; height: 193px;">
-<div>
-<h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/299f0113-3ba6-47de-86b2-9bbfa2ad4e3f" alt="" /></a></h1>
-</div>
+
 <div>
 <h1><a href=""><img class="aligncenter" src="https://github.com/user-attachments/assets/4ce6df35-4de5-4bc9-93d2-cc0dae348266" alt="" /></a></h1>
 </div>
