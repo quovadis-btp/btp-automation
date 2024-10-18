@@ -148,8 +148,19 @@ This approach aligns well with modern cloud-native architectures and microservic
 
   * [Seamless deployment of SaaS provider applications to kyma environments](https://github.com/kyma-project/kyma/issues/18666)
 
-
 <h2 id="terraform-automation">2. Terraform automation.</h2>  
+
+<table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
+<tbody>
+<tr style="height: 193px;">
+<td style="width: 71.6%; height: 193px;">
+<div>
+<h1><a href="https://registry.terraform.io/providers/SAP/btp/latest"><img class="aligncenter" src="https://github.com/user-attachments/assets/e7bfe7d5-1aa3-4b5c-a4aa-596884bed105" alt="" /></a></h1>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 
 Terraform is a popular declarative CaC tool that allows you to describe and orchestrate infrastructure landscapes in the form of code.  
 It allows to plan, apply and maintain the desired state of our defined btp contexts, laying the bricks towards business landscape automation - our ultimate goal.    
