@@ -233,7 +233,7 @@ resource "terraform_data" "kyma" {
   triggers_replace = btp_subaccount_environment_instance.kyma[*]
   depends_on = [time_sleep.wait_180_seconds]
 
-  input = jsondecode(local.labels)
+  input = local.labels
   //command = "echo 'terraform_data.kyma provisioner'"
 
   provisioner "local-exec" {
@@ -248,9 +248,8 @@ resource "terraform_data" "kyma_env" {
         terraform_data.kubectl_getnodes
   ]
 
-  input = jsondecode(local.labels)
-  //command = "echo 'terraform_data.kyma provisioner'"
-
+  input = local.labels
+ 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
 
