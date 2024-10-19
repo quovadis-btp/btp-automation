@@ -249,8 +249,8 @@ resource "terraform_data" "kyma_env" {
   ]
 
   input = [
-        local.dashboard_url
-        local.labels
+        local.dashboard_url,
+        local.labels,
         local.parameters
       ]
  
