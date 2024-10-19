@@ -261,16 +261,6 @@ locals {
   kyma_kubeconfig = data.http.kubeconfig.response_body
 }
 
-/*
-data "tfe_outputs" "runtime_context" {
-  organization = "quovadis"
-  workspace    = "runtime-context-41bb3a1e-2c13-454e-976f-d9734acad3c4"
-}
-
-locals {
-  oidc-kubeconfig = data.tfe_outputs.runtime_context.value
-}
-*/
 
 /*
 resource "local_sensitive_file" "kubeconfig-oidc" {
