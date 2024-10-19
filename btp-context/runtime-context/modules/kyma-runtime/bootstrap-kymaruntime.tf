@@ -259,21 +259,18 @@ resource "terraform_data" "kyma_env" {
     command = <<EOF
      (
       dashboard_url='${self.input[0]}'
-      echo $(jq  '.' <<< $dashboard_url)
-      # echo $dashboard_url
-
-      echo $(jq -r '.' <<< $dashboard_url ) >  dashboard_url.json
+      echo "$dashboard_url"
+      # echo $(jq -r '.' <<< $dashboard_url)
+      # echo $(jq -r '.' <<< $dashboard_url ) >  dashboard_url.json
 
       labels='${self.input[1]}'
-      echo $(jq '.' <<< $labels)
-      # echo $labels
-
+      echo "$labels"
+      # echo $(jq -r '.' <<< $labels)
       echo $(jq -r '.' <<< $labels ) >  labels.json
 
       parameters='${self.input[2]}'
-      echo $(jq  '.' <<< $parameters)
-      # echo $parameters
-
+      echo "$parameters"
+      # echo $(jq -r '.' <<< $parameters)
       echo $(jq -r '.' <<< $parameters ) >  parameters.json
 
      )
