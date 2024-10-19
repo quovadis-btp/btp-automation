@@ -271,6 +271,7 @@ resource "terraform_data" "kyma_env" {
       parameters='${self.input[2]}'
       echo "$parameters"
       # echo $(jq -r '.' <<< $parameters)
+      echo $parameters | jq -r '.'
       echo $(jq -r '.' <<< $parameters ) >  parameters.json
 
      )
