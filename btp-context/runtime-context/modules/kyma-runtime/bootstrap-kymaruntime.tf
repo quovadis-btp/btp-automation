@@ -62,7 +62,7 @@ locals {
   user_apply = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
 
 //  administrators = var.cluster_admins
-  administrators = concat(var.cluster_admins, "${list(local.user_plan, local.user_apply)}"  )
+  administrators = concat(var.cluster_admins, tolist([local.user_plan, local.user_apply]) )
 }
 
 output "administrators" {
