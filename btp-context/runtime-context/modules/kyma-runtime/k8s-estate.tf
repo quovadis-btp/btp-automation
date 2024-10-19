@@ -1,16 +1,12 @@
-/*
-.PHONY: get-cluster-zones
-get-cluster-zones: ## get cluster nodes topology
-  kubectl get nodes -o custom-columns=NAME:.metadata.name,REGION:".metadata.labels.topology\.kubernetes\.io/region",ZONE:".metadata.labels.topology\.kubernetes\.io/zone" --kubeconfig $(KUBECONFIG)
+// https://discuss.hashicorp.com/t/extracting-variables-from-workspace-name-in-tfc/55952/4
+//
+locals {
+  workspace_name = "${terraform.workspace}"
+}
 
-.PHONY: get-cluster-id
-get-cluster-id: ## get cluster id for hanacloud instance mapping
-  kubectl get cm sap-btp-operator-config -n kyma-system --kubeconfig $(KUBECONFIG) -o jsonpath='{.data.CLUSTER_ID}'
-
-CLUSTER_DOMAIN= $(shell kubectl get cm -n kube-system shoot-info --kubeconfig $(KUBECONFIG) -ojsonpath='{.data.domain}' )
-ISTIO_GATEWAY=kyma-gateway.kyma-system.svc.cluster.local
-*/
-
+output "workspace_name" {
+  value = local.workspace_name
+}
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
