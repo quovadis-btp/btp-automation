@@ -289,15 +289,15 @@ locals {
   parameters = one(btp_subaccount_environment_instance.kyma[*].parameters)
 }
 
-outputs "kyma_dashboard_url" {
+output "kyma_dashboard_url" {
   value = nonsensitive(local.dashboard_url)
 }
 
-outputs "kyma_labels" {
+output "kyma_labels" {
   value = nonsensitive(jsonencode(local.labels))
 }
 
-outputs "kyma_parameters" {
+output "kyma_parameters" {
   value = nonsensitive(jsonencode(local.parameters))
 }
 
