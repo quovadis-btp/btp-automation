@@ -55,8 +55,14 @@ resource "null_resource" "cache_kyma_machine_type" {
 locals {
   machineType = one(null_resource.cache_kyma_machine_type[*].triggers.machineType)
   cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
+
+  administrators = var.cluster_admins
+  administrators_merge = merge(tomap({ var.cluster_admins, [ data.tfe_outputs.current-runtime-context.values.user_plan, data.tfe_outputs.current-runtime-context.values.user_apply ] })
 }
 
+output "administrators_merge" {
+  value = nonsensitive(local.administrators_merge)
+}
 
 locals {
   modules = [
@@ -118,7 +124,7 @@ resource "btp_subaccount_environment_instance" "kyma" {
       "modules": {
         "list": local.modules
       },
-      "administrators": var.cluster_admins,
+      "administrators": local.administrators,
       "oidc": {
         "clientID": jsondecode(btp_subaccount_service_binding.ias-local-binding.credentials).clientid,
         "groupsClaim": "groups",
