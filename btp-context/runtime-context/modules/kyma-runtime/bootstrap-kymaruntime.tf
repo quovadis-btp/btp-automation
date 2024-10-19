@@ -58,8 +58,8 @@ locals {
 
 
 
-  user_plan = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_plan)
-  user_apply = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
+//  user_plan = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_plan)
+//  user_apply = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
 
 //  administrators = var.cluster_admins
   administrators = concat(var.cluster_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.user_plan, local.user_apply]) )

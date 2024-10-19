@@ -6,6 +6,12 @@ variable "TFC_WORKSPACE_SLUG" {
   type        = string
 }
 
+variable "TFC_PROJECT_NAME" {
+  // HCP Terraform automatically injects the following environment variables for each run. 
+  description = "The name of the project used in this run."
+  type        = string
+}
+
 locals {
   workspace_name = "${terraform.workspace}"
   organization_name = split("/", var.TFC_WORKSPACE_SLUG)[0]
@@ -15,8 +21,25 @@ output "workspace_name" {
   value = local.workspace_name
 }
 
+
+// organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>.
+locals {
+  organization_name = "${local.organization_name}"
+  user_plan = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:plan"
+  user_apply = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:apply"
+}
+
+output "user_plan" {
+  value = nonsensitive(local.user_plan)
+}
+
+output "user_apply" {
+  value = nonsensitive(local.user_apply)
+}
+  
+/*
 data "tfe_outputs" "current-runtime-context" {
-  organization = "${local.organization_name}" // var.provider_context_organization
+  organization = "${local.organization_name}"
   workspace    = "${terraform.workspace}"
 }
 
@@ -27,6 +50,7 @@ output "user_plan" {
 output "user_apply" {
   value = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
 }
+*/
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
