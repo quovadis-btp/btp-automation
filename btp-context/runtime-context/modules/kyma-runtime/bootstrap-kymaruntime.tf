@@ -57,7 +57,7 @@ locals {
   cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
 
   administrators = var.cluster_admins
-  administrators_merge = merge(var.cluster_admins, [ data.tfe_outputs.current-runtime-context.values.user_plan, data.tfe_outputs.current-runtime-context.values.user_apply ] )
+  administrators_merge = concat(var.cluster_admins, [ data.tfe_outputs.current-runtime-context.values.user_plan, data.tfe_outputs.current-runtime-context.values.user_apply ] )
 }
 
 output "administrators_merge" {
