@@ -8,6 +8,19 @@ output "workspace_name" {
   value = local.workspace_name
 }
 
+data "tfe_outputs" "current-runtime-context" {
+  organization = var.provider_context_organization
+  workspace    = "${terraform.workspace}"
+}
+
+output "user_plan" {
+  value = data.tfe_outputs.current-runtime-context.values.user_plan
+}
+
+output "user_apply" {
+  value = data.tfe_outputs.current-runtime-context.values.user_apply
+}
+
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
 data "kubernetes_config_map_v1" "sap-btp-operator-config" {
