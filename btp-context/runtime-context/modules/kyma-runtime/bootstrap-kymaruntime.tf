@@ -289,6 +289,18 @@ locals {
   parameters = one(btp_subaccount_environment_instance.kyma[*].parameters)
 }
 
+outputs "kyma_dashboard_url" {
+  value = nonsensitive(local.dashboard_url)
+}
+
+outputs "kyma_labels" {
+  value = nonsensitive(jsonencode(local.labels))
+}
+
+outputs "kyma_parameters" {
+  value = nonsensitive(jsonencode(local.parameters))
+}
+
 # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
 # https://developer.hashicorp.com/terraform/language/expressions/custom-conditions#preconditions-and-postconditions
 #
