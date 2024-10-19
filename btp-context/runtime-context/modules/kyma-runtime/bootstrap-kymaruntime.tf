@@ -264,15 +264,17 @@ resource "terraform_data" "kyma_env" {
       # echo $(jq -r '.' <<< $dashboard_url ) >  dashboard_url.json
 
       labels='${self.input[1]}'
-      echo "$labels"
+      echo "$labels" | jq -r '.'
+      echo "$labels" | jq -r '.' >  labels.json
       # echo $(jq -r '.' <<< $labels)
-      echo $(jq -r '.' <<< $labels ) >  labels.json
+      # echo $(jq -r '.' <<< $labels ) >  labels.json
 
       parameters='${self.input[2]}'
-      echo "$parameters"
+      # echo "$parameters"
       # echo $(jq -r '.' <<< $parameters)
       echo $parameters | jq -r '.'
-      echo $(jq -r '.' <<< $parameters ) >  parameters.json
+      echo $parameters | jq -r '.' >  parameters.json
+      #echo $(jq -r '.' <<< $parameters ) >  parameters.json
 
      )
     EOF
