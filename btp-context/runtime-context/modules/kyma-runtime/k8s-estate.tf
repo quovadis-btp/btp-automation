@@ -14,11 +14,11 @@ data "tfe_outputs" "current-runtime-context" {
 }
 
 output "user_plan" {
-  value = data.tfe_outputs.current-runtime-context.values.user_plan
+  value = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_plan)
 }
 
 output "user_apply" {
-  value = data.tfe_outputs.current-runtime-context.values.user_apply
+  value = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
 }
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
