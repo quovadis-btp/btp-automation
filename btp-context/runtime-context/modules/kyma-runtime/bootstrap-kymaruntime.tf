@@ -249,9 +249,9 @@ resource "terraform_data" "kyma_env" {
   ]
 
   input = [
-        local.dashboard_url,
-        local.labels,
-        local.parameters
+        nonsensitive(local.dashboard_url),
+        nonsensitive(local.labels),
+        nonsensitive(local.parameters)
       ]
  
   provisioner "local-exec" {
