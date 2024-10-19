@@ -294,11 +294,11 @@ output "kyma_dashboard_url" {
 }
 
 output "kyma_labels" {
-  value = nonsensitive(jsonencode(local.labels))
+  value = nonsensitive(jsondecode(local.labels))
 }
 
 output "kyma_parameters" {
-  value = nonsensitive(jsonencode(local.parameters))
+  value = nonsensitive(jsondecode(local.parameters))
 }
 
 # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
