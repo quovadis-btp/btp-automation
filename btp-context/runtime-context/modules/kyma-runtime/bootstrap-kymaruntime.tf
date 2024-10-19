@@ -233,9 +233,13 @@ resource "terraform_data" "kyma" {
   triggers_replace = btp_subaccount_environment_instance.kyma[*]
   depends_on = [time_sleep.wait_180_seconds]
 
+  input = one(btp_subaccount_environment_instance.kyma[*])
+  //command = "echo 'terraform_data.kyma provisioner'"
+
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "echo 'terraform_data.kyma provisioner'"
+
+    command = "echo '${self.input}'"
   }
 }
 
