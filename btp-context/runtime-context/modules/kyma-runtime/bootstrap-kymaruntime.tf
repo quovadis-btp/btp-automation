@@ -248,18 +248,47 @@ resource "terraform_data" "kyma_env" {
         terraform_data.kubectl_getnodes
   ]
 
-  input = one(btp_subaccount_environment_instance.kyma[*]) //local.labels
+  input = [
+        local.dashboard_url
+        local.labels
+        local.parameters
+      ]
  
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
 
-    command = "echo '${self.input}'"
+//    command = "echo '${self.input[0]}'"
+   command = <<EOF
+     (
+      dashboard_url='${self.input[0]}'
+      echo $(jq -r '.' <<< $dashboard_url)
+      echo $dashboard_url
+
+      echo $(jq -r '.' <<< $dashboard_url ) >  dashboard_url.json
+
+      labels='${self.input[1]}'
+      echo $(jq -r '.' <<< $labels)
+      echo $labels
+
+      echo $(jq -r '.' <<< $labels ) >  labels.json
+
+      parameters='${self.input[2]}'
+      echo $(jq -r '.' <<< $parameters)
+      echo $parameters
+
+      echo $(jq -r '.' <<< $parameters ) >  parameters.json
+  
+     )
+   EOF
+
   }
 }
 
 # https://stackoverflow.com/a/74460150
 locals {
+  dashboard_url = one(btp_subaccount_environment_instance.kyma[*].dashboard_url)
   labels = one(btp_subaccount_environment_instance.kyma[*].labels)
+  parameters = one(btp_subaccount_environment_instance.kyma[*].parameters)
 }
 
 # https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http
