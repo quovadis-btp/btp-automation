@@ -24,7 +24,6 @@ output "workspace_name" {
 
 // organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>.
 locals {
-  organization_name = "${local.organization_name}"
   user_plan = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:plan"
   user_apply = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:apply"
 }
