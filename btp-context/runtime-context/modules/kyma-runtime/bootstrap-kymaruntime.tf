@@ -248,7 +248,7 @@ resource "terraform_data" "kyma_env" {
         terraform_data.kubectl_getnodes
   ]
 
-  input = local.labels
+  input = one(btp_subaccount_environment_instance.kyma[*]) //local.labels
  
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
