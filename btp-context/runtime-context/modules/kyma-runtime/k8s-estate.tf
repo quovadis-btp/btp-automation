@@ -1,7 +1,14 @@
 // https://discuss.hashicorp.com/t/extracting-variables-from-workspace-name-in-tfc/55952/4
 //
+variable "TFC_WORKSPACE_SLUG" {
+  // HCP Terraform automatically injects the following environment variables for each run. 
+  description = "The slug consists of the organization name and workspace name, joined with a slash."
+  type        = string
+}
+
 locals {
   workspace_name = "${terraform.workspace}"
+  organization_name = split("/", var.TFC_WORKSPACE_SLUG)[0]
 }
 
 output "workspace_name" {
@@ -9,7 +16,7 @@ output "workspace_name" {
 }
 
 data "tfe_outputs" "current-runtime-context" {
-  organization = var.provider_context_organization
+  organization = "${local.organization_name}" // var.provider_context_organization
   workspace    = "${terraform.workspace}"
 }
 
