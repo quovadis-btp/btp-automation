@@ -39,7 +39,7 @@ locals {
   # github action user name format: actions-oidc:repo:myOrg/myRepo:ref:refs/heads/main
   # user name: actions-oidc:repo:quovadis-btp/btp-boosters:ref:refs/heads/main
   #
-  user_gha = "actions-oidc:repo:${{var.GITHUB_ACTIONS_REPOSITORY}:ref:${var.GITHUB_ACTIONS_REF}"
+  user_gha = "actions-oidc:repo:${var.GITHUB_ACTIONS_REPOSITORY}:ref:${var.GITHUB_ACTIONS_REF}"
 }
 
 output "user_plan" {
