@@ -14,10 +14,6 @@ resource "btp_subaccount_entitlement" "kymaruntime" {
 }
 
 
-/*
-  btp list accounts/available-environment | jq -r '.availableEnvironments[] | select(.serviceName == "kymaruntime" and .planName =="$(KYMARUNTIME_PLAN)") | .createSchema | fromjson | { machineType: .parameters.properties.machineType.enum[1], region: .parameters.properties.region.enum[0] }' > kyma-params.json
-*/
-
 # Fetch all available environments for the subaccount
 #
 data "btp_subaccount_environments" "all" {
@@ -56,13 +52,7 @@ locals {
   machineType = one(null_resource.cache_kyma_machine_type[*].triggers.machineType)
   cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
 
-
-
-//  user_plan = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_plan)
-//  user_apply = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
-
-//  administrators = var.cluster_admins
-  administrators = concat(var.cluster_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.user_plan, local.user_apply]) )
+  administrators = concat(var.cluster_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.user_plan, local.user_apply, local.user_gha]) )
 }
 
 output "administrators" {

@@ -21,11 +21,25 @@ output "workspace_name" {
   value = local.workspace_name
 }
 
+/*
+data "tfe_outputs" "current-runtime-context" {
+  organization = "${local.organization_name}"
+  workspace    = "${terraform.workspace}"
+}
+*/
 
-// organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>.
+
 locals {
+  // TFC/HCP user identity formats
+  //
+  // organization:<MY-ORG-NAME>:project:<MY-PROJECT-NAME>:workspace:<MY-WORKSPACE-NAME>:run_phase:<plan|apply>
   user_plan = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:plan"
   user_apply = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:apply"
+
+  # github action user name format: actions-oidc:repo:myOrg/myRepo:ref:refs/heads/main
+  # user name: actions-oidc:repo:quovadis-btp/btp-boosters:ref:refs/heads/main
+  #
+  user_gha = "actions-oidc:repo:${{var.GITHUB_ACTIONS_REPOSITORY}:ref:${var.GITHUB_ACTIONS_REF}"
 }
 
 output "user_plan" {
@@ -36,20 +50,9 @@ output "user_apply" {
   value = nonsensitive(local.user_apply)
 }
   
-/*
-data "tfe_outputs" "current-runtime-context" {
-  organization = "${local.organization_name}"
-  workspace    = "${terraform.workspace}"
+output "user_gha" {
+  value = nonsensitive(local.user_gha)
 }
-
-output "user_plan" {
-  value = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_plan)
-}
-
-output "user_apply" {
-  value = nonsensitive(data.tfe_outputs.current-runtime-context.values.user_apply)
-}
-*/
 
 # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 
