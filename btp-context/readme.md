@@ -52,12 +52,12 @@ Introduction to btp contexts
 </tbody>
 </table>
 
-BTP contexts are logical entities defined to host and implement various infrastructure contexts, namely bootstrap, runtime, provider and consumer.  
+BTP contexts are logical entities defined to host and implement various infrastructure configurations, for instance, bootstrap, runtime, provider and consumer.  
 
-The main idea behind the contexts is the ability to combine and maintain resources from multiple global accounts with their subaccounts across different regions and break free from 
+The contexts offer the ability to combine and maintain resources from multiple global accounts with their subaccounts across different regions and break free from 
 the rigidity of the cloud foundry runtime org structure.
 
-In a nutshell, the contexts are declarative entities, defined as terraform scripts, eventually orchestrated by CI/CD pipelines.  
+In a nutshell, the contexts are declarative entities, defined as terraform configurations, eventually orchestrated by CI/CD pipelines.  
 
 <table style="width: 100%; border-collapse: collapse; background-color: #ebf8ff;" border="1">
 <tbody>
@@ -94,12 +94,11 @@ In a nutshell, the contexts are declarative entities, defined as terraform scrip
 
 <h2 id="btp-automation">1. Bootstrap toolkit for business users.</h2>  
 
-The value proposition behind a "depleted" runtime environment concept, in particular in the context of SAP Business Technology Platform (BTP),  
-is a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
-
 Let me summarize and expand on the concept's main ideas:
 
 <h3 id="runtime-context">1.1 "Depleted" Runtime Environment.</h3>  
+The value proposition behind a "depleted" runtime environment concept, in particular in the context of SAP Business Technology Platform (BTP),  
+is a more flexible and efficient approach to managing BTP landscapes, particularly those using Kyma runtime.   
 
   * Consists of one or more Kyma clusters
   * Has a limited set of BTP services directly associated
@@ -170,7 +169,6 @@ Providers are a logical abstraction of an upstream API. They are responsible for
 
 For instance, the SAP BTP [terraform provider](https://registry.terraform.io/providers/SAP/btp/latest/docs) is leveraging the server side BTP CLI API.  
 Additionally, each terraform provider may have its own ecosystem of modules, self-contained packages of Terraform configurations that are managed as a group.  
-For instance, for sap btp: https://registry.terraform.io/providers/SAP/btp/latest
 
 
 <table style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;" border="1">
