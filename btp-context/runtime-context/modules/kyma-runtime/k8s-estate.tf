@@ -37,7 +37,6 @@ locals {
   user_apply = "organization:${local.organization_name}:project:${var.TFC_PROJECT_NAME}:workspace:${terraform.workspace}:run_phase:apply"
 
   # github action user name format: actions-oidc:repo:myOrg/myRepo:ref:refs/heads/main
-  # user name: actions-oidc:repo:quovadis-btp/btp-boosters:ref:refs/heads/main
   #
   user_gha = "actions-oidc:repo:${var.GITHUB_ACTIONS_REPOSITORY}:ref:${var.GITHUB_ACTIONS_REF}"
 }
