@@ -48,6 +48,10 @@ resource "null_resource" "cache_kyma_machine_type" {
   }*/
 }
 
+output "kyma_machine_types" {
+  vaalue = jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.machineType.enum
+}
+
 locals {
   machineType = one(null_resource.cache_kyma_machine_type[*].triggers.machineType)
   cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
