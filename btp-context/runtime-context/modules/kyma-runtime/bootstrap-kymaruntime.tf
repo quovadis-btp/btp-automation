@@ -49,15 +49,13 @@ resource "null_resource" "cache_kyma_machine_type" {
 }
 
 output "kyma_machine_types" {
-  count   = var.BTP_KYMA_PLAN != "trial" ? 1 : 0
 
-  value = jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.machineType.enum
+  value = var.BTP_KYMA_PLAN != "trial" ? jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.machineType.enum : ["trial"]
 }
 
 output "kyma_cluster_regions" {
-  count   = var.BTP_KYMA_PLAN != "trial" ? 1 : 0
-  
-  value = jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.region.enum
+
+  value = var.BTP_KYMA_PLAN != "trial" ? jsondecode([for env in data.btp_subaccount_environments.all.values : env if env.service_name == "kymaruntime" && env.environment_type == "kyma" && env.plan_name == var.BTP_KYMA_PLAN][0].schema_create).parameters.properties.region.enum : ["trial"]
 }
 
 locals {
