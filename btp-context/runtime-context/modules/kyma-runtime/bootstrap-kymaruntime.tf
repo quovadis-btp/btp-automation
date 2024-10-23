@@ -59,7 +59,7 @@ locals {
 
   bot_admins = [for cluster_admin in var.cluster_admins : "bot-identity:${cluster_admin}"]
 
-  administrators = concat(var.cluster_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.bot_admins, local.user_plan, local.user_apply, local.user_gha]) )
+  administrators = concat(var.cluster_admins, local.bot_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.user_plan, local.user_apply, local.user_gha]) )
 }
 
 output "administrators" {
