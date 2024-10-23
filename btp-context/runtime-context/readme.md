@@ -34,7 +34,7 @@ PS. Both [cf](https://docs.cloudfoundry.org/concepts/architecture) and [k8s](htt
 
 ## Kymaruntime environment discovery
 
-### machine types
+### kyma worker nodes machine types
 
 ```
 kyma_machine_types = [
@@ -53,7 +53,7 @@ kyma_machine_types = [
     ]
 ```
 
-### cluster regions
+### kyma cluster regions
 
 ```
 kyma_cluster_regions = [
@@ -69,7 +69,29 @@ kyma_cluster_regions = [
         "ap-southeast-1",
         "ap-southeast-2",
     ]
+```
 
+### kyma labels and dashboard url
+
+```
+kyma_labels = {
+        APIServerURL  = "https://api.c-36b26c5.kyma.ondemand.com"
+        KubeconfigURL = "https://kyma-env-broker.cp.kyma.cloud.sap/kubeconfig/5EB1A820-22D4-4E8C-AF0A-E667C99A400C"
+        Name          = "btp-runtime-spark-x"
+    }
+kyma_dashboard_url = "https://dashboard.kyma.cloud.sap/?kubeconfigID=5EB1A820-22D4-4E8C-AF0A-E667C99A400C"
+
+```
+
+### ingres load balancer
+
+```
+Ingress_LoadBalancer = [
+        {
+            hostname = "a5aa0f24fdb6d4e3fa1323d7b88ce121-*******.eu-central-1.elb.amazonaws.com"
+            ip       = null
+        },
+    ]
 ```
 
 ## Destinations
