@@ -52,12 +52,20 @@ locals {
   machineType = one(null_resource.cache_kyma_machine_type[*].triggers.machineType)
   cluster_region = one(null_resource.cache_kyma_region[*].triggers.region)
 
+
+  bot_admins = [for cluster_admin in var.cluster_admins : "bot-identity:${cluster_admin}"]
+
   administrators = concat(var.cluster_admins, tolist([var.BTP_BOT_USER, format("bot-identity:%s",var.BTP_BOT_USER), local.user_plan, local.user_apply, local.user_gha]) )
 }
 
 output "administrators" {
   value = nonsensitive(local.administrators)
 }
+
+output "bot_admins" {
+  value = nonsensitive(local.bot_admins)
+}
+
 
 locals {
   modules = [
