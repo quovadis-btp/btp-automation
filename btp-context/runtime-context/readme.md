@@ -32,6 +32,46 @@ Eventually, a kyma environment is provisioned with a short lived token based kub
 
 PS. Both [cf](https://docs.cloudfoundry.org/concepts/architecture) and [k8s](https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams) runtimes can be used jointly or seperately in their respective runtime contexts
 
+## Kymaruntime environment discovery
+
+### machine types
+
+```
+kyma_machine_types = [
+        "m6i.large",
+        "m6i.xlarge",
+        "m6i.2xlarge",
+        "m6i.4xlarge",
+        "m6i.8xlarge",
+        "m6i.12xlarge",
+        "m5.large",
+        "m5.xlarge",
+        "m5.2xlarge",
+        "m5.4xlarge",
+        "m5.8xlarge",
+        "m5.12xlarge",
+    ]
+```
+
+### cluster regions
+
+```
+kyma_cluster_regions = [
+        "eu-central-1",
+        "eu-west-2",
+        "ca-central-1",
+        "sa-east-1",
+        "us-east-1",
+        "us-west-1",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ap-south-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+    ]
+
+```
+
 ## Destinations
 
 These destinations are the entry endpoints to help manage the runtime context estate.  
